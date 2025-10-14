@@ -8,11 +8,12 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser # define que esse formulário irá criar/editar instâncias da tabela CustomUser
-        fields = ["username", "cpf", "email", "password"] # define a ordem e os campos que irão aparecer
+        fields = ["username", "cpf", "email", "telefone", "password"] # define a ordem e os campos que irão aparecer
         labels = { # define os labels de cada campo
             "username": "Usuário",
             "cpf": "CPF",
             "email": "E-mail",
+            "telefone": "Telefone",
         }
         widgets = {
             "username": forms.TextInput(attrs={"placeholder": "Nome de usuário"}),
@@ -22,6 +23,10 @@ class RegisterForm(forms.ModelForm):
                 "pattern": "[0-9]*",
             }),
             "email": forms.EmailInput(attrs={"placeholder": "E-mail"}),
+            "telefone": forms.TextInput(attrs={
+                "placeholder": "Telefone",
+                "inputmode": "tel", # Teclado numérico com símbolos em mobile
+            }),
         }
         help_texts = { # define os textos de apoio para cada campo
             "username": None,
