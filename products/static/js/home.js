@@ -1,46 +1,40 @@
-document.addEventListener("DOMContentLoaded", function() {
-  const track = document.querySelector('.carousel-track');
-  const items = Array.from(document.querySelectorAll('.produto-card'));
-  const prevBtn = document.querySelector('.carousel-btn.prev');
-  const nextBtn = document.querySelector('.carousel-btn.next');
-  
-  let currentIndex = 0;
-  let itemsPerView = 4; // padrão desktop
-  const moveBy = 2; // desliza 2 por clique
+const track = document.querySelector('.carousel-track');
+const prevBtn = document.querySelector('.carousel-btn.prev');
+const nextBtn = document.querySelector('.carousel-btn.next');
+const cards = document.querySelectorAll('.produto-card');
 
-  function updateItemsPerView() {
-    const width = window.innerWidth;
-    if (width <= 700) itemsPerView = 2;
-    else if (width <= 1000) itemsPerView = 3;
-    else itemsPerView = 4;
+let currentIndex = 0;
+
+// Função para calcular largura do card + gap dinamicamente
+function getCardWidth() {
+  const cardStyle = getComputedStyle(cards[0]);
+  const cardWidth = cards[0].offsetWidth;
+  const gap = parseFloat(cardStyle.marginRight) || 0; // pega a margin-right real
+  return cardWidth + gap;
+}
+
+// Função para calcular o máximo índice do carrossel
+function getMaxIndex() {
+  const trackParentWidth = track.parentElement.offsetWidth;
+  return cards.length - Math.floor(trackParentWidth / getCardWidth());
+}
+
+nextBtn.addEventListener('click', () => {
+  const maxIndex = getMaxIndex();
+  if (currentIndex < maxIndex) {
+    currentIndex++;
+    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
   }
+});
 
-  function updateCarousel() {
-    const itemWidth = items[0].offsetWidth + 80; // soma o gap (aprox. 2rem)
-    const moveX = currentIndex * itemWidth;
-    track.style.transform = `translateX(-${moveX}px)`;
+prevBtn.addEventListener('click', () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
   }
+});
 
-  nextBtn.addEventListener('click', () => {
-    updateItemsPerView();
-    if (currentIndex + moveBy < items.length - itemsPerView + 1) {
-      currentIndex += moveBy;
-      updateCarousel();
-    }
-  });
-
-  prevBtn.addEventListener('click', () => {
-    updateItemsPerView();
-    if (currentIndex - moveBy >= 0) {
-      currentIndex -= moveBy;
-      updateCarousel();
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    updateItemsPerView();
-    updateCarousel();
-  });
-
-  updateItemsPerView();
+// Ajusta o carrossel ao redimensionar a tela
+window.addEventListener('resize', () => {
+  track.style.transform = `translateX(-${currentIndex * getCardWidth() + 3000}px)`;
 });

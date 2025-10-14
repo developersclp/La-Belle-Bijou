@@ -24,6 +24,7 @@
     box-sizing: border-box;
     border-radius: 8px;
     padding: 1.3rem;
+    flex: 0 0 calc((80vw - 2*2vw - 3vw)/4); /* 2*2vw = padding, 3vw = gap entre 4 cards */
     cursor: pointer;
     transition: all 0.3s;
     background-color: #fff;
@@ -31,8 +32,8 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
     & img {
-        width: 20rem;
-        height: 20rem;
+        width: 100%; /* ajusta à largura do card */
+        height: auto;
         object-fit: cover;
         border-radius: 4px;
         margin-bottom: 1rem;
@@ -126,7 +127,7 @@
     }
 }
 
-.carousel-container {
+.container-geral {
     position: relative;
     width: 90vw;
     display: flex;
@@ -135,17 +136,21 @@
 }
 
 .carousel-track {
-    width: 80vw;
+    width: 100%;
     display: flex;
     transition: transform 0.5s ease;
-    padding: 2rem;
-    gap: 8rem;
+    gap: 1vw;
+}
+
+.hidden {
     overflow: hidden;
+    width: 80vw;
+    padding: 6vh 2vw;
 }
 
 .carousel-btn {
-    width: 5rem;
-    height: 5rem;
+    width: 3.5vw;
+    height: 3.5vw;
     background: #00000080;
     font-size: 3rem;
     color: #ffffff;
@@ -162,5 +167,5 @@
 
 .carousel-btn:hover {
     background: #000000b3;
-    transform: scale(1.1);
+     transform: scale(1.1);
 }

@@ -61,10 +61,12 @@
           </div>
       {% endfor %}
   </div> -->
-  <div class="carousel-container">
+
+  <div class="container-geral">
     <button class="carousel-btn prev">&#10094;</button>
 
-    <div class="carousel-track">
+    <div class="hidden">
+      <div class="carousel-track">
       {% for produto in produtos %}
         <div class="produto-card" onclick="window.location.href='{% url 'detalhe-produto' produto.pk %}'">
           {% if produto.imagem_principal %}
@@ -77,10 +79,19 @@
           <button onclick="window.location.href='{% url 'teste-carrinho' %}'"><p>Adicionar ao carrinho</p></button>
         </div>
       {% endfor %}
+      </div>
     </div>
 
     <button class="carousel-btn next">&#10095;</button>
   </div>
+
+  {% for categoria in categorias %}
+  <h1 id="subtitulo">{{ categoria.nome }}</h1>
+
+  <div class="container-geral">
+    
+  </div>
+  {% endfor %}
 </div>
 
 <script src="{% static 'js/home.js' %}"></script>
