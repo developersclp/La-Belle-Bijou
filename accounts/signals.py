@@ -12,16 +12,22 @@ def fill_user_data(request, sociallogin, **kwargs):
 
     if sociallogin.account.provider == "google":
         email = data.get("email")
-        first_name = data.get("given_name")
-        last_name = data.get("family_name")
+        first_name = data.get("given_name") or ""
+        last_name = data.get("family_name") or ""
 
-        # Preenche se estiver vazio
-        if not user.email:
+        # Garante valores válidos
+        if not user.email and email:
             user.email = email
         if not user.first_name:
             user.first_name = first_name
         if not user.last_name:
             user.last_name = last_name
+
+        # Evita salvar None em qualquer campo obrigatório
+        if user.last_name is None:
+            user.last_name = ""
+        if user.first_name is None:
+            user.first_name = ""
 
         user.save()
 
