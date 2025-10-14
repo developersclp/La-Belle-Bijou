@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -35,6 +37,7 @@
             <div class="login-link">
                 Não tem uma conta? <a href="{% url 'register' %}">clique aqui para cadastrar</a>
             </div>
+            <a href='{% provider_login_url 'google' %}'>google</a>
         </div>
     </div>
 </body>

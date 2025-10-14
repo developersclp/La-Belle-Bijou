@@ -3,8 +3,10 @@ from django.views.generic import CreateView, UpdateView
 from .models import CustomUser
 from .forms import RegisterForm, LoginForm
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm, ProfileForm
+from .forms import RegisterForm, LoginForm, ProfileForm, CompleteSignupForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 class RegisterView(CreateView):
     model = CustomUser # model respectivo
@@ -35,3 +37,20 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     
     def get_object(self):
         return self.request.user
+    
+@login_required
+def complete_signup(request):
+    user = request.user
+
+    if user.telefone and user.cpf:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CompleteSignupForm(request.POST, instance=user)
+        if form.is_valid(): 
+            form.save()
+            return redirect('home')
+    else:
+        form = CompleteSignupForm(instance=user)
+
+    return render(request, 'accounts/complete_signup.html', {'form': form})

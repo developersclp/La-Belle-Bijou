@@ -16,7 +16,11 @@ class RegisterForm(forms.ModelForm):
         }
         widgets = {
             "username": forms.TextInput(attrs={"placeholder": "Nome de usuário"}),
-            "cpf": forms.TextInput(attrs={"placeholder": "CPF"}),
+            "cpf": forms.TextInput(attrs={
+                "placeholder": "CPF",
+                "inputmode": "numeric", # Mostra teclado numérico em celulares
+                "pattern": "[0-9]*",
+            }),
             "email": forms.EmailInput(attrs={"placeholder": "E-mail"}),
         }
         help_texts = { # define os textos de apoio para cada campo
@@ -59,3 +63,25 @@ class ProfileForm(forms.ModelForm):
             'last_name': 'Sobrenome',
             'data_nasc': 'Data de nascimento',
         }
+
+
+class CompleteSignupForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['telefone', 'cpf']
+        widgets = {
+            "cpf": forms.TextInput(attrs={
+                "placeholder": "CPF",
+                "inputmode": "numeric", # Mostra teclado numérico em celulares
+                "pattern": "[0-9]*",
+            }),
+            "telefone": forms.TextInput(attrs={
+                "placeholder": "Telefone",
+                "inputmode": "tel", # Teclado numérico com símbolos em mobile
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['telefone'].required = True
+        self.fields['cpf'].required = True
