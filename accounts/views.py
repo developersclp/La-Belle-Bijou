@@ -7,6 +7,7 @@ from .forms import RegisterForm, LoginForm, ProfileForm, CompleteSignupForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth import views as auth_views
 
 class RegisterView(CreateView):
     model = CustomUser # model respectivo
@@ -54,3 +55,21 @@ def complete_signup(request):
         form = CompleteSignupForm(instance=user)
 
     return render(request, 'accounts/complete_signup.html', {'form': form})
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Reset de Senha -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
+
+class ResetPasswordView(auth_views.PasswordResetView): # view que manda o email
+    template_name = 'accounts/reset_password.html'
+    email_template_name = 'accounts/reset_password_email.html'
+    subject_template_name = 'accounts/reset_password_assunto.txt'
+    success_url = reverse_lazy('reset-senha-enviado')
+
+class ResetPasswordDoneView(auth_views.PasswordResetDoneView): # view que renderiza a tela de email enviado
+    template_name = 'accounts/reset_password_enviado.html'
+
+class ResetPasswordConfirmView(auth_views.PasswordResetConfirmView): # view que renderiza o formulário de reset de senha
+    template_name = 'accounts/reset_password_form.html'
+    success_url = reverse_lazy('reset-concluido')
+
+class ResetPasswordCompleteView(auth_views.PasswordResetCompleteView): # view que renderiza a tela de confirmação de senha alterada
+    template_name = 'accounts/reset_password_feito.html'

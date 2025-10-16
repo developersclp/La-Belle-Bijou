@@ -18,6 +18,31 @@ body {
     overflow: hidden;
 }
 
+.google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #fff;
+    color: #444;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: .5s;
+}
+
+.google:hover{
+    background-color: #e0e0e0;
+}
+
+.google-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 /* Container principal - TELA CHEIA */
 .cadastro-container {
     display: flex;
@@ -187,6 +212,7 @@ form button:hover {
     color: #ffffff;
     width: 100%;
     max-width: 400px;
+    margin-bottom: 2vh;
 }
 
 .login-link a {

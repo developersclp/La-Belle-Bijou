@@ -13,6 +13,7 @@ class ListaProdutosAdm(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Produto 
     template_name = "dashboard/adm_produto.html" 
     context_object_name = "produtos"
+    ordering = ['id']
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -106,6 +107,7 @@ class ListarCategorias(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Categoria
     template_name = "dashboard/adm_categoria.html"
     context_object_name = "categorias"
+    ordering = ['id']
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -205,6 +207,7 @@ class ListaUsuarios(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = CustomUser
     template_name = 'dashboard/adm_usuarios.html'
     context_object_name = 'usuarios'
+    ordering = ['id']
 
     def test_func(self):
         return self.request.user.is_superuser
