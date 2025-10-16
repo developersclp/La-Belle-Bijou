@@ -1,40 +1,72 @@
-const track = document.querySelector('.carousel-track');
-const prevBtn = document.querySelector('.carousel-btn.prev');
-const nextBtn = document.querySelector('.carousel-btn.next');
-const cards = document.querySelectorAll('.produto-card');
+// home.js - Versão corrigida para múltiplos carrosséis
 
-let currentIndex = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos os carrosséis
+    document.querySelectorAll('.produtos-secao').forEach((secao) => {
+        initCarrossel(secao);
+    });
+});
 
-// Função para calcular largura do card + gap dinamicamente
-function getCardWidth() {
-  const cardStyle = getComputedStyle(cards[0]);
-  const cardWidth = cards[0].offsetWidth;
-  const gap = parseFloat(cardStyle.marginRight) || 0; // pega a margin-right real
-  return cardWidth + gap;
+function initCarrossel(secao) {
+    const track = secao.querySelector('.produtos-track');
+    const prevBtn = secao.querySelector('.produtos-btn.prev');
+    const nextBtn = secao.querySelector('.produtos-btn.next');
+    const cards = track.querySelectorAll('.produto-card');
+
+    if (cards.length === 0) return;
+
+    let currentIndex = 0;
+
+    function getCardWidth() {
+        const cardStyle = getComputedStyle(cards[0]);
+        const cardWidth = cards[0].offsetWidth;
+        const gap = parseFloat(cardStyle.marginRight) || 0;
+        return cardWidth + gap;
+    }
+
+    function getMaxIndex() {
+        const trackParentWidth = track.parentElement.offsetWidth;
+        const cardsToShow = Math.floor(trackParentWidth / getCardWidth());
+        return Math.max(0, cards.length - cardsToShow);
+    }
+
+    function updateCarrossel() {
+        track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+    }
+
+    function checkButtons() {
+        const maxIndex = getMaxIndex();
+        prevBtn.style.display = currentIndex > 0 ? 'flex' : 'none';
+        nextBtn.style.display = currentIndex < maxIndex ? 'flex' : 'none';
+    }
+
+    nextBtn.addEventListener('click', () => {
+        const maxIndex = getMaxIndex();
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateCarrossel();
+            checkButtons();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarrossel();
+            checkButtons();
+        }
+    });
+
+    // Esconder botões inicialmente se não forem necessários
+    checkButtons();
+
+    // Recalcular ao redimensionar
+    window.addEventListener('resize', () => {
+        const maxIndex = getMaxIndex();
+        if (currentIndex > maxIndex) {
+            currentIndex = maxIndex;
+            updateCarrossel();
+        }
+        checkButtons();
+    });
 }
-
-// Função para calcular o máximo índice do carrossel
-function getMaxIndex() {
-  const trackParentWidth = track.parentElement.offsetWidth;
-  return cards.length - Math.floor(trackParentWidth / getCardWidth());
-}
-
-nextBtn.addEventListener('click', () => {
-  const maxIndex = getMaxIndex();
-  if (currentIndex < maxIndex) {
-    currentIndex++;
-    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
-  }
-});
-
-prevBtn.addEventListener('click', () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
-  }
-});
-
-// Ajusta o carrossel ao redimensionar a tela
-window.addEventListener('resize', () => {
-  track.style.transform = `translateX(-${currentIndex * getCardWidth() + 3000}px)`;
-});
