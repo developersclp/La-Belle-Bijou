@@ -1,7 +1,5 @@
-// home.js - Versão corrigida para múltiplos carrosséis
-
+// home.js - Versão com 4 cards fixos
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar todos os carrosséis
     document.querySelectorAll('.produtos-secao').forEach((secao) => {
         initCarrossel(secao);
     });
@@ -16,22 +14,24 @@ function initCarrossel(secao) {
     if (cards.length === 0) return;
 
     let currentIndex = 0;
+    const cardsPorPagina = 4;
 
     function getCardWidth() {
-        const cardStyle = getComputedStyle(cards[0]);
-        const cardWidth = cards[0].offsetWidth;
-        const gap = parseFloat(cardStyle.marginRight) || 0;
-        return cardWidth + gap;
+        // Método preciso: usa o bounding box real
+        const cardRect = cards[0].getBoundingClientRect();
+        return cardRect.width + 30; // width + gap de 30px definido no track
     }
 
     function getMaxIndex() {
-        const trackParentWidth = track.parentElement.offsetWidth;
-        const cardsToShow = Math.floor(trackParentWidth / getCardWidth());
-        return Math.max(0, cards.length - cardsToShow);
+        // Máximo de páginas baseado em 4 cards por página
+        return Math.ceil(cards.length / cardsPorPagina) - 1;
     }
 
     function updateCarrossel() {
-        track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+        const deslocamento = currentIndex * cardsPorPagina * getCardWidth();
+        track.style.transform = `translateX(-${deslocamento}px)`;
+        
+        console.log(`Index: ${currentIndex}, Deslocamento: ${deslocamento}px, Card width: ${getCardWidth()}px`);
     }
 
     function checkButtons() {
@@ -57,11 +57,10 @@ function initCarrossel(secao) {
         }
     });
 
-    // Esconder botões inicialmente se não forem necessários
     checkButtons();
 
-    // Recalcular ao redimensionar
     window.addEventListener('resize', () => {
+        // Ao redimensionar, mantém a posição atual se possível
         const maxIndex = getMaxIndex();
         if (currentIndex > maxIndex) {
             currentIndex = maxIndex;

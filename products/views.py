@@ -15,13 +15,16 @@ class Home(TemplateView):
         categorias = Categoria.objects.all().prefetch_related('produtos')
         contexto['categorias'] = categorias
 
-        produtos_por_categoria = {}
         for categoria in categorias:
-            produtos_por_categoria[categoria] = categoria.produtos.all()
-        contexto['produtos_por_categoria'] = produtos_por_categoria
+            produtos_count = categoria.produtos.count()
 
-        produtos = Produto.objects.all()
-        contexto['produtos'] = produtos
+        # Criar lista de tuplas (categoria, produtos) para o template
+        categorias_com_produtos = []
+        for categoria in categorias:
+            produtos_da_categoria = categoria.produtos.all() # Limita a 10 produtos
+            categorias_com_produtos.append((categoria, produtos_da_categoria))
+        contexto['categorias_com_produtos'] = categorias_com_produtos
+
         return contexto
 
 class DetailProduto(DetailView):

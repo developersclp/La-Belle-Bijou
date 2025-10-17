@@ -103,7 +103,7 @@
     <h1 id="subtitulo">Mais populares</h1>
     <div class="produtos-container">
         <div class="produtos-track">
-        {% for produto in produtos %}
+        {% for produto in produtos_mais_vendidos %}
             <div class="produto-card" onclick="window.location.href='{% url 'detalhe-produto' produto.pk %}'">
                 {% if produto.imagem_principal %}
                     <img src="{{ produto.imagem_principal.url }}" alt="{{ produto.nome }}">
@@ -128,12 +128,12 @@
 </div>
 
 <!-- Na seção de categorias - CORRIGIDO -->
-{% for categoria in categorias %}
+{% for categoria, produtos in categorias_com_produtos %}
 <div class="produtos-secao">
     <h1 id="subtitulo">{{ categoria.nome }}</h1>
     <div class="produtos-container">
         <div class="produtos-track">
-        {% for produto in produtos_por_categoria.categoria %}
+        {% for produto in produtos %}
             <div class="produto-card" onclick="window.location.href='{% url 'detalhe-produto' produto.pk %}'">
                 {% if produto.imagem_principal %}
                     <img src="{{ produto.imagem_principal.url }}" alt="{{ produto.nome }}">
@@ -146,6 +146,8 @@
                     <p>Adicionar ao carrinho</p>
                 </button>
             </div>
+        {% empty %}
+        <h1>Categoria sem produtos atualmente...</h1>
         {% endfor %}
         </div>
     </div>
