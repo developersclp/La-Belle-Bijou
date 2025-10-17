@@ -120,6 +120,8 @@
                     <p>Adicionar ao carrinho</p>
                 </button>
             </div>
+            {% empty %}
+            <h1 class="empty">Sem produtos vendidos até o momento...</h1>
         {% endfor %}
         </div>
     </div>
@@ -147,7 +149,7 @@
                 </button>
             </div>
         {% empty %}
-        <h1>Categoria sem produtos atualmente...</h1>
+        <h1 class="empty">Categoria sem produtos atualmente...</h1>
         {% endfor %}
         </div>
     </div>
