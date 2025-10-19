@@ -1,6 +1,8 @@
 from django import forms
 from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Senha"}), label='Senha') # define o campo de senha
@@ -39,6 +41,11 @@ class RegisterForm(forms.ModelForm):
 
         if password and password_confirm and password != password_confirm: # verifica se as senhas são diferentes
             self.add_error("password_confirm", "As senhas não coincidem!") # caso forem diferentes retorna o erro
+        else:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                self.add_error("password_confirm", e)
 
         return cleaned_data # retorna o dicionário para que o django tenha os campos validados
     
