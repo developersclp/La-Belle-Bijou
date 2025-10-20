@@ -58,10 +58,6 @@ def complete_signup(request):
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Reset de Senha -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
 class ResetPasswordView(auth_views.PasswordResetView): # view que manda o email
     template_name = 'accounts/reset_password.html'
     email_template_name = 'accounts/reset_password_email.html'

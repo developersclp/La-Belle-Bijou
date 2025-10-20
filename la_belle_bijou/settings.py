@@ -188,3 +188,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# EMAIL_BACKEND = "emails.sendgrid_backend.SendGridBackend"
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "apikey"
+# EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_API_KEY")
+# DEFAULT_FROM_EMAIL = "lucgarcbeni@gmail.com"
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Pagamento -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
+
+# PAGARME_API_KEY = os.getenv("PAGARME_API_KEY")
+# PAGARME_API_URL = os.getenv("PAGARME_API_URL", "https://api.pagar.me/core/v5")
