@@ -1,0 +1,360 @@
+/* =========================
+   criar_produto.css — versão definitiva
+   Substitua todo o arquivo existente por este conteúdo
+   ========================= */
+
+/* --- Variáveis de cor --- */
+:root{
+  --bg-dashboard: #262b31;        /* fundo do painel (não alterado) */
+  --card-bg: #ececec;            /* fundo do card branco-suave */
+  --panel-bg: #efefef;           /* seção interna */
+  --field-bg: #ffffff;           /* inputs */
+  --field-border: #d8d8d8;       /* borda dos inputs */
+  --label-color: #666666;
+  --muted: #8b8b8b;
+  --accent-dark: #1E293B;        /* botão salvar */
+  --accent-gold: #d4af37;        /* dourado para foco */
+  --green: #35b24a;              /* toggle ativo */
+}
+
+/* =========================
+   CARD PRINCIPAL (a área branca interna)
+   O template usa .bg-gray-100 para essa área — sobrescrevemos aqui
+   ========================= */
+.bg-gray-100 {
+  background-color: var(--card-bg) !important;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+  padding: 28px !important;       /* garante padding mesmo com tailwind */
+  margin-bottom: 30px;
+}
+
+/* Força largura máxima e centralização dentro da base */
+.bg-gray-100 {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Garante grid duas colunas do conteúdo */
+.bg-gray-100 > .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+/* =========================
+   HEADINGS (títulos dentro do card)
+   ========================= */
+.bg-gray-100 h2.text-lg,
+.bg-gray-100 h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #444444;
+  margin: 4px 0 14px 0;
+}
+
+/* legenda pequena (Imagens selecionadas etc) */
+.bg-gray-100 h3,
+.bg-gray-100 .text-sm {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* =========================
+   ÁREA DE UPLOAD (camera) — caixa central grande
+   ========================= */
+.border-2.border-dashed {
+  /* força aparência */
+  border-style: dashed !important;
+  border-width: 2px !important;
+  border-color: #d0d0d0 !important;
+  background: linear-gradient(#f6f6f6, #f2f2f2) !important;
+  border-radius: 8px !important;
+  height: 220px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, transform .08s;
+  padding: 12px;
+}
+
+/* ícone da câmera */
+.border-2.border-dashed img {
+  width: 56px;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+/* texto dentro da área de upload */
+.border-2.border-dashed p {
+  color: #6b6b6b;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+/* hover sutil */
+.border-2.border-dashed:hover {
+  background: linear-gradient(#f7f7f7,#efefef) !important;
+  border-color: #bfbfbf !important;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   PREVIEWS / IMAGENS ADICIONAIS (thumbnails)
+   ========================= */
+#formset-container {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* thumb branco com borda arredondada */
+.formset-form {
+  width: 116px;
+  height: 96px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* input file dentro do formset (se aparecer) */
+.formset-form input[type="file"]{
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* botão remover na miniatura */
+.formset-form .remove-form {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(0,0,0,0.04);
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: none;
+  color: #444;
+  cursor: pointer;
+}
+.formset-form .remove-form:hover { background: rgba(0,0,0,0.08); }
+
+/* botão + Adicionar imagem */
+#add-form {
+  margin-top: 6px;
+  background: none;
+  border: none;
+  color: #1f6feb;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+#add-form:hover { text-decoration: underline; }
+
+/* =========================
+   FORM - DETALHES DO PRODUTO (lado direito)
+   ========================= */
+form.space-y-4 { width: 100%; }
+
+/* Força layout de campo: label sobre input (como na imagem) */
+form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label-color);
+  margin-bottom: 6px;
+}
+
+/* Estilo geral para inputs/selects/textarea */
+form input[type="text"],
+form input[type="number"],
+form input[type="email"],
+form select,
+form textarea,
+form input[type="file"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #222;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: border-color .14s ease, box-shadow .14s ease, transform .06s;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* especificidade maior para inputs que o Django gera sem wrapper */
+input, select, textarea { font-family: inherit; }
+
+/* textarea maior */
+form textarea { min-height: 100px; resize: vertical; }
+
+/* focus: borda dourada sutil */
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 6px rgba(212,175,55,0.06);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   FIX do SELECT (corrige problema relatado)
+   - Remover qualquer background-image custom que escondia a seta
+   - Usar aparência nativa do sistema (garante funcionamento)
+   ========================= */
+
+/* remove regras antigas que adicionavam background-image */
+form select {
+  background-image: none !important;
+  -webkit-appearance: menulist-button !important;
+  appearance: menulist-button !important;
+  padding-right: 12px;  /* espaço para a seta nativa */
+  height: 38px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+/* Força a seta nativa em browsers que suportam */
+form select::-ms-expand { display: block; }
+
+/* =========================
+   Campos que o template possivelmente renderiza inline:
+   (ex.: "{{ form.nome.label_tag }} {{ form.nome }}")
+   - Para esses casos fazemos o input ocupar uma largura fixa à direita
+   ========================= */
+
+/* Quando o label e o input aparecem inline (sem wrapper),
+   garantimos que o input fique visível e com margem */
+label + input,
+label + select,
+label + textarea {
+  margin-left: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* limites de largura para inputs inline (igual mock) */
+label + input[type="text"],
+label + input[type="number"],
+label + select {
+  max-width: 260px;
+}
+
+/* se houver container .space-y-3 o deixamos com espaçamento correto */
+.space-y-3 > * { margin-bottom: 10px; }
+
+/* =========================
+   TOGGLE (checkbox) estilo botão (Produto Ativo)
+   - Aplica somente se for um checkbox simples
+   ========================= */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 46px;
+  height: 26px;
+  background: #e6e6e6;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  transition: background .14s, box-shadow .14s;
+}
+input[type="checkbox"]::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transition: left .14s cubic-bezier(.2,.9,.2,1);
+}
+input[type="checkbox"]:checked {
+  background: var(--green);
+  box-shadow: 0 4px 12px rgba(53,178,74,0.14);
+}
+input[type="checkbox"]:checked::after { left: calc(100% - 23px); }
+
+/* =========================
+   BOTOES (Cancelar / Salvar Joia)
+   ========================= */
+.botoes-form {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* cancelar: cinza claro */
+a.bg-gray-400,
+.btn-cancelar {
+  background: #bdc3c7;
+  color: #1b1b1b;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+a.bg-gray-400:hover,
+.btn-cancelar:hover { background: #a9a9a9; }
+
+/* salvar: escuro com hover dourado */
+.btn-salvar,
+form button[type="submit"],
+button.btn-salvar {
+  background: var(--accent-dark);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  border: none;
+}
+.btn-salvar:hover,
+form button[type="submit"]:hover {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* =========================
+   CORREÇÕES ADICIONAIS E RESPONSIVIDADE
+   ========================= */
+@media (max-width: 980px) {
+  .bg-gray-100 > .grid { grid-template-columns: 1fr; }
+  .formset-form { width: 95px; height: 80px; }
+  .border-2.border-dashed { height: 180px; }
+}
+
+@media (max-width: 480px) {
+  .bg-gray-100 { padding: 18px !important; margin: 16px !important; }
+  .formset-form { width: 82px; height: 70px; }
+}
+
+/* =========================
+   IMPORTANTE:
+   - Substitua todo o CSS antigo por este arquivo
+   - Se algum input continuar com aparência do browser ou "sumir",
+     poste aqui o HTML gerado (inspecione elemento e cole)
+   ========================= */
