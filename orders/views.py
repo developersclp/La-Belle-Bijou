@@ -20,7 +20,7 @@ class CheckoutPixView(View):
         cart = Cart(request)
         if not len(cart):
             messages.error(request, "Seu carrinho está vazio.")
-            return redirect("ver-carrinho")
+            return redirect("ver_carrinho")
         else:
             endereco_form = EnderecoForm()
             return render(request, self.template_name, {"cart": cart, "endereco": endereco_form})
@@ -31,7 +31,7 @@ class CheckoutPixView(View):
 
         if not len(cart):
             messages.error(request, "Seu carrinho está vazio.")
-            return redirect("ver-carrinho")
+            return redirect("ver_carrinho")
         
         
         if endereco_form.is_valid():
