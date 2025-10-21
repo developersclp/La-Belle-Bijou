@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="pagamento-container" style="text-align: center; margin-top: 50px;">
+    <h1>Pagamento via Pix</h1>
+
+    <p><strong>Pedido #{{ pedido.id }}</strong></p>
+    <p>Valor total: <strong>R$ {{ pedido.valor_total }}</strong></p>
+
+    <div style="margin-top: 30px;">
+        <p>Escaneie o QR Code abaixo com seu app do banco:</p>
+        <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code Pix" style="width: 250px; height: 250px;"/>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <p>Ou copie o código Pix:</p>
+        <textarea readonly rows="4" style="width: 80%; max-width: 500px;">{{ qr_code }}</textarea>
+    </div>
+
+    <p style="margin-top: 20px;">
+        Após o pagamento, o status será atualizado automaticamente assim que o webhook for recebido.
+    </p>
+
+    <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top: 20px;">Voltar para a loja</a>
+</div>
+{% endblock %}

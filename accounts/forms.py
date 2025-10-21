@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Endereco
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
@@ -97,3 +97,14 @@ class CompleteSignupForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['telefone'].required = True
         self.fields['cpf'].required = True
+
+class EnderecoForm(forms.ModelForm):
+    class Meta:
+        model = Endereco
+        fields = ["rua", "numero", "complemento", "cep"]
+        widgets = {
+            "rua": forms.TextInput(attrs={"placeholder": "Rua", "class": "form-control"}),
+            "numero": forms.TextInput(attrs={"placeholder": "Número", "class": "form-control"}),
+            "complemento": forms.TextInput(attrs={"placeholder": "Complemento (opcional)", "class": "form-control"}),
+            "cep": forms.TextInput(attrs={"placeholder": "CEP", "class": "form-control"}),
+        }

@@ -201,5 +201,5 @@ DEFAULT_FROM_EMAIL = "lucgarcbeni@gmail.com"
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Pagamento -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
-# PAGARME_API_KEY = os.getenv("PAGARME_API_KEY")
-# PAGARME_API_URL = os.getenv("PAGARME_API_URL", "https://api.pagar.me/core/v5")
+PAGARME_API_KEY = os.getenv("PAGARME_API_KEY")
+PAGARME_API_URL = os.getenv("PAGARME_API_URL", "https://api.pagar.me/core/v5")
