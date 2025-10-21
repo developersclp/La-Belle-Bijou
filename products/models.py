@@ -8,13 +8,32 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nome
 
+class ProdutoManager(models.Manager):
+    def mais_vendidos(self, limite=10):
+        """
+        Retorna os produtos mais vendidos (com mais saídas por VENDA)
+        """
+        from django.db.models import Sum, Q
+        
+        return self.annotate(
+            total_vendas=Sum(
+                'movimentacoes__quantidade',
+                filter=Q(movimentacoes__tipo='SAIDA', movimentacoes__motivo='VENDA')
+            )
+        ).filter(
+            total_vendas__isnull=False,
+            total_vendas__gt=0
+        ).order_by('-total_vendas')[:limite]
+
 class Produto(models.Model):
     nome = models.CharField(max_length=50)
     descricao = models.TextField(null=True, blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    categorias = models.ManyToManyField(Categoria, related_name="categorias")
+    categorias = models.ManyToManyField(Categoria, related_name="produtos")
     imagem_principal = models.ImageField(upload_to="produtos/principal/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
+
+    objects = ProdutoManager()
 
     @property
     def estoque_atual(self): # função para calcular o estoque atual de cada produto
@@ -48,7 +67,7 @@ class MovimentacaoEstoque(models.Model):
     quantidade = models.PositiveIntegerField()
     motivo = models.CharField(max_length=255, choices=MOTIVOS)
     data = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True) 
+    usuario = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.tipo} - {self.produto.nome} ({self.quantidade})"
