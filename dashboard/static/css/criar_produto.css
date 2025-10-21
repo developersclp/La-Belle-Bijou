@@ -72,7 +72,8 @@
   border-color: #d0d0d0 !important;
   background: linear-gradient(#f6f6f6, #f2f2f2) !important;
   border-radius: 8px !important;
-  height: 220px !important;
+  height: 200px !important;
+  width: 420px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -172,7 +173,7 @@ form.space-y-4 { width: 100%; }
 form label {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 580;
   color: var(--label-color);
   margin-bottom: 6px;
 }
