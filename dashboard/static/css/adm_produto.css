@@ -1,0 +1,103 @@
+/* Reset e básicos */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font-family: "Poppins", sans-serif; }
+button { font: inherit; cursor: pointer; }
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  transition: opacity 0.3s ease;
+}
+.overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* Modal */
+.modal {
+  width: 620px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 36px 48px 40px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  transform: translateY(-12px);
+  opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  outline: none;
+}
+.overlay.show .modal {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Modal Header */
+.modal-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.modal h2 { margin: 0; font-size: 28px; font-weight: 600; }
+.modal p.description { margin: 10px 0 0; color: #666; font-size: 14px; }
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px; height: 34px;
+  border: none; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #4b4b4b;
+}
+.close-btn:hover { color: #000; }
+
+/* Form */
+form { display: flex; flex-direction: column; gap: 22px; }
+.input-wrap { width: 100%; }
+input[type="text"] {
+  width: 100%; height: 40px;
+  padding: 10px 12px;
+  border-radius: 6px; border: 1.5px solid #e6e6e6;
+  font-size: 14px; color: #333;
+}
+input[type="text"]:focus {
+  outline: none;
+  border-color: #d3d9ff;
+  box-shadow: 0 0 0 4px rgba(211,217,255,0.45);
+}
+
+/* Erro */
+.error { color: #b82b2b; font-size: 13px; display: none; margin-top: 6px; }
+.error.show { display: block; }
+
+/* Actions */
+.actions { display: flex; justify-content: flex-end; }
+.save-btn {
+  min-width: 120px; padding: 10px 18px; border-radius: 8px;
+  border: none; background: #22252c; color: #fff;
+  font-weight: 500; font-size: 16px;
+}
+
+/* Responsivo */
+@media (max-width:480px) {
+  .modal { padding: 24px; border-radius: 10px; }
+  .modal h2 { font-size: 22px; }
+  .save-btn { width: 100%; }
+  .actions { justify-content: center; }
+}
+
+/* Visually hidden para acessibilidade */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  border: 0;
+}

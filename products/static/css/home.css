@@ -199,9 +199,23 @@
 }
 
 @media (max-width: 768px) {
+    .produtos-secao {
+        margin: 0 auto;
+    }
+
+    .produtos-container {
+        width: 100vw;
+    }
+
+    .produtos-track {
+        width: 100%;
+        gap: 10px;
+    }
+
     .produto-card {
-        flex: 0 0 calc((100% - 30px) / 2); /* 2 cards em mobile */
+        flex: 0 0 calc((100% - 5px) / 2); /* 2 cards em mobile */
         min-height: 320px;
+        padding: .7rem;
     }
     
     .produtos-btn {
