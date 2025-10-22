@@ -83,7 +83,7 @@
 
   <!-- Na seção de categorias - CORRIGIDO -->
   {% for categoria, produtos in categorias_com_produtos %}
-  <div class="produtos-secao">
+  <div class="produtos-secao" id="{{ categoria.nome }}">
       <h1 id="subtitulo">{{ categoria.nome }}</h1>
       <div class="produtos-container">
           <div class="produtos-track">

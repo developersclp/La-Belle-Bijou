@@ -36,7 +36,8 @@ header {
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    justify-content: space-evenly;
+    gap: 1.5vw;
+    justify-content: center;
 
     & a {
         height: 4vh;

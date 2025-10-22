@@ -2,10 +2,16 @@
 <header>
     <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Logo"></a>
     <div class="links">
+        {% if categorias %}
+            {% for categoria in categorias %}
+            <a href="#{{ categoria.nome }}">{{ categoria.nome }}</a>
+            {% endfor %}
+        {% else %}
         <a href="">Joias</a>
         <a href="">Colares</a>
         <a href="">Pulseiras</a>
         <a href="">Piercing</a>
+        {% endif %}
     </div>
     <div class="icones">
         {% if not user.is_authenticated %}
