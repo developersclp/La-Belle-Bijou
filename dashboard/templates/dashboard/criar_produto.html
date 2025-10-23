@@ -2,22 +2,22 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
+<link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
 {% endblock %}
 
 {% block header_title %}
-    <h1 class="text-3xl font-semibold text-gray-100 mb-2">Gerenciar Produtos</h1>
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">Gerenciar Produtos</h1>
 {% endblock %}
 
 {% block header_desc %}
-    <p class="text-gray-400 mb-8">Verifique as informações abaixo</p>
+<p class="text-gray-400 mb-8">Verifique as informações abaixo</p>
 {% endblock %}
 
 {% block conteudo %}
 <div class="p-8">
 
     <div class="bg-gray-100 rounded-2xl shadow-lg p-8">
-        
+
         <div class="grid">
 
             <div>
@@ -31,11 +31,11 @@
                 <h3 class="mt-6 mb-2">Imagens selecionadas</h3>
                 <div id="formset-container">
                     {% for f in formset %}
-                        <div class="formset-form">
-                            {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
-                            {{ f.imagem }}
-                            <button type="button" class="remove-form">🗑️</button>
-                        </div>
+                    <div class="formset-form">
+                        {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+                        {{ f.imagem }}
+                        <button type="button" class="remove-form">🗑️</button>
+                    </div>
                     {% endfor %}
                 </div>
 
@@ -43,7 +43,8 @@
                     <div class="formset-form">
                         {% for hidden in formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
                         {{ formset.empty_form.imagem }}
-                        <input type="hidden" name="{{ formset.prefix }}-__prefix__-DELETE" id="id_{{ formset.prefix }}-__prefix__-DELETE" value="">
+                        <input type="hidden" name="{{ formset.prefix }}-__prefix__-DELETE"
+                            id="id_{{ formset.prefix }}-__prefix__-DELETE" value="">
                         <button type="button" class="remove-form">🗑️</button>
                     </div>
                 </div>
@@ -54,22 +55,22 @@
             <div>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    
+
                     {{ formset.management_form }}
 
                     <div class="mb-6">
                         <h2 class="text-lg">Detalhes do produto</h2>
-                        
+
                         <div class="mb-4">
                             <label for="{{ form.nome.id_for_label }}">Nome da Joia</label>
                             {{ form.nome }}
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4 form-group-inline">
                             <label for="{{ form.categorias.id_for_label }}">Categoria</label>
                             {{ form.categorias }}
                         </div>
-                        
+
                         <div class="mb-4">
                             <label for="{{ form.descricao.id_for_label }}">Descrição</label>
                             {{ form.descricao }}
@@ -78,15 +79,15 @@
 
                     <div class="mb-6">
                         <h2 class="text-lg">Precificação e Estoque</h2>
-                        
+
                         <div class="mb-4">
                             <label for="{{ form.preco.id_for_label }}">Preço Unitário (R$)</label>
                             {{ form.preco }}
                         </div>
 
                         <div class="mb-4">
-                           <label for="{{ form.estoque.id_for_label }}">Qtde. de Estoque</label>
-                           {{ form.estoque }}
+                            <label for="{{ form.estoque.id_for_label }}">Qtde. de Estoque</label>
+                            {{ form.estoque }}
                         </div>
 
                         <div class="flex items-center gap-4">
@@ -112,47 +113,47 @@
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById("formset-container");
-    const addBtn = document.getElementById("add-form");
-    const emptyFormHtml = document.getElementById("empty-form").innerHTML;
-    const totalFormsInput = document.getElementById("id_{{ formset.prefix }}-TOTAL_FORMS");
+    document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("formset-container");
+        const addBtn = document.getElementById("add-form");
+        const emptyFormHtml = document.getElementById("empty-form").innerHTML;
+        const totalFormsInput = document.getElementById("id_{{ formset.prefix }}-TOTAL_FORMS");
 
-    function attachRemoveEvents() {
-        container.querySelectorAll(".remove-form").forEach(button => {
-            button.onclick = function() {
-                const formDiv = this.closest(".formset-form");
-                const deleteInput = formDiv.querySelector("input[name$='-DELETE']");
-                if (deleteInput) {
-                    deleteInput.value = "on";
-                    formDiv.style.display = "none";
-                } else {
-                    formDiv.remove();
-                    // Atualiza o total de forms apenas se um novo for removido
-                    let visibleForms = 0;
-                    container.querySelectorAll(".formset-form").forEach(form => {
-                        if (form.style.display !== 'none') {
-                            visibleForms++;
-                        }
-                    });
-                    totalFormsInput.value = visibleForms;
-                }
-            };
+        function attachRemoveEvents() {
+            container.querySelectorAll(".remove-form").forEach(button => {
+                button.onclick = function () {
+                    const formDiv = this.closest(".formset-form");
+                    const deleteInput = formDiv.querySelector("input[name$='-DELETE']");
+                    if (deleteInput) {
+                        deleteInput.value = "on";
+                        formDiv.style.display = "none";
+                    } else {
+                        formDiv.remove();
+                        // Atualiza o total de forms apenas se um novo for removido
+                        let visibleForms = 0;
+                        container.querySelectorAll(".formset-form").forEach(form => {
+                            if (form.style.display !== 'none') {
+                                visibleForms++;
+                            }
+                        });
+                        totalFormsInput.value = visibleForms;
+                    }
+                };
+            });
+        }
+
+        addBtn.addEventListener("click", function () {
+            let formIndex = container.querySelectorAll(".formset-form").length;
+            const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formIndex);
+            const temp = document.createElement("div");
+            temp.innerHTML = newFormHtml.trim();
+            const newFormDiv = temp.firstElementChild;
+            container.appendChild(newFormDiv);
+            totalFormsInput.value = formIndex + 1;
+            attachRemoveEvents();
         });
-    }
 
-    addBtn.addEventListener("click", function() {
-        let formIndex = container.querySelectorAll(".formset-form").length;
-        const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formIndex);
-        const temp = document.createElement("div");
-        temp.innerHTML = newFormHtml.trim();
-        const newFormDiv = temp.firstElementChild;
-        container.appendChild(newFormDiv);
-        totalFormsInput.value = formIndex + 1;
         attachRemoveEvents();
     });
-
-    attachRemoveEvents();
-});
 </script>
 {% endblock %}
