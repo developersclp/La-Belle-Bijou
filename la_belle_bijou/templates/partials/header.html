@@ -15,15 +15,10 @@
     </div>
     <div class="icones">
         {% if not user.is_authenticated %}
-<<<<<<< HEAD
             <a href="{% url 'register' %}" id="bCadastro">Cadastro</a>
             <a href="{% url 'login' %}" id="bEntrar">Entrar</a>
-=======
-        <a href="{% url 'register' %}" id="bCadastro">Cadastro</a>
-        <a href="{% url 'login' %}" id="bEntrar">Entrar</a>
->>>>>>> origin/tela_produtos
         {% endif %}
-        <a href=""><img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="bCarrinho"></a>
+        <a href="{% url 'ver_carrinho' %}"><img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="bCarrinho"></a>
         <a href=""><img src="{% static 'img/perfil.png' %}" alt="Perfil" class="bPerfil"></a>
     </div>
 </header>

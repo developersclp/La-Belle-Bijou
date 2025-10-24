@@ -1,4 +1,4 @@
-import requests
+import requests, base64
 from decimal import Decimal
 from django.views import View
 from django.shortcuts import render, redirect
@@ -55,7 +55,6 @@ class CheckoutPixView(View):
             data_criacao=timezone.now(),
         )
 
-        # 2️⃣ Cria os itens do pedido
         itens_pagamento = []
         for item in cart:
             produto = Produto.objects.get(id=item["id"])
@@ -71,56 +70,85 @@ class CheckoutPixView(View):
                 "amount": int(item["preco"] * 100),
             })
 
-        # 3️⃣ Monta o payload para Pagar.me
         payload = {
-            "api_key": settings.PAGARME_API_KEY,
-            "amount": int(cart.get_total_price() * 100),
-            "items": itens_pagamento,
-            "customer": {
-                "external_id": str(request.user.id),
-                "name": request.user.username,
-                "email": request.user.email,
-                "type": "individual",
-                "country": "br",
+            "is_building": False,
+            "type": "order",
+            "payment_settings": {
+                "accepted_payment_methods": ["pix", "credit_card", "boleto"],
+                "pix_settings": {"expires_in": 3600},
+                "credit_card_settings": {"installments_setup": {"interest_type": "simple"}}
             },
-            "payment_method": "pix",
+            "customer_settings": {
+                "customer": {
+                    "name": request.user.get_full_name() or request.user.username or "Cliente",
+                    "email": request.user.email or "sem-email@example.com",
+                    "type": "individual",
+                    "document": getattr(request.user, "cpf", None),
+                    "phone": getattr(request.user, "telefone", None)
+                }
+            },
+            "cart_settings": {
+                "items": [
+                    {
+                        "name": item["nome"],
+                        "amount": int(item["preco"] * 100),  # valor em centavos
+                        "quantity": item["quantidade"],
+                    } for item in cart
+                ],
+            },
+            # opcional: configurações de retorno após o pagamento
+            # "redirect_url": "https://seu-dominio.com/pagarme/retorno",
         }
+
+        auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
 
         headers = {
-            "Authorization": f"Bearer {settings.PAGARME_API_KEY}",
-            "Content-Type": "application/json",
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authorization": f"Basic {auth}"
         }
 
-        try:
-            response = requests.post(
-                f"{settings.PAGARME_API_URL}/orders",
-                json=payload,
-                headers=headers,
-            )
-            data = response.json()
-            print(data)
+        response = requests.post(
+            f"{settings.PAGARME_API_URL}/paymentlinks",
+            json=payload,
+            headers=headers,
+        )
+        data = response.json()
+        print("STATUS CODE:", response.status_code)
+        print("RESPONSE JSON:", data)
 
-            if response.status_code in [200, 201]:
-                qr_code = data["charges"][0]["last_transaction"]["qr_code"]
-                qr_code_base64 = data["charges"][0]["last_transaction"]["qr_code_base64"]
+        # if response.status_code in [200, 201]:
+        #     qr_code = data["charges"][0]["last_transaction"]["qr_code"]
+        #     qr_code_base64 = data["charges"][0]["last_transaction"]["qr_code_base64"]
 
-                # limpa o carrinho
+        #     cart.clear()
+        #     pedido.status = "AGUARDANDO_PAGAMENTO"
+        #     pedido.save()
+
+        #     return render(
+        #         request,
+        #         "orders/pagamento_pix.html",
+        #         {"pedido": pedido, "qr_code": qr_code, "qr_code_base64": qr_code_base64},
+        #     )
+        
+        if response.status_code in (200, 201):
+            link_pagamento = data.get("url")
+            if link_pagamento:
+                # limpa o carrinho e atualiza status do pedido
                 cart.clear()
+                pedido.status = "AGUARDANDO_PAGAMENTO"
+                pedido.payment_url = link_pagamento  # se tiver campo no model, armazene
+                pedido.save()
 
-                return render(
-                    request,
-                    "orders/pagamento_pix.html",
-                    {"pedido": pedido, "qr_code": qr_code, "qr_code_base64": qr_code_base64},
-                )
-
+                # redireciona cliente para a página de checkout hospedada
+                return redirect(link_pagamento)
             else:
-                messages.error(request, f"Erro ao criar pagamento: {data}")
+                messages.error(request, f"Resposta inesperada da API: {data}")
                 pedido.status = "CANCELADO"
                 pedido.save()
                 return redirect("checkout_pix")
-
-        except Exception as e:
-            messages.error(request, f"Erro de conexão com o Pagar.me: {e}")
+        else:
+            messages.error(request, f"Erro ao criar pagamento: {data}")
             pedido.status = "CANCELADO"
             pedido.save()
             return redirect("checkout_pix")
