@@ -109,7 +109,7 @@ class CheckoutPixView(View):
         }
 
         response = requests.post(
-            f"{settings.PAGARME_API_URL}/paymentlinks",
+            f"{settings.PAGARME_API_URL}/checkout/payment-links",
             json=payload,
             headers=headers,
         )
