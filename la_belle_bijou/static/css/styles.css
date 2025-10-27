@@ -115,3 +115,52 @@ footer {
     justify-content: center;
     align-items: center;
 }
+
+/* Customização para navbar abrir para a esquerda */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Começa fora da tela à direita */
+        bottom: 0;
+        width: 80%; /* Largura do menu */
+        padding: 2rem 1rem;
+        background-color: var(--bs-body-bg);
+        transition: right 0.3s ease-in-out;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        z-index: 1050;
+        overflow-y: auto;
+    }
+    
+    .navbar-collapse.show {
+        right: 0; /* Move para dentro da tela */
+    }
+    
+    /* Ajuste para o container */
+    .navbar > .container-fluid {
+        padding: 0;
+    }
+    
+    /* Estilo para os itens do menu */
+    .navbar-nav {
+        margin-top: 2rem;
+    }
+    
+    /* Overlay de fundo */
+    .navbar-collapse::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .navbar-collapse.show::before {
+        opacity: 1;
+    }
+}
