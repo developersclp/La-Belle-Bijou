@@ -11,10 +11,9 @@ from products.models import Produto
 from .models import Pedido, ItemPedido
 from products.cart import Cart
 from accounts.forms import EnderecoForm
-from datetime import datetime, timedelta, timezone as dt_timezone
 
 
-class CheckoutPixView(View):
+class CheckoutView(View):
     template_name = "orders/checkout.html"
 
     def get(self, request):
@@ -46,7 +45,7 @@ class CheckoutPixView(View):
             )
         else:
             messages.error(request, "Endereço inválido.")
-            return redirect("checkout_pix")
+            return redirect("checkout")
         
         pedido = Pedido.objects.create(
             usuario=request.user,
@@ -123,20 +122,6 @@ class CheckoutPixView(View):
         data = response.json()
         print("STATUS CODE:", response.status_code)
         print("RESPONSE JSON:", data)
-
-        # if response.status_code in [200, 201]:
-        #     qr_code = data["charges"][0]["last_transaction"]["qr_code"]
-        #     qr_code_base64 = data["charges"][0]["last_transaction"]["qr_code_base64"]
-
-        #     cart.clear()
-        #     pedido.status = "AGUARDANDO_PAGAMENTO"
-        #     pedido.save()
-
-        #     return render(
-        #         request,
-        #         "orders/pagamento_pix.html",
-        #         {"pedido": pedido, "qr_code": qr_code, "qr_code_base64": qr_code_base64},
-        #     )
         
         if response.status_code in (200, 201):
             link_pagamento = data.get("url")
@@ -153,12 +138,9 @@ class CheckoutPixView(View):
                 messages.error(request, f"Resposta inesperada da API: {data}")
                 pedido.status = "CANCELADO"
                 pedido.save()
-                return redirect("checkout_pix")
+                return redirect("checkout")
         else:
             messages.error(request, f"Erro ao criar pagamento: {data}")
             pedido.status = "CANCELADO"
             pedido.save()
-            return redirect("checkout_pix")
-
-class Pix(View):
-    template_name = 'orders/pagamento_pix.html'
+            return redirect("checkout")
