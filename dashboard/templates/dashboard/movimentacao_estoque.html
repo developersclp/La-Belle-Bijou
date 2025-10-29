@@ -1,13 +1,99 @@
-<h2>
-  {% if tipo_movimentacao == "entrada" %}
-    Registrar Entrada
-  {% else %}
-    Registrar Saída
-  {% endif %}
-</h2>
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+{% comment %}
+  Carregamos exatamente o mesmo CSS da página de criar produto,
+  para reaproveitar todos os estilos de formulário.
+{% endcomment %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
+{% endblock %}
+
+
+{% comment %}
+  O título principal da página, dinâmico como no seu código original.
+{% endcomment %}
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">
+  {% if tipo_movimentacao == "entrada" %}
+    Registrar Entrada de Estoque
+  {% else %}
+    Registrar Saída de Estoque
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% comment %}
+  A descrição que aparece abaixo do título.
+{% endcomment %}
+{% block header_desc %}
+<p class="text-gray-400 mb-8">Preencha os campos abaixo para registrar a movimentação.</p>
+{% endblock %}
+
+
+{% comment %}
+  Aqui está o conteúdo principal, usando a mesma estrutura de "card"
+  da página de referência.
+{% endcomment %}
+{% block conteudo %}
+<div class="p-8">
+
+  <div class="bg-gray-100 rounded-2xl shadow-lg p-8">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <h2 class="text-lg">Detalhes da Movimentação</h2>
+
+      {% comment %}
+        IMPORTANTE: Abandonamos o {{ form.as_p }} para ter controle total
+        sobre o HTML de cada campo, aplicando os estilos corretos.
+      {% endcomment %}
+
+      <div class="mb-4">
+        <label for="{{ form.produto.id_for_label }}">Produto</label>
+        {{ form.produto }}
+        {% if form.produto.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.produto.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label for="{{ form.quantidade.id_for_label }}">Quantidade</label>
+        {{ form.quantidade }}
+        {% if form.quantidade.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.quantidade.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label for="{{ form.motivo.id_for_label }}">Motivo</label>
+        {{ form.motivo }}
+        {% if form.motivo.errors %}
+          <div class="text-red-500 text-sm mt-1">{{ form.motivo.errors }}</div>
+        {% endif %}
+      </div>
+
+
+      <div class="flex justify-end gap-3 mt-8">
+        
+        <a href="{% url 'produtos-adm' %}" class="btn-cancelar">Cancelar</a>
+
+        <button type="submit" class="btn-salvar">
+          {% if tipo_movimentacao == "entrada" %}
+            Registrar Entrada
+          {% else %}
+            Registrar Saída
+          {% endif %}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<footer class="text-center py-6">
+  <p class="text-gray-500 text-sm">&copy; {% now "Y" %} La belle bijou – Todos os direitos reservados.</p>
+</footer>
+{% endblock %}

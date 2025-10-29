@@ -1,11 +1,46 @@
-<div class="container mt-4">
-    <h2>Editar Usuário</h2>
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
+{% endblock %}
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url 'usuarios-adm' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">Editar Usuário</h1>
+{% endblock %}
+
+{% block header_desc %}
+<p class="text-gray-400 mb-8">Altere as informações do usuário e salve as modificações.</p>
+{% endblock %}
+
+{% block conteudo %}
+<div class="flex items-center justify-center p-8">
+
+    <div class="bg-gray-100 rounded-lg shadow-lg p-8 w-full max-w-3xl">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <h2 class="text-lg mb-6">Dados do Usuário</h2>
+
+            {% for field in form %}
+            <div class="mb-5">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-red-500 text-xs mt-1">
+                        {{ field.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="flex justify-end gap-3 mt-8">
+                <a href="{% url 'usuarios-adm' %}" class="btn-cancelar">Cancelar</a>
+                <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+        </form>
+
+    </div>
 </div>
+{% endblock %}
