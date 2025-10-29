@@ -1,47 +1,80 @@
 {% load static %}
-<!-- <header>
-    <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Logo"></a>
-    <div class="links">
-        {% if categorias %}
-            {% for categoria in categorias %}
-            <a href="#{{ categoria.nome }}">{{ categoria.nome }}</a>
-            {% endfor %}
-        {% else %}
-        <a href="">Joias</a>
-        <a href="">Colares</a>
-        <a href="">Pulseiras</a>
-        <a href="">Piercing</a>
-        {% endif %}
-    </div>
-    <div class="icones">
-        {% if not user.is_authenticated %}
-        <a href="{% url 'register' %}" id="bCadastro">Cadastro</a>
-        <a href="{% url 'login' %}" id="bEntrar">Entrar</a>
-        {% endif %}
-        <a href=""><img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="bCarrinho"></a>
-        <a href=""><img src="{% static 'img/perfil.png' %}" alt="Perfil" class="bPerfil"></a>
-    </div>
-</header> -->
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<header class="navbar navbar-expand-lg custom-navbar">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar scroll</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarScroll">
-      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Link</a>
-        </li>
-      </ul>
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+    </a>
+
+    <div class="navbar-links-desktop d-none d-lg-flex">
+      {% if categorias %}
+        {% for categoria in categorias %}
+          <a href="#{{ categoria.nome }}" class="nav-link-custom">{{ categoria.nome }}</a>
+        {% endfor %}
+      {% else %}
+        <a href="" class="nav-link-custom">Joias</a>
+        <a href="" class="nav-link-custom">Colares</a>
+        <a href="" class="nav-link-custom">Pulseiras</a>
+        <a href="" class="nav-link-custom">Piercing</a>
+      {% endif %}
+    </div>
+
+    <div class="navbar-actions">
+
+      <div class="navbar-icons">
+        <a href="" class="icon-link" aria-label="Carrinho de compras">
+          <img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="icon-img">
+        </a>
+        {% if user.is_authenticated %}
+          <a href="" class="icon-link" aria-label="Perfil do usuário">
+            <img src="{% static 'img/perfil.png' %}" alt="Perfil" class="icon-img">
+          </a>
+        {% endif %}
+      </div>
+
+      {% if not user.is_authenticated %}
+        <div class="desktop-auth-buttons d-none d-lg-flex">
+          <a href="{% url 'register' %}" class="btn-cadastro">Cadastro</a>
+          <a href="{% url 'login' %}" class="btn-entrar">Entrar</a>
+        </div>
+      {% endif %}
+
+      <button class="navbar-toggler custom-toggler d-lg-none" type="button" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="toggler-icon"></span>
+        <span class="toggler-icon"></span>
+        <span class="toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="navbar-collapse-mobile d-lg-none" id="navbarMobile">
+      <div class="mobile-menu-header">
+        <h3>Menu</h3>
+      </div>
+      
+      <div class="mobile-menu-content">
+        {% if not user.is_authenticated %}
+          <div class="mobile-auth-buttons">
+            <a href="{% url 'register' %}" class="btn-cadastro-mobile">Cadastro</a>
+            <a href="{% url 'login' %}" class="btn-entrar-mobile">Entrar</a>
+          </div>
+        {% endif %}
+
+        <nav class="mobile-categories" aria-label="Categorias de produtos">
+          {% if categorias %}
+            {% for categoria in categorias %}
+              <a href="#{{ categoria.nome }}" class="mobile-category-link">{{ categoria.nome }}</a>
+            {% endfor %}
+          {% else %}
+            <a href="" class="mobile-category-link">Joias</a>
+            <a href="" class="mobile-category-link">Colares</a>
+            <a href="" class="mobile-category-link">Pulseiras</a>
+            <a href="" class="mobile-category-link">Piercing</a>
+          {% endif %}
+        </nav>
+      </div>
     </div>
   </div>
-</nav>
+</header>
+
+<!-- Overlay para mobile -->
+<div class="navbar-overlay d-lg-none"></div>
