@@ -12,16 +12,17 @@ class Cart:
         produto_id = str(produto.id) # transforma o id do produto em string (request.session só trabalha bem com chaves de texto)
         if produto_id not in self.cart: # se o produto não estiver no carrinho
             self.cart[produto_id] = { # adiciona as informações do produto
-                "nome": produto.nome,
-                "quantidade": 0,
+               "nome": produto.nome,
+                "quantidade": quantidade,  # <-- CORRIGIDO
                 "preco": str(produto.preco),
                 "imagem": produto.imagem_principal.url if produto.imagem_principal else "",
             }
-        if override:
-            self.cart[produto_id]["quantidade"] = quantidade
-        else: # se o produto já estiver no carrinho adiciona 1 na quantidade
-            self.cart[produto_id]["quantidade"] += quantidade
-        
+        else:
+            if override:
+                self.cart[produto_id]["quantidade"] = quantidade
+            else: # se o produto já estiver no carrinho adiciona 1 na quantidade
+                self.cart[produto_id]["quantidade"] += quantidade
+            
         print(self.session["cart"])
         self.save() # salva na sessão
 

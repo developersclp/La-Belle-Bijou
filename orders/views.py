@@ -11,6 +11,7 @@ from products.models import Produto
 from .models import Pedido, ItemPedido
 from products.cart import Cart
 from accounts.forms import EnderecoForm
+from datetime import datetime, timedelta, timezone as dt_timezone
 
 
 class CheckoutPixView(View):
@@ -55,7 +56,6 @@ class CheckoutPixView(View):
             data_criacao=timezone.now(),
         )
 
-        itens_pagamento = []
         for item in cart:
             produto = Produto.objects.get(id=item["id"])
             ItemPedido.objects.create(
@@ -64,40 +64,47 @@ class CheckoutPixView(View):
                 quantidade=item["quantidade"],
                 preco_unitario=item["preco"],
             )
-            itens_pagamento.append({
-                "name": item["nome"],
-                "quantity": item["quantidade"],
-                "amount": int(item["preco"] * 100),
-            })
-
+        print("🧮 Total do carrinho:", cart.get_total_price())
         payload = {
             "is_building": False,
             "type": "order",
             "payment_settings": {
                 "accepted_payment_methods": ["pix", "credit_card", "boleto"],
                 "pix_settings": {"expires_in": 3600},
-                "credit_card_settings": {"installments_setup": {"interest_type": "simple"}}
+                "credit_card_settings": {
+                    "operation_type": "auth_and_capture",
+                    "installments_setup": {
+                        "interest_type": "simple",
+                        "interest_rate": 0,
+                        "amount": int(cart.get_total_price() * 100),
+                        "max_installments": 12,
+                        "min_installments": 1
+                    }
+                },
+                "boleto_settings": {
+                    "instructions": "Pague o boleto até o vencimento.",
+                    "due_in": 2
+                }
             },
             "customer_settings": {
                 "customer": {
                     "name": request.user.get_full_name() or request.user.username or "Cliente",
                     "email": request.user.email or "sem-email@example.com",
                     "type": "individual",
-                    "document": getattr(request.user, "cpf", None),
-                    "phone": getattr(request.user, "telefone", None)
+                    "document": getattr(request.user, "cpf", None) or "00000000000",
+                    "phone": getattr(request.user, "telefone", None) or "+5511999999999"
                 }
             },
             "cart_settings": {
                 "items": [
                     {
                         "name": item["nome"],
-                        "amount": int(item["preco"] * 100),  # valor em centavos
-                        "quantity": item["quantidade"],
-                    } for item in cart
-                ],
-            },
-            # opcional: configurações de retorno após o pagamento
-            # "redirect_url": "https://seu-dominio.com/pagarme/retorno",
+                        "amount": int(Decimal(item["preco"]) * 100),
+                        "default_quantity": item["quantidade"]
+                    }
+                    for item in cart
+                ]
+            }
         }
 
         auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
@@ -109,7 +116,7 @@ class CheckoutPixView(View):
         }
 
         response = requests.post(
-            f"{settings.PAGARME_API_URL}/checkout/payment-links",
+            f"{settings.PAGARME_API_URL}/paymentlinks",
             json=payload,
             headers=headers,
         )
