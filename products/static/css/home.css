@@ -192,13 +192,38 @@
     }
 }
 
-@media (max-width: 1200px) {
-    .produto-card {
-        flex: 0 0 calc((100% - 60px) / 3); /* 3 cards em telas menores */
-    }
-}
-
 @media (max-width: 768px) {
+    #carouselExampleIndicators {
+        width: 100vw;
+        margin: 0 auto;
+    }
+
+    .imgs-menores {
+        width: 100vw;
+        height: auto;
+        border-radius: 0;
+    }
+    
+    .carousel-control-prev-icon {
+        width: 7vw;
+        height: 7vw;
+        background-size: 7vw;
+    }
+
+    .carousel-control-next-icon {
+        width: 7vw;
+        height: 7vw;
+        background-size: 7vw;
+    }
+
+    .carousel-indicators {
+        
+    }
+
+    .empty {
+        font-size: 1rem;
+    }
+
     .produtos-secao {
         margin: 0 auto;
     }
@@ -222,5 +247,14 @@
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
+    }
+
+    #footer_tela_principal {
+        height: 10vh;
+
+        .conteudo-footer {
+            height: 6vh;
+            font-size: 4vw;
+        }
     }
 }
