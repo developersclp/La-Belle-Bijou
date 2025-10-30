@@ -63,13 +63,13 @@ class CheckoutView(View):
                 quantidade=item["quantidade"],
                 preco_unitario=item["preco"],
             )
-        print("🧮 Total do carrinho:", cart.get_total_price())
+        
         payload = {
             "is_building": False,
             "type": "order",
             "payment_settings": {
                 "accepted_payment_methods": ["pix", "credit_card", "boleto"],
-                "pix_settings": {"expires_in": 3600},
+                "pix_settings": {"expires_in": 1, "discount_percentage": 0},
                 "credit_card_settings": {
                     "operation_type": "auth_and_capture",
                     "installments_setup": {
@@ -82,7 +82,8 @@ class CheckoutView(View):
                 },
                 "boleto_settings": {
                     "instructions": "Pague o boleto até o vencimento.",
-                    "due_in": 2
+                    "due_in": 2,
+                    "discount_percentage": 0,
                 }
             },
             "customer_settings": {
