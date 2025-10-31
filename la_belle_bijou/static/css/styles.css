@@ -7,7 +7,6 @@
     scroll-behavior: smooth;
 }
 
-/* ===== ESTILOS GERAIS DO HEADER ===== */
 .custom-navbar {
     width: 100%;
     height: 12vh;
@@ -24,7 +23,6 @@
     padding: 0;
 }
 
-/* Logo */
 .navbar-brand {
     padding: 0;
     display: flex;
@@ -37,8 +35,6 @@
     width: auto;
 }
 
-/* ===== LAYOUT DESKTOP ===== */
-/* Links centrais - Desktop */
 .navbar-links-desktop {
     position: absolute;
     left: 50%;
@@ -66,7 +62,6 @@
     transform: translateY(-1px);
 }
 
-/* Ações do navbar - Desktop */
 .navbar-actions {
     display: flex;
     align-items: center;
@@ -113,11 +108,11 @@
     color: #fff;
 }
 
-/* Ícones */
 .navbar-icons {
     display: flex;
     align-items: center;
     gap: 0.5vw;
+    margin-right: 3vw;
 }
 
 .icon-link {
