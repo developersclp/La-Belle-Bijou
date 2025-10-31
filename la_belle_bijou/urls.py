@@ -27,6 +27,7 @@ urlpatterns = [
     path('pedidos/', include('orders.urls')),
     path('produtos/', include('products.urls')),
     path("", Home.as_view(), name="home"),  # Esta é a home principal
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

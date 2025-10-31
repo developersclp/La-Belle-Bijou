@@ -31,6 +31,7 @@ class Produto(models.Model):
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     categorias = models.ManyToManyField(Categoria, related_name="produtos")
     imagem_principal = models.ImageField(upload_to="produtos/principal/", null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     objects = ProdutoManager()
 

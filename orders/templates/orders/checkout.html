@@ -1,0 +1,19 @@
+<h1>Finalizar compra</h1>
+
+<form method="post">
+  {% csrf_token %}
+  
+  <h3>Qual o endereço:</h3>
+  {{ endereco.rua }}, {{ endereco.numero }} - {{ endereco.complemento }} | {{ endereco.cep }}
+
+  <h3>Resumo do pedido:</h3>
+  <ul>
+    {% for item in cart %}
+      <li>{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
+    {% endfor %}
+  </ul>
+
+  <p><strong>Total:</strong> R$ {{ cart.get_total_price }}</p>
+
+  <button type="submit">Gerar Pix</button>
+</form>

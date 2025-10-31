@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -29,12 +31,17 @@
                 <div class="input-group">
                     <input type="password" name="password" placeholder="Senha" required><br>
                 </div>
+                <a href="{% url 'reset-senha' %}">Esqueci minha senha</a>
                 <button type="submit">Entrar</button>
             </form>
             
             <div class="login-link">
                 Não tem uma conta? <a href="{% url 'register' %}">clique aqui para cadastrar</a>
             </div>
+            <a href='{% provider_login_url 'google' %}' class='google'>
+                <img class="google-icon" src="../../static/img/google.png" alt="Google logo">
+                | Entrar com Google
+            </a>
         </div>
     </div>
 </body>

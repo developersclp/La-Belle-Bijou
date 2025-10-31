@@ -13,6 +13,9 @@
             {% csrf_token %}
             <button type="submit">logout</button>
         </form>
+        {% if user.is_superuser %}
+            <button onclick="window.location.href='{% url 'produtos-adm' %}'"> Tela de Adm </button>
+        {% endif %}
         <div class="welcome-message">
             <h1>Teste de {{ user.username }}</h1>
         </div>
@@ -47,6 +50,7 @@
 
 <div class="home-content">
 
+  <!-- Na seção de produtos mais vendidos -->
   <div class="produtos-secao">
       <h1 id="subtitulo">Mais populares</h1>
       <div class="produtos-container">
@@ -64,7 +68,7 @@
                   <p class="vendas" style="color: #666; font-size: 0.9rem;">
                       {{ produto.total_vendas }} vendas
                   </p>
-                  <button onclick="event.stopPropagation(); window.location.href='{% url 'teste-carrinho' %}'">
+                  <button onclick="event.stopPropagation(); window.location.href='{% url 'adicionar_carrinho' produto.pk %}'">
                       <p>Adicionar ao carrinho</p>
                   </button>
               </div>
@@ -80,7 +84,6 @@
       <button class="produtos-btn next">&#10095;</button>
   </div>
 
-  <!-- Na seção de categorias - CORRIGIDO -->
   {% for categoria, produtos in categorias_com_produtos %}
   <div class="produtos-secao" id="{{ categoria.nome }}">
       <h1 id="subtitulo">{{ categoria.nome }}</h1>
@@ -95,12 +98,15 @@
                   {% endif %}
                   <h3>{{ produto.nome }}</h3>
                   <p class="preco">R$ {{ produto.preco }}</p>
-                  <button onclick="event.stopPropagation(); window.location.href='{% url 'teste-carrinho' %}'">
+                  <button onclick="event.stopPropagation(); window.location.href='{% url 'adicionar_carrinho' produto.pk %}'">
                       <p>Adicionar ao carrinho</p>
                   </button>
               </div>
           {% empty %}
-          <h1 class="empty">Categoria sem produtos atualmente...</h1>
+            <div class="empty">
+              <h2>Categoria sem produtos</h2>
+              <p>Estamos preparando novidades incríveis para esta categoria!</p>
+            </div>
           {% endfor %}
           </div>
       </div>

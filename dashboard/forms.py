@@ -2,6 +2,9 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.forms.widgets import ClearableFileInput
 from products.models import Produto, ImagemProduto, Categoria, MovimentacaoEstoque
+from accounts.models import CustomUser
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Produtos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 class CustomClearableFileInput(ClearableFileInput):
     initial_text = "Imagem atual"
@@ -11,9 +14,12 @@ class CustomClearableFileInput(ClearableFileInput):
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
-        fields = ["nome", "descricao", "preco", "categorias", "imagem_principal"]
+        fields = ["nome", "descricao", "preco", "categorias", "is_active", "imagem_principal"]
         widgets = {
             "imagem_principal": CustomClearableFileInput
+        }
+        labels = {
+            "is_active": "Ativo"
         }
 
     categorias = forms.ModelMultipleChoiceField( # campo categorias é sobrescrito para personalização
@@ -57,3 +63,22 @@ class MovimentacaoEstoqueForm(forms.ModelForm):
             self.fields["motivo"].choices = [ # define as opções do campo motivo
                 ("VENDA", "Venda para cliente"),
             ] 
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Usuarios =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+class UsuarioForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "first_name", "last_name", "email", "telefone", "cpf", "data_nasc", "is_active", "is_superuser"]
+        labels = {
+            "username": "Nome de Usuário",
+            "first_name": "Primeiro nome",
+            "last_name": "Último nome",
+            "data_nasc": "Data de nascimento"
+        }
+
+        help_texts = {
+            "username": None,
+            "is_active": None,
+            "is_superuser": None,
+        }

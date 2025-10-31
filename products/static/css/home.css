@@ -1,9 +1,3 @@
-/* home.css */
-.home-content {
-    padding: 2rem 0;
-    min-height: calc(100vh - 15vh - 24vh);
-}
-
 .welcome-message {
     text-align: center;
     margin-bottom: 2rem;
@@ -16,13 +10,16 @@
 }
 
 #carouselExampleIndicators {
-    width: 80vw;
-    margin: 3vh auto auto;
+    width: 75vw;
+    margin: 1vh auto auto;
+}
+
+.carousel-inner {
+    border-radius: 3rem;
 }
 
 .imgs-menores {
-    width: 80vw;
-    border-radius: 3rem;
+    width: 75vw;
 }
 
 .carousel-control-prev-icon {
@@ -37,21 +34,21 @@
     background-size: 5vw;
 }
 
-/* SEÇÃO DE PRODUTOS CORRIGIDA */
 .produtos-secao {
     position: relative;
-    width: 90vw;
+    width: 80vw;
     min-height: 400px; /* Altura mínima em vez de fixa */
-    margin: 5vh auto;
-    padding: 2rem 0;
+    margin: 2vh auto;
+    padding: 1rem 0;
 }
 
 #subtitulo {
-    width: 90vw;
-    color: #757575;
-    border-bottom: 3px solid #757575;
-    margin: 0 auto 2rem auto; /* Margem consistente */
+    width: 80vw;
+    color: #252A36;
+    border-bottom: 2px solid #252A36;
+    margin: 0 auto 1rem auto; /* Margem consistente */
     padding-bottom: 0.5rem;
+    font-size: 2rem;
 }
 
 .produtos-container {
@@ -162,11 +159,11 @@
 }
 
 .produtos-btn.prev {
-    left: 0px;
+    left: -3vw;
 }
 
 .produtos-btn.next {
-    right: 0px;
+    right: -3vw;
 }
 
 .preco {
@@ -212,10 +209,10 @@
 }
 
 #footer_tela_principal {
-    height: 24vh;
+    height: 18vh;
 
     & .conteudo-footer {
-        height: 16vh;
+        height: 12vh;
     }
 }
 
@@ -223,6 +220,10 @@
     #carouselExampleIndicators {
         width: 100vw;
         margin: 0 auto;
+    }
+
+    .carousel-inner {
+        border-radius: 0rem;
     }
 
     .imgs-menores {
@@ -243,16 +244,15 @@
         background-size: 7vw;
     }
 
-    .carousel-indicators {
-        
-    }
-
     .produtos-secao {
         margin: 0 auto;
     }
 
+    #subtitulo {
+        font-size: 1.5rem;
+    }
+
     .produtos-container {
-        width: 100vw;
         position: absolute;
         left: 50%;
         top: 1rem;
@@ -262,11 +262,12 @@
     .produtos-track {
         width: 100%;
         gap: 10px;
+        margin: 3rem 0;
     }
 
     .produto-card {
         flex: 0 0 calc((100% - 5px) / 2); /* 2 cards em mobile */
-        min-height: 320px;
+        min-height: 200px;
         padding: .7rem;
     }
     
@@ -274,6 +275,14 @@
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
+    }
+    
+    .produtos-btn.prev {
+        left: -2rem;
+    }
+
+    .produtos-btn.next {
+        right: -2rem;
     }
 
     .empty {
@@ -289,11 +298,6 @@
     }
 
     #footer_tela_principal {
-        height: 10vh;
-
-        .conteudo-footer {
-            height: 6vh;
-            font-size: 4vw;
-        }
+        position: relative;
     }
 }

@@ -8,8 +8,7 @@ class CustomUser(AbstractUser):
     cpf = models.CharField(max_length=11, unique=True)
     data_nasc = models.DateField(null=True, blank=True)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username", "cpf"]
+    REQUIRED_FIELDS = ["email", "cpf"]
 
     def __str__(self):
         return self.email

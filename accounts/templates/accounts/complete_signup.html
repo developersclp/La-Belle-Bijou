@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labelle Bijou - Completar Cadastro</title>
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+</head>
+<body>
+    <div class="cadastro-container">
+        <!-- Lado esquerdo com logo -->
+        <div class="logo-side">
+            <div class="logo-content">
+                <p>Complete seu cadastro e aproveite todas as vantagens!</p>
+            </div>
+        </div>
+        
+        <!-- Lado direito com formulário -->
+        <div class="form-side">
+            <h2>Completar Cadastro</h2>
+            <p class="subtitle">Preencha as informações restantes</p>
+
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="input-group">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

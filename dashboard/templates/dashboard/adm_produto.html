@@ -1,62 +1,75 @@
+{% extends 'dashboard/base_adm.html' %}
 {% load static %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/adm_produto.css' %}">
+{% endblock %}
 
-<h1>Painel - Lista de Produtos</h1>
-<ul>
-    {% for produto in produtos %}
-        <li>{{ produto.nome }} - R$ {{ produto.preco }} || Estoque: {{produto.estoque_atual}}</li>
-        <button onclick="window.location.href='{% url 'upd-produto' produto.pk %}'">editar</button>
-        <button onclick="window.location.href='{% url 'deletar-produto' produto.pk %}'">excluir</button>
-     {% endfor %}
-</ul>
+{% block title %}Gerenciar Produtos - La Belle Bijou{% endblock %}
+{% block header_title %}Gerenciar Produtos{% endblock %}
+{% block header_desc %}Verifique as informações abaixo{% endblock %}
 
-<button onclick="window.location.href='{% url 'add-produto' %}'">Criar Produto</button>
+{% block extra %}
+<div class="toolbar">
+    <form method="get" id="filtro-form" class="filter-container">
+        <div class="search-container">
+            <input type="text" name="pesquisa" placeholder="Pesquisar..." value="{{ request.GET.pesquisa }}">
+        </div>
 
-<button id="openEntrada">Adicionar Entrada</button>
-<button id="add-saida">Adicionar Saída</button>
-
-<div class="overlay" id="overlay" aria-hidden="true">
-<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
-    <button class="close-btn" id="closeEntrada" aria-label="Fechar modal">&times;</button>
-
-    <header class="modal-header">
-    <h2 id="modalTitle">Adicionar Entrada</h2>
-    <p id="modalDesc" class="description">Colocar um form válido</p>
-    </header>
-
-    <form id="modalForm" novalidate>
-    <div class="input-wrap">
-        <label for="inputField" class="visually-hidden">Nome</label>
-        <input id="inputField" type="text" placeholder="Digite algo" required>
-        <div class="error" id="errorMsg">Colocar um form válido</div>
-    </div>
-    <div class="actions">
-        <button type="submit" class="save-btn">Salvar</button>
-    </div>
+        <select name="status" class="status-select" onchange="document.getElementById('filtro-form').submit()">
+            <option value="">Todos</option>
+            <option value="ativo" {% if request.GET.status == 'ativo' %}selected{% endif %}>Ativo</option>
+            <option value="inativo" {% if request.GET.status == 'inativo' %}selected{% endif %}>Inativo</option>
+        </select>
     </form>
-</div>
-</div>
 
-<div class="overlay" id="overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
-      <button class="close-btn" id="closeSaida" aria-label="Fechar modal">&times;</button>
-
-      <header class="modal-header">
-        <h2 id="modalTitle">Adcionar Saída</h2>
-        <p id="modalDesc" class="description">Preencha o conteúdo do modal abaixo.</p>
-      </header>
-
-      <form id="modalForm" novalidate>
-        <div class="input-wrap">
-          <label for="inputField" class="visually-hidden">Nome</label>
-          <input id="inputField" type="text" placeholder="Digite algo" required>
-          <div class="error" id="errorMsg">Por favor, insira um valor válido.</div>
-        </div>
-        <div class="actions">
-          <button type="submit" class="save-btn">Salvar</button>
-        </div>
-      </form>
+    <div class="button-group">
+        <a href="{% url 'add-entrada' %}" class="add-button">Adicionar Entrada</a>
+        <a href="{% url 'add-saida' %}" class="add-button">Adicionar Saída</a>
+        <a href="{% url 'add-produto' %}" class="add-button">Novo Item</a>
     </div>
 </div>
+{% endblock %}
 
-<script src="{% static 'js/adm_produto.js' %}"></script>
+{% block conteudo %}
+<div class="table-container">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Imagem – Nome</th>
+                <th>ID</th>
+                <th>Categorias</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                {% if produto.imagem_principal %}
+                    <td><img src="{{ produto.imagem_principal.url }}" alt="{{ produto.nome }}"> {{ produto.nome }}</td>
+                {% else %}
+                    <td><p>produto sem imagem - {{ produto.nome }}</p></td>
+                {% endif %}
+                <td>{{ produto.id }}</td>
+                <td>{% for c in produto.categorias.all %}{{ c.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                <td>R${{ produto.preco }}</td>
+                <td>{{ produto.estoque_atual }}</td>
+                <td>
+                    {% if produto.is_active %}
+                        <span class="status ativo">Ativo</span>
+                    {% else %}
+                        <span class="status inativo">Inativo</span>
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'upd-produto' produto.id %}" class="edit-icon">✎</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">Nenhum produto encontrado</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

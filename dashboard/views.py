@@ -1,18 +1,38 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from products.models import Produto, Categoria, MovimentacaoEstoque
+from accounts.models import CustomUser
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .forms import ProdutoForm, ImagemProdutoFormSet, CategoriaForm, MovimentacaoEstoqueForm
+from .forms import ProdutoForm, ImagemProdutoFormSet, CategoriaForm, MovimentacaoEstoqueForm, UsuarioForm
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Produtos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 class ListaProdutosAdm(LoginRequiredMixin, UserPassesTestMixin, ListView): 
     model = Produto 
     template_name = "dashboard/adm_produto.html" 
     context_object_name = "produtos"
+    ordering = ['id']
 
     def test_func(self):
         return self.request.user.is_superuser
+
+    def get_queryset(self): # método padrão do django para filtragem
+        queryset = super().get_queryset()
+
+        status = self.request.GET.get('status')
+        pesquisa = self.request.GET.get('pesquisa')
+
+        if status == 'ativo':
+            queryset = queryset.filter(is_active=True)
+        elif status == 'inativo':
+            queryset = queryset.filter(is_active=False)
+
+        if pesquisa:
+            queryset = queryset.filter(nome__icontains=pesquisa)
+
+        return queryset
 
 
 class CriarProduto(LoginRequiredMixin, UserPassesTestMixin, CreateView): # view para criação de produtos
@@ -79,23 +99,28 @@ class UpdateProduto(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def test_func(self):
         return self.request.user.is_superuser
-
-  
-class DeletarProduto(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Produto
-    template_name = "dashboard/deletar_produto.html" 
-    success_url = reverse_lazy("produtos-adm")
-
-    def test_func(self):
-        return self.request.user.is_superuser
     
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Categorias =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
 class ListarCategorias(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Categoria
     template_name = "dashboard/adm_categoria.html"
     context_object_name = "categorias"
+    ordering = ['id']
 
     def test_func(self):
         return self.request.user.is_superuser
+    
+    def get_queryset(self): # método padrão do django para filtragem
+        queryset = super().get_queryset()
+
+        pesquisa = self.request.GET.get('pesquisa')
+
+        if pesquisa:
+            queryset = queryset.filter(nome__icontains=pesquisa)
+
+        return queryset
     
 class CriarCategoria(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Categoria
@@ -172,5 +197,50 @@ class SaidaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.tipo = "SAIDA"
         return super().form_valid(form)
     
+    def test_func(self):
+        return self.request.user.is_superuser
+    
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Usuários =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+class ListaUsuarios(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = CustomUser
+    template_name = 'dashboard/adm_usuarios.html'
+    context_object_name = 'usuarios'
+    ordering = ['id']
+
+    def test_func(self):
+        return self.request.user.is_superuser
+    
+    def get_queryset(self): # método padrão do django para filtragem
+        queryset = super().get_queryset()
+
+        status = self.request.GET.get('status')
+        pesquisa = self.request.GET.get('pesquisa')
+
+        if status == 'ativo':
+            queryset = queryset.filter(is_active=True)
+        elif status == 'inativo':
+            queryset = queryset.filter(is_active=False)
+
+        if pesquisa:
+            queryset = queryset.filter(username__icontains=pesquisa)
+
+        return queryset
+    
+class DetalheUsuario(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = CustomUser
+    template_name = "dashboard/detalhe_usuario.html"
+    context_object_name = "usuario"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+    
+class EditarUsuario(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = CustomUser
+    form_class = UsuarioForm
+    template_name = "dashboard/editar_usuario.html"
+    success_url = reverse_lazy("usuarios-adm")
+
     def test_func(self):
         return self.request.user.is_superuser

@@ -1,0 +1,157 @@
+import requests, base64
+from decimal import Decimal
+from django.views import View
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.conf import settings
+from django.utils import timezone
+
+from accounts.models import Endereco
+from products.models import Produto
+from .models import Pedido, ItemPedido
+from products.cart import Cart
+from accounts.forms import EnderecoForm
+
+
+class CheckoutPixView(View):
+    template_name = "orders/checkout.html"
+
+    def get(self, request):
+        cart = Cart(request)
+        if not len(cart):
+            messages.error(request, "Seu carrinho está vazio.")
+            return redirect("ver_carrinho")
+        else:
+            endereco_form = EnderecoForm()
+            return render(request, self.template_name, {"cart": cart, "endereco": endereco_form})
+
+    def post(self, request):
+        cart = Cart(request)
+        endereco_form = EnderecoForm(request.POST)
+
+        if not len(cart):
+            messages.error(request, "Seu carrinho está vazio.")
+            return redirect("ver_carrinho")
+        
+        
+        if endereco_form.is_valid():
+            endereco_data = endereco_form.cleaned_data
+            endereco, created = Endereco.objects.get_or_create(
+                usuario=request.user,
+                rua=endereco_data["rua"],
+                numero=endereco_data["numero"],
+                complemento=endereco_data.get("complemento", ""),
+                cep=endereco_data["cep"],
+            )
+        else:
+            messages.error(request, "Endereço inválido.")
+            return redirect("checkout_pix")
+        
+        pedido = Pedido.objects.create(
+            usuario=request.user,
+            endereco=endereco,
+            status="PENDENTE",
+            valor_total=cart.get_total_price(),
+            data_criacao=timezone.now(),
+        )
+
+        itens_pagamento = []
+        for item in cart:
+            produto = Produto.objects.get(id=item["id"])
+            ItemPedido.objects.create(
+                pedido=pedido,
+                produto=produto,
+                quantidade=item["quantidade"],
+                preco_unitario=item["preco"],
+            )
+            itens_pagamento.append({
+                "name": item["nome"],
+                "quantity": item["quantidade"],
+                "amount": int(item["preco"] * 100),
+            })
+
+        payload = {
+            "is_building": False,
+            "type": "order",
+            "payment_settings": {
+                "accepted_payment_methods": ["pix", "credit_card", "boleto"],
+                "pix_settings": {"expires_in": 3600},
+                "credit_card_settings": {"installments_setup": {"interest_type": "simple"}}
+            },
+            "customer_settings": {
+                "customer": {
+                    "name": request.user.get_full_name() or request.user.username or "Cliente",
+                    "email": request.user.email or "sem-email@example.com",
+                    "type": "individual",
+                    "document": getattr(request.user, "cpf", None),
+                    "phone": getattr(request.user, "telefone", None)
+                }
+            },
+            "cart_settings": {
+                "items": [
+                    {
+                        "name": item["nome"],
+                        "amount": int(item["preco"] * 100),  # valor em centavos
+                        "quantity": item["quantidade"],
+                    } for item in cart
+                ],
+            },
+            # opcional: configurações de retorno após o pagamento
+            # "redirect_url": "https://seu-dominio.com/pagarme/retorno",
+        }
+
+        auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
+
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authorization": f"Basic {auth}"
+        }
+
+        response = requests.post(
+            f"{settings.PAGARME_API_URL}/checkout/payment-links",
+            json=payload,
+            headers=headers,
+        )
+        data = response.json()
+        print("STATUS CODE:", response.status_code)
+        print("RESPONSE JSON:", data)
+
+        # if response.status_code in [200, 201]:
+        #     qr_code = data["charges"][0]["last_transaction"]["qr_code"]
+        #     qr_code_base64 = data["charges"][0]["last_transaction"]["qr_code_base64"]
+
+        #     cart.clear()
+        #     pedido.status = "AGUARDANDO_PAGAMENTO"
+        #     pedido.save()
+
+        #     return render(
+        #         request,
+        #         "orders/pagamento_pix.html",
+        #         {"pedido": pedido, "qr_code": qr_code, "qr_code_base64": qr_code_base64},
+        #     )
+        
+        if response.status_code in (200, 201):
+            link_pagamento = data.get("url")
+            if link_pagamento:
+                # limpa o carrinho e atualiza status do pedido
+                cart.clear()
+                pedido.status = "AGUARDANDO_PAGAMENTO"
+                pedido.payment_url = link_pagamento  # se tiver campo no model, armazene
+                pedido.save()
+
+                # redireciona cliente para a página de checkout hospedada
+                return redirect(link_pagamento)
+            else:
+                messages.error(request, f"Resposta inesperada da API: {data}")
+                pedido.status = "CANCELADO"
+                pedido.save()
+                return redirect("checkout_pix")
+        else:
+            messages.error(request, f"Erro ao criar pagamento: {data}")
+            pedido.status = "CANCELADO"
+            pedido.save()
+            return redirect("checkout_pix")
+
+class Pix(View):
+    template_name = 'orders/pagamento_pix.html'
