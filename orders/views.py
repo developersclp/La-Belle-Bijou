@@ -69,7 +69,7 @@ class CheckoutView(View):
             "type": "order",
             "payment_settings": {
                 "accepted_payment_methods": ["pix", "credit_card", "boleto"],
-                "pix_settings": {"expires_in": 1, "discount_percentage": 0},
+                "pix_settings": {"expires_in": 3600, "discount_percentage": 0},
                 "credit_card_settings": {
                     "operation_type": "auth_and_capture",
                     "installments_setup": {

@@ -40,7 +40,7 @@ SECRET_KEY = 'django-insecure-(c!!0d%(rwvdl!r_q0h!wxz50$^6_sw7f_i!c4tn+t6hvv9=3l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["lucasbeni.pythonanywhere.com"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -130,7 +130,6 @@ DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
         conn_max_age=600,
-        ssl_require=True
     )
 }
 
