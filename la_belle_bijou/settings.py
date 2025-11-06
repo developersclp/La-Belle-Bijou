@@ -25,11 +25,21 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Static
+# Arquivos estáticos
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Diretórios adicionais (para desenvolvimento)
 STATICFILES_DIRS = [
-    BASE_DIR / 'la_belle_bijou' / 'static',   # <- registre o diretório do projeto
+    os.path.join(BASE_DIR, 'la_belle_bijou', 'static'),
 ]
+
+# Arquivos de mídia (uploads de imagens)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Durante o deploy no Render, o debug deve ser False
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -74,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     "allauth.account.middleware.AccountMiddleware",
     'accounts.middleware.CompleteProfileMiddleware',
@@ -163,16 +174,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = "/static/"
-
-# Para coletar os arquivos estáticos no deploy
-if not DEBUG:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
