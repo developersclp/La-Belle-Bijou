@@ -162,37 +162,40 @@ class PagarmeWebhookView(View):
     def post(self, request, *args, **kwargs):
         try:
             payload = json.loads(request.body)
+            event_type = payload.get("type")
+            order_data = payload.get("data", {})
         except json.JSONDecodeError:
             print("❌ JSON inválido recebido:", request.body)
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
 
-        event_type = payload.get("type")
-        data_obj = payload.get("data", {})
-
-        # Pode vir de order OU de charge
-        pagarme_id = (
-            data_obj.get("id")
-            or data_obj.get("code")
-            or data_obj.get("order", {}).get("id")
-            or data_obj.get("order", {}).get("code")
-            or data_obj.get("payment_link", {}).get("id")
+        paymentlink_code = (
+            order_data.get("integration", {}).get("code")
+            or order_data.get("code")
+            or order_data.get("charges", [{}])[0].get("code")
         )
 
-        if not pagarme_id:
-            print("⚠️ Nenhum ID encontrado no webhook.")
-            return JsonResponse({"message": "ID ausente"}, status=200)
+        if not paymentlink_code:
+            print("⚠️ Nenhum ID de order encontrado no webhook.")
+            return JsonResponse({"message": "Order ID ausente"}, status=200)
 
-        pedido = Pedido.objects.filter(pagarme_id=pagarme_id).first()
+        pedido = Pedido.objects.filter(pagarme_id=paymentlink_code).first()
+
         if not pedido:
-            print(f"❌ Nenhum pedido encontrado com pagarme_id={pagarme_id}")
+            print(f"❌ Nenhum pedido encontrado com pagarme_id={paymentlink_code}")
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
-        if event_type in ["order.paid", "payment.paid", "charge.paid"]:
+        if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
             pedido.data_pagamento = timezone.now()
-        elif event_type in ["order.canceled", "payment.canceled", "charge.failed", "charge.canceled", "order.closed", "order.payment_failed", "payment.failed",]:
+        elif event_type in [
+            "order.canceled",
+            "payment.canceled",
+            "order.closed",
+            "order.payment_failed",
+            "payment.failed",
+        ]:
             pedido.status = "CANCELADO"
         else:
             print(f"ℹ️ Evento ignorado: {event_type}")
