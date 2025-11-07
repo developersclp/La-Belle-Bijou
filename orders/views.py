@@ -161,15 +161,18 @@ class PagarmeWebhookView(View):
             payload = json.loads(request.body)
             event_type = payload.get("type")
             data = payload.get("data", {})
-            pagarme_order_id = data.get("id")
+            pagarme_order_id = data.get("object", {}).get("id")
         except json.JSONDecodeError:
-            return HttpResponseBadRequest("Invalid JSON")
+            print("❌ JSON inválido recebido:", request.body)
+            return JsonResponse({"message": "JSON inválido"}, status=200)
 
-        print("📩 Webhook recebido:", payload)
+        print("📩 Webhook recebido:", json.dumps(payload, indent=2))
 
         if not pagarme_order_id:
-            return HttpResponseBadRequest("Order ID ausente")
+            print("⚠️ Nenhum order_id encontrado no payload")
+            return JsonResponse({"message": "Order ID ausente"}, status=200)
 
+        # Buscar detalhes da order no Pagar.me
         auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
         headers = {"Authorization": f"Basic {auth}"}
         response = requests.get(
@@ -178,21 +181,24 @@ class PagarmeWebhookView(View):
         )
 
         if response.status_code != 200:
-            print("Erro ao buscar detalhes da ordem:", response.text)
-            return HttpResponseBadRequest("Erro ao consultar a ordem")
+            print("❌ Erro ao consultar order:", response.text)
+            return JsonResponse({"message": "Erro consultando order"}, status=200)
 
         order_data = response.json()
         metadata = order_data.get("metadata", {})
         pedido_id = metadata.get("pedido_id")
 
         if not pedido_id:
-            return HttpResponseBadRequest("Pedido não encontrado no metadata")
+            print("⚠️ Pedido ID ausente no metadata:", metadata)
+            return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
         try:
             pedido = Pedido.objects.get(id=pedido_id)
         except Pedido.DoesNotExist:
-            return HttpResponseBadRequest("Pedido não encontrado")
+            print("❌ Pedido não encontrado no banco:", pedido_id)
+            return JsonResponse({"message": "Pedido não existe"}, status=200)
 
+        # Atualizar status
         if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
         elif event_type in [
@@ -204,8 +210,9 @@ class PagarmeWebhookView(View):
         ]:
             pedido.status = "CANCELADO"
         else:
-            print(f"Evento {event_type} não tratado.")
-            return JsonResponse({"message": "Evento ignorado."})
+            print(f"ℹ️ Evento ignorado: {event_type}")
+            return JsonResponse({"message": "Evento ignorado"}, status=200)
 
         pedido.save()
-        return JsonResponse({"message": "Webhook recebido com sucesso."})
+        print(f"✅ Pedido {pedido.id} atualizado para {pedido.status}")
+        return JsonResponse({"message": "Webhook processado com sucesso"}, status=200)
