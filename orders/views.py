@@ -166,6 +166,7 @@ class PagarmeWebhookView(View):
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
+        print(f"order id: {order_id}")
 
         if not order_id:
             print("⚠️ Nenhum order_id encontrado no payload")
@@ -178,8 +179,8 @@ class PagarmeWebhookView(View):
             f"{settings.PAGARME_API_URL}/orders/{order_id}",
             headers=headers,
         )
-
-        if response.status_code != 200:
+        print(f"Status: {response.status_code}")
+        if response.status_code not in [200, 201]:
             print("❌ Erro ao consultar order:", response.text)
             return JsonResponse({"message": "Erro consultando order"}, status=200)
 
