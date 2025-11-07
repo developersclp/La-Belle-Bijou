@@ -160,15 +160,14 @@ class PagarmeWebhookView(View):
         try:
             payload = json.loads(request.body)
             event_type = payload.get("type")
-            data = payload.get("data", {})
-            pagarme_order_id = data.get("object", {}).get("id")
+            order_id = payload.get("data", {}).get("id")
         except json.JSONDecodeError:
             print("❌ JSON inválido recebido:", request.body)
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
 
-        if not pagarme_order_id:
+        if not order_id:
             print("⚠️ Nenhum order_id encontrado no payload")
             return JsonResponse({"message": "Order ID ausente"}, status=200)
 
@@ -176,7 +175,7 @@ class PagarmeWebhookView(View):
         auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
         headers = {"Authorization": f"Basic {auth}"}
         response = requests.get(
-            f"{settings.PAGARME_API_URL}/orders/{pagarme_order_id}",
+            f"{settings.PAGARME_API_URL}/orders/{order_id}",
             headers=headers,
         )
 
