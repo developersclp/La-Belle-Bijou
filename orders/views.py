@@ -132,8 +132,7 @@ class CheckoutView(View):
         
         if response.status_code in (200, 201):
             link_pagamento = data.get("url")
-            order_info = data.get("order", {})
-            pagarme_order_id = order_info.get("id")
+            pagarme_order_id = data.get("id")
             if link_pagamento:
                 # limpa o carrinho e atualiza status do pedido
                 cart.clear()
@@ -171,17 +170,21 @@ class PagarmeWebhookView(View):
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
 
-        order_id = order_data.get("id")
+        paymentlink_code = (
+            order_data.get("integration", {}).get("code")
+            or order_data.get("code")
+            or order_data.get("charges", [{}])[0].get("code")
+        )
 
-        if not order_id:
+        if not paymentlink_code:
             print("⚠️ Nenhum ID de order encontrado no webhook.")
             return JsonResponse({"message": "Order ID ausente"}, status=200)
 
         # Busca o pedido com base no ID da order do Pagar.me
-        pedido = Pedido.objects.filter(pagarme_id=order_id).first()
+        pedido = Pedido.objects.filter(pagarme_id=paymentlink_code).first()
 
         if not pedido:
-            print(f"❌ Nenhum pedido encontrado com pagarme_id={order_id}")
+            print(f"❌ Nenhum pedido encontrado com pagarme_id={paymentlink_code}")
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
         # Atualiza status conforme o evento recebido
