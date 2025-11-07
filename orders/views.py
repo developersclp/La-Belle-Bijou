@@ -132,11 +132,15 @@ class CheckoutView(View):
         
         if response.status_code in (200, 201):
             link_pagamento = data.get("url")
+            order_info = data.get("order", {})
+            pagarme_order_id = order_info.get("id")
             if link_pagamento:
                 # limpa o carrinho e atualiza status do pedido
                 cart.clear()
                 pedido.status = "AGUARDANDO_PAGAMENTO"
-                pedido.payment_url = link_pagamento  # se tiver campo no model, armazene
+                pedido.payment_url = link_pagamento
+                if pagarme_order_id:
+                    pedido.pagarme_id = pagarme_order_id
                 pedido.save()
 
                 # redireciona cliente para a página de checkout hospedada
@@ -161,24 +165,24 @@ class PagarmeWebhookView(View):
             payload = json.loads(request.body)
             event_type = payload.get("type")
             order_data = payload.get("data", {})
-            metadata = order_data.get("metadata", {})
         except json.JSONDecodeError:
             print("❌ JSON inválido recebido:", request.body)
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
 
-        pedido_id = metadata.get("pedido_id")
-        if not pedido_id:
-            print("⚠️ Pedido ID ausente no metadata:", metadata)
-            return JsonResponse({"message": "Pedido não encontrado"}, status=200)
+        order_id = order_data.get("id")
 
-        # Tenta buscar o pedido no banco
-        try:
-            pedido = Pedido.objects.get(id=pedido_id)
-        except Pedido.DoesNotExist:
-            print("❌ Pedido não encontrado no banco:", pedido_id)
-            return JsonResponse({"message": "Pedido não existe"}, status=200)
+        if not order_id:
+            print("⚠️ Nenhum ID de order encontrado no webhook.")
+            return JsonResponse({"message": "Order ID ausente"}, status=200)
+
+        # Busca o pedido com base no ID da order do Pagar.me
+        pedido = Pedido.objects.filter(pagarme_id=order_id).first()
+
+        if not pedido:
+            print(f"❌ Nenhum pedido encontrado com pagarme_id={order_id}")
+            return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
         # Atualiza status conforme o evento recebido
         if event_type in ["order.paid", "payment.paid"]:
