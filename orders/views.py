@@ -1,16 +1,21 @@
-import requests, base64
+import requests, base64, json
 from decimal import Decimal
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.conf import settings
 from django.utils import timezone
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from accounts.models import Endereco
 from products.models import Produto
 from .models import Pedido, ItemPedido
 from products.cart import Cart
 from accounts.forms import EnderecoForm
+
+from .models import Pedido
 
 
 class CheckoutView(View):
@@ -104,7 +109,8 @@ class CheckoutView(View):
                     }
                     for item in cart
                 ]
-            }
+            },
+            "metadata": { "pedido_id": pedido.id }
         }
 
         auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
@@ -145,3 +151,61 @@ class CheckoutView(View):
             pedido.status = "CANCELADO"
             pedido.save()
             return redirect("checkout")
+        
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class PagarmeWebhookView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            payload = json.loads(request.body)
+            event_type = payload.get("type")
+            data = payload.get("data", {})
+            pagarme_order_id = data.get("id")
+        except json.JSONDecodeError:
+            return HttpResponseBadRequest("Invalid JSON")
+
+        print("📩 Webhook recebido:", payload)
+
+        if not pagarme_order_id:
+            return HttpResponseBadRequest("Order ID ausente")
+
+        auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
+        headers = {"Authorization": f"Basic {auth}"}
+        response = requests.get(
+            f"{settings.PAGARME_API_URL}/orders/{pagarme_order_id}",
+            headers=headers,
+        )
+
+        if response.status_code != 200:
+            print("Erro ao buscar detalhes da ordem:", response.text)
+            return HttpResponseBadRequest("Erro ao consultar a ordem")
+
+        order_data = response.json()
+        metadata = order_data.get("metadata", {})
+        pedido_id = metadata.get("pedido_id")
+
+        if not pedido_id:
+            return HttpResponseBadRequest("Pedido não encontrado no metadata")
+
+        try:
+            pedido = Pedido.objects.get(id=pedido_id)
+        except Pedido.DoesNotExist:
+            return HttpResponseBadRequest("Pedido não encontrado")
+
+        if event_type in ["order.paid", "payment.paid"]:
+            pedido.status = "PAGO"
+        elif event_type in [
+            "order.canceled",
+            "payment.canceled",
+            "order.closed",
+            "order.payment_failed",
+            "payment.failed",
+        ]:
+            pedido.status = "CANCELADO"
+        else:
+            print(f"Evento {event_type} não tratado.")
+            return JsonResponse({"message": "Evento ignorado."})
+
+        pedido.save()
+        return JsonResponse({"message": "Webhook recebido com sucesso."})
