@@ -160,45 +160,27 @@ class PagarmeWebhookView(View):
         try:
             payload = json.loads(request.body)
             event_type = payload.get("type")
-            order_id = payload.get("data", {}).get("id")
+            order_data = payload.get("data", {})
+            metadata = order_data.get("metadata", {})
         except json.JSONDecodeError:
             print("❌ JSON inválido recebido:", request.body)
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
-        print(f"order id: {order_id}")
 
-        if not order_id:
-            print("⚠️ Nenhum order_id encontrado no payload")
-            return JsonResponse({"message": "Order ID ausente"}, status=200)
-
-        # Buscar detalhes da order no Pagar.me
-        auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
-        headers = {"Authorization": f"Basic {auth}"}
-        response = requests.get(
-            f"{settings.PAGARME_API_URL}/orders/{order_id}",
-            headers=headers,
-        )
-        print(f"Status: {response.status_code}")
-        if response.status_code not in [200, 201]:
-            print("❌ Erro ao consultar order:", response.text)
-            return JsonResponse({"message": "Erro consultando order"}, status=200)
-
-        order_data = response.json()
-        metadata = order_data.get("metadata", {})
         pedido_id = metadata.get("pedido_id")
-
         if not pedido_id:
             print("⚠️ Pedido ID ausente no metadata:", metadata)
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
+        # Tenta buscar o pedido no banco
         try:
             pedido = Pedido.objects.get(id=pedido_id)
         except Pedido.DoesNotExist:
             print("❌ Pedido não encontrado no banco:", pedido_id)
             return JsonResponse({"message": "Pedido não existe"}, status=200)
 
-        # Atualizar status
+        # Atualiza status conforme o evento recebido
         if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
         elif event_type in [
