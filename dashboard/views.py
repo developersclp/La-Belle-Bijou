@@ -1,9 +1,10 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from products.models import Produto, Categoria, MovimentacaoEstoque
 from accounts.models import CustomUser
+from orders.models import Pedido, ItemPedido
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .forms import ProdutoForm, ImagemProdutoFormSet, CategoriaForm, MovimentacaoEstoqueForm, UsuarioForm
+from .forms import ProdutoForm, ImagemProdutoFormSet, CategoriaForm, MovimentacaoEstoqueForm, UsuarioForm, PedidoForm
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
 
@@ -244,3 +245,46 @@ class EditarUsuario(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.request.user.is_superuser
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Pedidos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+class ListaPedidos(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Pedido
+    template_name = "dashboard/adm_pedidos.html"
+    context_object_name = "pedidos"
+    ordering = ["id"]
+
+    def get_queryset(self): # método padrão do django para filtragem
+        queryset = super().get_queryset()
+
+        status = self.request.GET.get('status')
+        pesquisa = self.request.GET.get('pesquisa')
+
+        if status == 'Pendente':
+            queryset = queryset.filter(status="PENDENTE")
+        elif status == 'Pago':
+            queryset = queryset.filter(status="PAGO")
+        elif status == 'Cancelado':
+            queryset = queryset.filter(status="CANCELADO")
+        elif status == 'Aguardando Pagamento':
+            queryset = queryset.filter(status="AGUARDANDO_PAGAMENTO")
+
+        if pesquisa:
+            queryset = queryset.filter(id__istartswith=pesquisa)
+
+        return queryset
+
+    def test_func(self):
+        return self.request.user.is_superuser
+    
+class EditarPedido(UpdateView):
+    model = Pedido
+    form_class = PedidoForm
+    template_name = "dashboard/editar_pedido.html"
+    context_object_name = "pedido"
+    success_url = "pedidos-adm"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["itens_pedido"] = ItemPedido.objects.filter(pedido=self.object)
+        return context

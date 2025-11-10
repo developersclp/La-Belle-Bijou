@@ -165,7 +165,6 @@ class PagarmeWebhookView(View):
             event_type = payload.get("type")
             order_data = payload.get("data", {})
         except json.JSONDecodeError:
-            print("❌ JSON inválido recebido:", request.body)
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
         print("📩 Webhook recebido:", json.dumps(payload, indent=2))
@@ -177,13 +176,11 @@ class PagarmeWebhookView(View):
         )
 
         if not paymentlink_code:
-            print("⚠️ Nenhum ID de order encontrado no webhook.")
             return JsonResponse({"message": "Order ID ausente"}, status=200)
 
         pedido = Pedido.objects.filter(pagarme_id=paymentlink_code).first()
 
         if not pedido:
-            print(f"❌ Nenhum pedido encontrado com pagarme_id={paymentlink_code}")
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
 
         if event_type in ["order.paid", "payment.paid"]:
@@ -198,9 +195,7 @@ class PagarmeWebhookView(View):
         ]:
             pedido.status = "CANCELADO"
         else:
-            print(f"ℹ️ Evento ignorado: {event_type}")
             return JsonResponse({"message": "Evento ignorado"}, status=200)
 
         pedido.save()
-        print(f"✅ Pedido {pedido.id} atualizado para {pedido.status}")
         return JsonResponse({"message": "Webhook processado com sucesso"}, status=200)
