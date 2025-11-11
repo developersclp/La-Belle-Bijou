@@ -72,6 +72,7 @@ class CheckoutView(View):
         payload = {
             "is_building": False,
             "type": "order",
+            "max_paid_sessions": 1,
             "payment_settings": {
                 "accepted_payment_methods": ["pix", "credit_card", "boleto"],
                 "pix_settings": {"expires_in": 3600, "discount_percentage": 0},
