@@ -73,7 +73,10 @@
                   </button>
               </div>
               {% empty %}
-              <h1 class="empty">Sem produtos vendidos até o momento...</h1>
+              <div class="empty">
+                <h2>Categoria sem produtos</h2>
+                <p>Estamos preparando novidades incríveis para esta categoria!</p>
+              </div>
           {% endfor %}
           </div>
       </div>
@@ -81,7 +84,6 @@
       <button class="produtos-btn next">&#10095;</button>
   </div>
 
-  <!-- Na seção de categorias - CORRIGIDO -->
   {% for categoria, produtos in categorias_com_produtos %}
   <div class="produtos-secao" id="{{ categoria.nome }}">
       <h1 id="subtitulo">{{ categoria.nome }}</h1>
@@ -101,7 +103,10 @@
                   </button>
               </div>
           {% empty %}
-          <h1 class="empty">Categoria sem produtos atualmente...</h1>
+            <div class="empty">
+              <h2>Categoria sem produtos</h2>
+              <p>Estamos preparando novidades incríveis para esta categoria!</p>
+            </div>
           {% endfor %}
           </div>
       </div>
