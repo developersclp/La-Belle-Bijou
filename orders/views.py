@@ -41,13 +41,6 @@ class CalcularFreteView(View):
 
             if endereco_form.is_valid():
                 endereco_data = endereco_form.cleaned_data
-                endereco, created = Endereco.objects.get_or_create(
-                    usuario=request.user,
-                    rua=endereco_data["rua"],
-                    numero=endereco_data["numero"],
-                    complemento=endereco_data.get("complemento", ""),
-                    cep=endereco_data["cep"],
-                )
                 cep_destino = endereco_data["cep"]
             else:
                 messages.error(request, "Endereço inválido.")
@@ -101,10 +94,10 @@ class CalcularFreteView(View):
 
             request.session["opcoes_envio"] = opcoes_envio
             request.session["endereco"] = {
-                "rua": endereco.rua,
-                "numero": endereco.numero,
-                "complemento": endereco.complemento,
-                "cep": endereco.cep,
+                "rua": endereco_data["rua"],
+                "numero": endereco_data["numero"],
+                "complemento": endereco_data.get("complemento", ""),
+                "cep": endereco_data["cep"],
             }
             request.session.modified = True
 
