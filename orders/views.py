@@ -17,6 +17,123 @@ from accounts.forms import EnderecoForm
 
 from .models import Pedido
 
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Frete =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+class CalcularFreteView(View):
+    template_name = "orders/calcular-frete.html"
+
+    def get(self, request):
+        cart = Cart(request)
+        if not len(cart):
+            messages.error(request, "Seu carrinho está vazio.")
+            return redirect("ver_carrinho")
+        endereco_form = EnderecoForm()
+        return render(request, self.template_name, {"cart": cart, "endereco": endereco_form})
+
+    def post(self, request, *args, **kwargs):
+        try:
+            cart = Cart(request)
+            endereco_form = EnderecoForm(request.POST)
+
+            if not len(cart):
+                messages.error(request, "Seu carrinho está vazio.")
+                return redirect("ver_carrinho")
+
+            if endereco_form.is_valid():
+                endereco_data = endereco_form.cleaned_data
+                endereco, created = Endereco.objects.get_or_create(
+                    usuario=request.user,
+                    rua=endereco_data["rua"],
+                    numero=endereco_data["numero"],
+                    complemento=endereco_data.get("complemento", ""),
+                    cep=endereco_data["cep"],
+                )
+                cep_destino = endereco_data["cep"]
+            else:
+                messages.error(request, "Endereço inválido.")
+                return redirect("calcular-frete")
+
+            cep_origem = "01001-000"
+
+            produtos = []
+            for item in cart:
+                produto = Produto.objects.get(id=item["id"])
+                produtos.append({
+                    "weight": float(produto.peso),
+                    "width": float(produto.largura),
+                    "height": float(produto.altura),
+                    "length": float(produto.comprimento),
+                    "quantity": item["quantidade"]
+                })
+
+            payload = {
+                "from": {"postal_code": cep_origem},
+                "to": {"postal_code": cep_destino},
+                "services": "1,2,17",
+                "options": {"insurance_value": float(cart.get_total_price())},
+                "products": produtos
+            }
+
+            headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}"
+            }
+
+            response = requests.post(settings.SUPERFRETE_API_URL, json=payload, headers=headers)
+
+            if response.status_code != 200:
+                messages.error(request, "Erro ao consultar API do SuperFrete.")
+                return redirect("calcular-frete")
+
+            data = response.json()
+            servicos = data.get("data") if isinstance(data, dict) else data
+
+            opcoes_envio = []
+            for servico in servicos or []:
+                opcoes_envio.append({
+                    "nome": servico.get("company", {}).get("name"),
+                    "servico": servico.get("name"),
+                    "valor": servico.get("price"),
+                    "prazo": servico.get("delivery_time"),
+                    "logo": servico.get("company", {}).get("picture")
+                })
+
+            request.session["opcoes_envio"] = opcoes_envio
+            request.session["endereco"] = {
+                "rua": endereco.rua,
+                "numero": endereco.numero,
+                "complemento": endereco.complemento,
+                "cep": endereco.cep,
+            }
+            request.session.modified = True
+
+            return render(request, self.template_name, {
+                "cart": cart,
+                "endereco": endereco_form,
+                "opcoes_envio": opcoes_envio
+            })
+
+        except Exception as e:
+            messages.error(request, f"Erro ao calcular frete: {e}")
+            return redirect("calcular-frete")
+        
+class EscolherFreteView(View):
+    def post(self, request, *args, **kwargs):
+        frete_valor = request.POST.get("frete_escolhido")
+        servico_nome = request.POST.get("servico_nome")
+
+        if not frete_valor:
+            messages.error(request, "Selecione uma opção de frete.")
+            return redirect("calcular-frete")
+
+        request.session["frete_escolhido"] = float(frete_valor)
+        request.session["frete_servico"] = servico_nome
+        request.session.modified = True
+
+        return redirect("checkout")
+        
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Pagarme =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 class CheckoutView(View):
     template_name = "orders/checkout.html"
@@ -26,21 +143,33 @@ class CheckoutView(View):
         if not len(cart):
             messages.error(request, "Seu carrinho está vazio.")
             return redirect("ver_carrinho")
-        else:
-            endereco_form = EnderecoForm()
-            return render(request, self.template_name, {"cart": cart, "endereco": endereco_form})
 
+        frete_valor = request.session.get("frete_escolhido", 0)
+        frete_servico = request.session.get("frete_servico", "Não selecionado")
+        endereco = request.session.get("endereco", None)
+        total_com_frete = cart.get_total_price() + Decimal(frete_valor)
+
+        context = {
+            "cart": cart,
+            "frete_valor": frete_valor,
+            "frete_servico": frete_servico,
+            "total_com_frete": total_com_frete,
+            "endereco": endereco,
+        }
+
+        return render(request, self.template_name, context)
+    
     def post(self, request):
         cart = Cart(request)
-        endereco_form = EnderecoForm(request.POST)
+        endereco_data = request.session.get("endereco")
+        frete_valor = Decimal(request.session.get("frete_escolhido", 0))
+        frete_servico = request.session.get("frete_servico", "Não selecionado")
 
         if not len(cart):
             messages.error(request, "Seu carrinho está vazio.")
             return redirect("ver_carrinho")
-        
-        
-        if endereco_form.is_valid():
-            endereco_data = endereco_form.cleaned_data
+
+        if endereco_data:
             endereco, created = Endereco.objects.get_or_create(
                 usuario=request.user,
                 rua=endereco_data["rua"],
@@ -49,14 +178,16 @@ class CheckoutView(View):
                 cep=endereco_data["cep"],
             )
         else:
-            messages.error(request, "Endereço inválido.")
-            return redirect("checkout")
-        
+            messages.error(request, "Endereço não encontrado. Volte e preencha novamente.")
+            return redirect("calcular-frete")
+
+        total_com_frete = cart.get_total_price() + frete_valor
+
         pedido = Pedido.objects.create(
             usuario=request.user,
             endereco=endereco,
             status="PENDENTE",
-            valor_total=cart.get_total_price(),
+            valor_total=total_com_frete,
             data_criacao=timezone.now(),
         )
 
@@ -81,7 +212,7 @@ class CheckoutView(View):
                     "installments_setup": {
                         "interest_type": "simple",
                         "interest_rate": 0,
-                        "amount": int(cart.get_total_price() * 100),
+                        "amount": int(total_com_frete * 100),
                         "max_installments": 12,
                         "min_installments": 1
                     }

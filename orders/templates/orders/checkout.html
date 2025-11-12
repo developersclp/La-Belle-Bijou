@@ -1,19 +1,26 @@
-<h1>Finalizar compra</h1>
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Checkout</h2>
+
+<h4>Itens do Carrinho:</h4>
+<ul>
+  {% for item in cart %}
+    <li>{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
+  {% endfor %}
+</ul>
+
+<p><strong>Subtotal:</strong> R$ {{ cart.get_total_price }}</p>
+<h3>Endereço de entrega</h3>
+<p>{{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento }} - CEP {{ endereco.cep }}</p>
+<p><strong>Frete ({{ frete_servico }}):</strong> R$ {{ frete_valor|floatformat:2 }}</p>
+<hr>
+<h3>Total com frete: R$ {{ total_com_frete|floatformat:2 }}</h3>
 
 <form method="post">
   {% csrf_token %}
-  
-  <h3>Qual o endereço:</h3>
-  {{ endereco.rua }}, {{ endereco.numero }} - {{ endereco.complemento }} | {{ endereco.cep }}
-
-  <h3>Resumo do pedido:</h3>
-  <ul>
-    {% for item in cart %}
-      <li>{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
-    {% endfor %}
-  </ul>
-
-  <p><strong>Total:</strong> R$ {{ cart.get_total_price }}</p>
-
-  <button type="submit">Ir para o pagamento</button>
+  <button type="submit" style="padding:10px 20px; background:green; color:white; border:none; border-radius:5px;">
+    Prosseguir para pagamento
+  </button>
 </form>
+{% endblock %}
