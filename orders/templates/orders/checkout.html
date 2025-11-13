@@ -1,26 +1,45 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock extra_css %}
 
 {% block conteudo %}
-<h2>Checkout</h2>
+  <div class="checkout-container">
+    <div class="checkout-header">
+      <h2 class="checkout-title">Checkout</h2>
+    </div>
 
-<h4>Itens do Carrinho:</h4>
-<ul>
-  {% for item in cart %}
-    <li>{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
-  {% endfor %}
-</ul>
+    <div class="checkout-section">
+      <h4>Itens do Carrinho:</h4>
+      <ul class="cart-list">
+        {% for item in cart %}
+          <li class="cart-item">{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
+        {% endfor %}
+      </ul>
+      <p class="subtotal"><strong>Subtotal:</strong> R$ {{ cart.get_total_price }}</p>
+    </div>
 
-<p><strong>Subtotal:</strong> R$ {{ cart.get_total_price }}</p>
-<h3>Endereço de entrega</h3>
-<p>{{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento }} - CEP {{ endereco.cep }}</p>
-<p><strong>Frete ({{ frete_servico }}):</strong> R$ {{ frete_valor|floatformat:2 }}</p>
-<hr>
-<h3>Total com frete: R$ {{ total_com_frete|floatformat:2 }}</h3>
+    <div class="checkout-section">
+      <h3>Endereço de entrega</h3>
+      <p class="endereco-text">
+        {{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento }} - CEP {{ endereco.cep }}
+      </p>
+      <p class="frete-info"><strong>Frete ({{ frete_servico }}):</strong> R$ {{ frete_valor|floatformat:2 }}</p>
+    </div>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" style="padding:10px 20px; background:green; color:white; border:none; border-radius:5px;">
-    Prosseguir para pagamento
-  </button>
-</form>
+    <hr>
+    <div class="checkout-total">
+      <h3>Total com frete:</h3>
+      <h2 class="total-valor">R$ {{ total_com_frete|floatformat:2 }}</h2>
+    </div>
+
+    <form method="post" class="checkout-form">
+      {% csrf_token %}
+      <button type="submit" class="btn-pagamento">
+        Prosseguir para pagamento
+      </button>
+    </form>
+  </div>
 {% endblock %}

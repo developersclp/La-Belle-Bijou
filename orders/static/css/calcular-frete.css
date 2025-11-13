@@ -1,0 +1,122 @@
+body, html {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+.frete-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.frete-titulo {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.frete-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.frete-form input[type="text"],
+.frete-form input[type="number"],
+.frete-form input[type="email"],
+.frete-form input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.frete-form input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.btn-calcular {
+  align-self: flex-start;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-calcular:hover {
+  background-color: #0056b3;
+}
+
+.opcoes-envio {
+  margin-top: 40px;
+}
+
+.opcao-frete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fafafa;
+  transition: box-shadow 0.2s ease;
+}
+
+.opcao-frete:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.frete-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.frete-logo {
+  height: 35px;
+}
+
+.frete-detalhes span {
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.btn-escolher {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-escolher:hover {
+  background-color: #0056b3;
+}
+
+footer {
+  margin-top: auto;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 0.9rem;
+}

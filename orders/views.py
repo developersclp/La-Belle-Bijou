@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from accounts.models import Endereco
 from products.models import Produto
@@ -19,7 +20,7 @@ from .models import Pedido
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Frete =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-class CalcularFreteView(View):
+class CalcularFreteView(LoginRequiredMixin, View):
     template_name = "orders/calcular-frete.html"
 
     def get(self, request):
@@ -115,7 +116,7 @@ class CalcularFreteView(View):
             messages.error(request, f"Erro ao calcular frete: {e}")
             return redirect("calcular-frete")
         
-class EscolherFreteView(View):
+class EscolherFreteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         frete_valor = request.POST.get("frete_escolhido")
         servico_nome = request.POST.get("servico_nome")
@@ -132,7 +133,7 @@ class EscolherFreteView(View):
         
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Pagarme =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
     template_name = "orders/checkout.html"
 
     def get(self, request):
@@ -197,6 +198,21 @@ class CheckoutView(View):
                 preco_unitario=item["preco"],
             )
         
+        itensCarrinho =  [{
+                            "name": item["nome"],
+                            "amount": int(Decimal(item["preco"]) * 100),
+                            "default_quantity": item["quantidade"] } 
+                            for item in cart
+                        ]
+        
+        frete = {
+                 "name": "Frete", 
+                 "amount": int(round(frete_valor, 2) * 100),
+                 "default_quantity": 1
+                }
+        
+        itensCarrinho.append(frete)
+        
         payload = {
             "is_building": False,
             "type": "order",
@@ -230,17 +246,12 @@ class CheckoutView(View):
                 }
             },
             "cart_settings": {
-                "items": [
-                    {
-                        "name": item["nome"],
-                        "amount": int(Decimal(item["preco"]) * 100),
-                        "default_quantity": item["quantidade"]
-                    }
-                    for item in cart
-                ]
+                "items": itensCarrinho
             },
             "metadata": { "pedido_id": pedido.id }
         }
+
+        print(payload)
 
         auth = base64.b64encode(f"{settings.PAGARME_API_KEY}:".encode()).decode()
 
@@ -287,7 +298,7 @@ class CheckoutView(View):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class PagarmeWebhookView(View):
+class PagarmeWebhookView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             payload = json.loads(request.body)

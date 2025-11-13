@@ -209,7 +209,7 @@ DEFAULT_FROM_EMAIL = "lucgarcbeni@gmail.com"
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Frete -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
 SUPERFRETE_API_KEY = os.getenv("SUPERFRETE_API_KEY")
-SUPERFRETE_API_URL = os.getenv("SUPERFRETE_API_URL", "https://sandbox.superfrete.com/api/v0/calculator")
+SUPERFRETE_API_URL = os.getenv("SUPERFRETE_API_URL", "https://api.superfrete.com//api/v0/calculator")
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Pagamento -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
