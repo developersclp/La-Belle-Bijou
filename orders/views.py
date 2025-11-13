@@ -62,7 +62,7 @@ class CalcularFreteView(View):
             payload = {
                 "from": {"postal_code": cep_origem},
                 "to": {"postal_code": cep_destino},
-                "services": "1,2,17",
+                "services": "1,2,17,3,31",
                 "options": {"insurance_value": float(cart.get_total_price())},
                 "products": produtos
             }
@@ -84,13 +84,17 @@ class CalcularFreteView(View):
 
             opcoes_envio = []
             for servico in servicos or []:
-                opcoes_envio.append({
-                    "nome": servico.get("company", {}).get("name"),
-                    "servico": servico.get("name"),
-                    "valor": servico.get("price"),
-                    "prazo": servico.get("delivery_time"),
-                    "logo": servico.get("company", {}).get("picture")
-                })
+                if servico.get("price") == None:
+                    continue
+                else:
+                    opcoes_envio.append({
+                        "nome": servico.get("company", {}).get("name"),
+                        "servico": servico.get("name"),
+                        "valor": servico.get("price"),
+                        "prazo": servico.get("delivery_time"),
+                        "logo": servico.get("company", {}).get("picture")
+                    })
+            print(opcoes_envio)
 
             request.session["opcoes_envio"] = opcoes_envio
             request.session["endereco"] = {
