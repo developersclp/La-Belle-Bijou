@@ -266,7 +266,7 @@
     }
 
     .produto-card {
-        flex: 0 0 calc((100% - 5px) / 2); /* 2 cards em mobile */
+        flex: 0 0 calc((100% - 10px) / 2); /* 2 cards em mobile */
         min-height: 200px;
         padding: .7rem;
     }

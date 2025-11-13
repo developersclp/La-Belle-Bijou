@@ -20,14 +20,10 @@ class Home(TemplateView):
         produtos_mais_vendidos = Produto.objects.mais_vendidos(10)
         contexto['produtos_mais_vendidos'] = produtos_mais_vendidos
 
-        categorias = Categoria.objects.all().prefetch_related('produtos')
-        contexto['categorias'] = categorias
-
-        for categoria in categorias:
-            produtos_count = categoria.produtos.count()
-
         # Criar lista de tuplas (categoria, produtos) para o template
         categorias_com_produtos = []
+        categorias = Categoria.objects.all().prefetch_related('produtos')
+        
         for categoria in categorias:
             produtos_da_categoria = categoria.produtos.all() # Limita a 10 produtos
             categorias_com_produtos.append((categoria, produtos_da_categoria))
@@ -39,6 +35,15 @@ class DetailProduto(DetailView):
     model = Produto
     template_name = "products/detalhe_produto.html"
     context_object_name = "produto"
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+
+        categorias =  Categoria.objects.all()
+
+        contexto['categorias'] = categorias
+        
+        return contexto
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Carrinho -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
