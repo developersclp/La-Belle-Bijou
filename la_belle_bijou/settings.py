@@ -105,6 +105,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'la_belle_bijou.context_processors.categorias', # Chama processor que define as categorias atuais para todos os templates
             ],
         },
     },

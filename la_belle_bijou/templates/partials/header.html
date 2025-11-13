@@ -9,13 +9,8 @@
     <div class="navbar-links-desktop d-none d-lg-flex">
       {% if categorias %}
         {% for categoria in categorias %}
-          <a href="#{{ categoria.nome }}" class="nav-link-custom">{{ categoria.nome }}</a>
+          <a href="/#{{ categoria.nome }}" class="nav-link-custom">{{ categoria.nome }}</a>
         {% endfor %}
-      {% else %}
-        <a href="" class="nav-link-custom">Joias</a>
-        <a href="" class="nav-link-custom">Colares</a>
-        <a href="" class="nav-link-custom">Pulseiras</a>
-        <a href="" class="nav-link-custom">Piercing</a>
       {% endif %}
     </div>
 
