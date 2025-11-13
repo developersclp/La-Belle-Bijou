@@ -218,3 +218,7 @@ h1 {
 footer {
   margin-top: auto; /* Empurra o footer para o final */
 }
+
+@media (max-width: 768px) {
+  
+}
