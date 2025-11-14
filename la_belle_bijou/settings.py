@@ -30,10 +30,9 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "la_belle_bijou", "static"),
-    ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "la_belle_bijou", "static"),
+]
 
 # Arquivos de mídia (uploads de imagens)
 MEDIA_URL = '/media/'
