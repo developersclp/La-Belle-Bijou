@@ -206,7 +206,7 @@ class CheckoutView(LoginRequiredMixin, View):
                         ]
         
         frete = {
-                 "name": "Frete", 
+                 "name": f"Frete - {frete_servico}", 
                  "amount": int(round(frete_valor, 2) * 100),
                  "default_quantity": 1
                 }

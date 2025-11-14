@@ -25,33 +25,34 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Arquivos estáticos
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# Diretórios adicionais (para desenvolvimento)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'la_belle_bijou', 'static'),
-]
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "la_belle_bijou", "static"),
+    ]
 
 # Arquivos de mídia (uploads de imagens)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Durante o deploy no Render, o debug deve ser False
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(c!!0d%(rwvdl!r_q0h!wxz50$^6_sw7f_i!c4tn+t6hvv9=3l'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# ALLOWED_HOSTS = [
+#     "127.0.0.1",
+#     "localhost",
+#     "seu-dominio.com",
+#     "www.seu-dominio.com"
+# ]
 
-ALLOWED_HOSTS = ["la-belle-bijou.onrender.com", "127.0.0.1"]
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -84,7 +85,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     "allauth.account.middleware.AccountMiddleware",
     'accounts.middleware.CompleteProfileMiddleware',
@@ -138,12 +138,29 @@ WSGI_APPLICATION = 'la_belle_bijou.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-    )
-}
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # Ambiente local (PostgreSQL local)
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=False
+        )
+    }
+else:
+    # Ambiente VPS (PostgreSQL local do servidor)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST", "localhost"),
+            "PORT": os.getenv("DB_PORT", 5432),
+        }
+    }
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_URL = "login"
@@ -170,12 +187,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -210,7 +221,7 @@ DEFAULT_FROM_EMAIL = "lucgarcbeni@gmail.com"
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Frete -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
 SUPERFRETE_API_KEY = os.getenv("SUPERFRETE_API_KEY")
-SUPERFRETE_API_URL = os.getenv("SUPERFRETE_API_URL", "https://api.superfrete.com//api/v0/calculator")
+SUPERFRETE_API_URL = os.getenv("SUPERFRETE_API_URL", "https://api.superfrete.com/api/v0/calculator")
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Pagamento -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
