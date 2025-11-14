@@ -298,7 +298,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class PagarmeWebhookView(LoginRequiredMixin, View):
+class PagarmeWebhookView(View):
     def post(self, request, *args, **kwargs):
         try:
             payload = json.loads(request.body)
