@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from .models import CustomUser
+from orders.models import Pedido, ItemPedido
 from .forms import RegisterForm, LoginForm
 from django.urls import reverse_lazy
 from .forms import RegisterForm, LoginForm, ProfileForm, CompleteSignupForm
@@ -8,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import views as auth_views
+from django.http import Http404
 
 class RegisterView(CreateView):
     model = CustomUser # model respectivo
@@ -55,6 +57,34 @@ def complete_signup(request):
         form = CompleteSignupForm(instance=user)
 
     return render(request, 'accounts/complete_signup.html', {'form': form})
+
+class VerPedidos(LoginRequiredMixin, ListView):
+    model = Pedido
+    template_name = 'accounts/pedidos.html'
+    context_object_name = 'pedidos'
+
+    def get_queryset(self):
+        user = self.request.user
+        return Pedido.objects.filter(usuario=user).order_by('-data_criacao')
+
+class PedidoDetalheView(LoginRequiredMixin, DetailView):
+    model = Pedido
+    template_name = 'accounts/ver_pedido.html'
+    context_object_name = 'pedido'
+
+    def get_object(self, queryset=None):
+        pedido = super().get_object(queryset)
+
+        if pedido.usuario != self.request.user:
+            raise Http404("Pedido não encontrado")
+        return pedido
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pedido = self.get_object()
+        context["itens_pedido"] = pedido.itens.all()
+
+        return context
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Reset de Senha -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 

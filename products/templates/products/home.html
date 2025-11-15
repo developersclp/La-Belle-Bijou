@@ -16,6 +16,7 @@
         {% if user.is_superuser %}
             <button onclick="window.location.href='{% url 'produtos-adm' %}'"> Tela de Adm </button>
         {% endif %}
+        <button onclick="window.location.href='{% url "ver-pedidos" %}'">Ver Pedidos</button>
         <div class="welcome-message">
             <h1>Teste de {{ user.username }}</h1>
         </div>

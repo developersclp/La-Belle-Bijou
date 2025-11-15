@@ -6,6 +6,7 @@ from products.models import Produto
 class Pedido(models.Model):
     STATUS_CHOICES = [
         ("PENDENTE", "Pendente"),
+        ("AGUARDANDO_PAGAMENTO", "Aguardando Pagamento"),
         ("PAGO", "Pago"),
         ("ENVIADO", "Enviado"),
         ("CANCELADO", "Cancelado"),

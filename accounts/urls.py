@@ -7,6 +7,8 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
     path("profile/", ProfileView.as_view(), name="profile"),  # Nova URL para edição de perfil
     path("completar-cadastro/", complete_signup, name="completar-cadastro"),
+    path("ver-pedidos/", VerPedidos.as_view(), name="ver-pedidos"),
+    path("pedido/<int:pk>/", PedidoDetalheView.as_view(), name="detalhe-pedido"),
 
     # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Reset de Senha -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
