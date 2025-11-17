@@ -31,6 +31,11 @@
                 <div class="input-group">
                     <input type="password" name="password" placeholder="Senha" required><br>
                 </div>
+                {% if form.non_field_errors %}
+                    <div class="error-message">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %} 
                 <a href="{% url 'reset-senha' %}">Esqueci minha senha</a>
                 <button type="submit">Entrar</button>
             </form>

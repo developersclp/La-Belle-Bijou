@@ -168,6 +168,11 @@
     .produto-preco {
         font-size: 1.7rem;
     }
+
+    .produto-imagem{
+        display: flex;
+        flex-direction: column-reverse;
+    }
     
     .produto-imagem img {
         height: 380px;
@@ -183,4 +188,17 @@
         padding: 0.8rem 1.8rem;
         font-size: 1rem;
     }
+
+    .imagens-secundarias {
+        flex-direction: row;
+    }
+
+    .imagens-secundarias img {
+        width: 10vw;
+        height: 10vw;
+        object-fit: cover;
+        border: 2px solid transparent;
+        transition: border 0.2s ease;
+    }
+
 }

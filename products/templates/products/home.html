@@ -17,9 +17,6 @@
             <button onclick="window.location.href='{% url 'produtos-adm' %}'"> Tela de Adm </button>
         {% endif %}
         <button onclick="window.location.href='{% url "ver-pedidos" %}'">Ver Pedidos</button>
-        <div class="welcome-message">
-            <h1>Teste de {{ user.username }}</h1>
-        </div>
     {% endif %}
 
 <div id="carouselExampleIndicators" class="carousel slide">
@@ -91,6 +88,7 @@
       <div class="produtos-container">
           <div class="produtos-track">
           {% for produto in produtos %}
+            {% if produto.is_active %}
               <div class="produto-card" onclick="window.location.href='{% url 'detalhe-produto' produto.pk %}'">
                   {% if produto.imagem_principal %}
                       <img src="{{ produto.imagem_principal.url }}" alt="{{ produto.nome }}">
@@ -103,6 +101,7 @@
                       <p>Adicionar ao carrinho</p>
                   </button>
               </div>
+            {% endif %}
           {% empty %}
             <div class="empty">
               <h2>Categoria sem produtos</h2>
