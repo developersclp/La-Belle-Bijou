@@ -30,9 +30,9 @@
 }
 
 .logo-img {
-    height: 16.5vh;
-    max-height: 80px;
+    height: 10vh;
     width: auto;
+    margin: auto 0 auto 3rem;
 }
 
 .navbar-links-desktop {
@@ -168,7 +168,7 @@ footer {
     }
 
     .logo-img {
-        height: 8vh;
+        height: 100%;
         max-height: 90px;
         min-height: 40px;
     }

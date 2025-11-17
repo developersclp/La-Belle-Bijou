@@ -266,23 +266,23 @@
     }
 
     .produto-card {
-        flex: 0 0 calc((100% - 5px) / 2); /* 2 cards em mobile */
-        min-height: 200px;
+        flex: 0 0 calc((100% - 10px) / 2); /* 2 cards em mobile */
+        min-height: 5vh;
         padding: .7rem;
     }
     
     .produtos-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
     }
     
     .produtos-btn.prev {
-        left: -2rem;
+        left: -1.2rem;
     }
 
     .produtos-btn.next {
-        right: -2rem;
+        right: -1.2rem;
     }
 
     .empty {
