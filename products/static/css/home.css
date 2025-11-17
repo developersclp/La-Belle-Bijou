@@ -209,10 +209,10 @@
 }
 
 #footer_tela_principal {
-    height: 18vh;
+    height: 25vh;
 
     & .conteudo-footer {
-        height: 12vh;
+        height: 20vh;
     }
 }
 

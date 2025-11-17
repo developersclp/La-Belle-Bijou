@@ -146,34 +146,48 @@ footer {
     width: 100%;
     height: 14vh;
     background-color: #fff;
-    color: #9D9D9D;
+    color: #cdb468;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 
     & h1{
-        font-size: 1.3rem;
+        width: 40%;
+        text-align: center;
+        font-size: 1.5rem;
     }
 }
 
-.redes {
-    height: 100%;
-    width: 40vw;
+.geral-footer {
+    width: 40%;
+    margin-left: 3vw;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+}
 
-    & a {
+.redes-footer {
+    width: 40%;
+    margin-right: 3vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    & a, h3 {
+        font-size: 1rem;
         text-decoration: none;
-        color: #252A36;
+        color: #cdb468;
+        width: fit-content;
+        display: flex;
+        align-content: end;
     }
 
     & a:hover {
-        color: #313847;
         font-weight: bold;
     }
 
     & img {
-        width: 5rem;
+        width: 2rem;
     }
 }
 

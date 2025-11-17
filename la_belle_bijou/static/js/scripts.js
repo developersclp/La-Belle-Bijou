@@ -39,3 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', closeMenu);
     });
 });
+
+icon_perfil = document.querySelector('icon-link')
+menu_variavel = document.getElementById('menu-variavel')
+
+function menu_usuario() {
+    if (menu_variavel.style.display == 'flex') {
+
+    }
+}
+
+icon_perfil.addEventListener('click', menu_usuario)

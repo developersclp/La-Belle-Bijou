@@ -26,12 +26,12 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="input-group">
-                    <input type="text" name="username" placeholder="Email" required><br>
+                    <input type="text" name="username" placeholder="Email" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" name="password" placeholder="Senha" required><br>
+                    <input type="password" name="password" placeholder="Senha" required>
+                    <a href="{% url 'reset-senha' %}" id="">Esqueci minha senha</a>
                 </div>
-                <a href="{% url 'reset-senha' %}">Esqueci minha senha</a>
                 <button type="submit">Entrar</button>
             </form>
             
