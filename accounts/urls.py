@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
-    path("login/", LoginView.as_view(), name="login"),
+    path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("profile/", ProfileView.as_view(), name="profile"),  # Nova URL para edição de perfil
     path("completar-cadastro/", complete_signup, name="completar-cadastro"),
@@ -16,4 +16,8 @@ urlpatterns = [
     path('reset-senha/enviado/', ResetPasswordDoneView.as_view(), name='reset-senha-enviado'),
     path('reset/<uidb64>/<token>/', ResetPasswordConfirmView.as_view(), name='reset-senha-confirm'),
     path('reset-senha/concluido/', ResetPasswordCompleteView.as_view(), name='reset-concluido'),
+
+    path("enviar-verificacao/", EnviarEmailVerificacaoView.as_view(), name="enviar-verificacao"),
+    path("verificacao-enviada/", ConfirmarEmailEnviado.as_view(), name="verificacao-enviada"),
+    path("verificar/<int:uid>/<str:token>/", VerificarEmailView.as_view(), name="verificar-email"),
 ]
