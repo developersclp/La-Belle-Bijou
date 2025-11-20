@@ -114,9 +114,21 @@ main {
 }
 
 footer {
-  margin-top: auto;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  font-size: 0.9rem;
+  margin-top: auto; /* Empurra o footer para o final */
+}
+
+
+@media (max-width: 768px) {
+  .opcao-frete{
+    justify-content: space-around;
+  }
+
+  .frete-info{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn-escolher {
+    padding: 15px 16px;
+  }
 }

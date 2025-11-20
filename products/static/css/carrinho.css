@@ -218,3 +218,18 @@ h1 {
 footer {
   margin-top: auto; /* Empurra o footer para o final */
 }
+
+@media (max-width: 768px) {
+  .action-link {
+    background-color: #252A36;
+    color: white;
+    text-decoration: none;
+    padding: 15px 25px;
+    margin: 25px 0 0 5%;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: 0.3s;
+    display: flex;
+    text-align: center;
+  }
+}
