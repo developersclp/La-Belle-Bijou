@@ -211,25 +211,83 @@ h1 {
   margin-bottom: 8px;
 }
 
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .main-content {
-  flex: 1; /* Faz o conteúdo ocupar o espaço disponível */
+  flex: 1;
 }
 
 footer {
-  margin-top: auto; /* Empurra o footer para o final */
+  margin-top: auto;
 }
 
 @media (max-width: 768px) {
-  .action-link {
-    background-color: #252A36;
-    color: white;
-    text-decoration: none;
-    padding: 15px 25px;
-    margin: 25px 0 0 5%;
-    border-radius: 6px;
-    font-weight: 500;
-    transition: 0.3s;
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cart-table {
+    min-width: 400px;
+  }
+  
+  .cart-table thead th {
+    white-space: nowrap;
+    font-size: 0.75rem;
+    padding: 10px 5px;
+  }
+
+  .product-name {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+  }
+
+  .product-name img {
+    width: 75px;
+    height: 75px;
+  }
+
+  .price-col, .quantity-col, .total-col {
+    min-width: 100px;
+  }
+
+  td, th {
+    padding: 12px 8px;
+    font-size: 0.85rem;
+  }
+
+  .quantity {
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+
+  .quantity button {
+    width: 26px;
+    height: 26px;
+  }
+
+  .product-name {
+    white-space: normal;
+  }
+
+  .cart-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .cart-actions .action-link {
+    width: 100%;
     text-align: center;
+  }
+
+  .summary {
+    justify-content: center;
+    margin: 40px auto 0 auto;
   }
 }
