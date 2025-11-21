@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/calcular-frete.css' %}">
+{% endblock extra_css %}
+
+{% block conteudo %}
+<div class="frete-container">
+  <h2 class="frete-titulo">Calcular Frete</h2>
+
+  <form method="post" class="frete-form">
+    {% csrf_token %}
+    <div class="form-campos">
+      {{ endereco.as_p }}
+    </div>
+    <button type="submit" class="btn-calcular">Calcular Frete</button>
+  </form>
+
+  {% if opcoes_envio %}
+  <div class="opcoes-envio">
+    <h3>Escolha o tipo de envio:</h3>
+    <form method="post" action="{% url 'escolher-frete' %}">
+      {% csrf_token %}
+      {% for opcao in opcoes_envio %}
+      <div class="opcao-frete">
+        <div class="frete-info">
+          <img src="{{ opcao.logo }}" alt="{{ opcao.nome }}" class="frete-logo">
+          <div class="frete-detalhes">
+            <strong>{{ opcao.nome }} - {{ opcao.servico }}</strong><br>
+            <span>Valor: <b>R$ {{ opcao.valor|floatformat:2 }}</b></span><br>
+            <span>Prazo: {{ opcao.prazo }} dias úteis</span>
+          </div>
+        </div>
+        <button type="submit" name="frete_escolhido" value="{{ opcao.valor }}" class="btn-escolher">
+          Escolher esta opção
+        </button>
+        <input type="hidden" name="servico_nome" value="{{ opcao.servico }}">
+      </div>
+      {% endfor %}
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

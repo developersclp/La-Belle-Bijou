@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block conteudo %}
+    {% for pedido in pedidos %}
+        <div>
+            <p>Pedido: {{ pedido.id }}</p>
+            <p>Status: {{ pedido.status }}</p>
+            <p>Total: R$ {{ pedido.valor_total }}</p>
+            <a href="{% url 'detalhe-pedido' pedido.pk %}">Ver detalhes</a>
+        </div>
+    {% empty %}
+        <p>Você ainda não fez nenhum pedido.</p>
+    {% endfor %}
+{% endblock conteudo %}

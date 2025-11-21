@@ -3,6 +3,7 @@ from django.forms.models import inlineformset_factory
 from django.forms.widgets import ClearableFileInput
 from products.models import Produto, ImagemProduto, Categoria, MovimentacaoEstoque
 from accounts.models import CustomUser
+from orders.models import Pedido
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Produtos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -81,4 +82,17 @@ class UsuarioForm(forms.ModelForm):
             "username": None,
             "is_active": None,
             "is_superuser": None,
+        }
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Pedidos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+class PedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ["status", "valor_total", "pagarme_id", "payment_url", "endereco"]
+        widgets = {
+            "valor_total": forms.TextInput(attrs={"readonly": "readonly"}),
+            "pagarme_id": forms.TextInput(attrs={"readonly": "readonly"}),
+            "payment_url": forms.TextInput(attrs={"readonly": "readonly"}),
+            "endereco": forms.TextInput(attrs={"readonly": "readonly"}),
         }

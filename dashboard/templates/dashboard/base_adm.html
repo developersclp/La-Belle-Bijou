@@ -29,6 +29,7 @@
                 <li><a href="{% url 'produtos-adm' %}" class="{% if request.resolver_match.url_name == 'produtos-adm' %}active{% endif %}">Produtos</a></li>
                 <li><a href="{% url 'categorias-adm' %}" class="{% if request.resolver_match.url_name == 'categorias-adm' %}active{% endif %}">Categorias</a></li>
                 <li><a href="{% url 'usuarios-adm' %}" class="{% if request.resolver_match.url_name == 'usuarios-adm' %}active{% endif %}">Usuários</a></li>
+                <li><a href="{% url 'pedidos-adm' %}" class="{% if request.resolver_match.url_name == 'pedidos-adm' %}active{% endif %}">Pedidos</a></li>
             </ul>
         </nav>
     </aside>

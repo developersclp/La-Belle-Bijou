@@ -10,8 +10,8 @@ urlpatterns = [
     # categorias
     path('categorias/', ListarCategorias.as_view(), name="categorias-adm"), 
     path('add-categoria/', CriarCategoria.as_view(), name="add-categoria"),
-    path('upd-categoria/<int:pk>', UpdateCategoria.as_view(), name="upd-categoria"),
-    path('delete-categoria/<int:pk>', DeletarCategoria.as_view(), name="deletar-categoria"),
+    path('upd-categoria/<int:pk>/', UpdateCategoria.as_view(), name="upd-categoria"),
+    path('delete-categoria/<int:pk>/', DeletarCategoria.as_view(), name="deletar-categoria"),
 
     # estoque
     path('registrar-entrada/', EntradaCreateView.as_view(), name="add-entrada"),
@@ -19,6 +19,10 @@ urlpatterns = [
 
     # usuarios
     path('usuarios/', ListaUsuarios.as_view(), name="usuarios-adm"),
-    path('usuarios/<int:pk>', DetalheUsuario.as_view(), name="detalhe-user" ),
-    path('upd-usuario/<int:pk>', EditarUsuario.as_view(), name="editar-user")
+    path('usuarios/<int:pk>/', DetalheUsuario.as_view(), name="detalhe-user" ),
+    path('upd-usuario/<int:pk>/', EditarUsuario.as_view(), name="editar-user"),
+
+    # pedidos
+    path('pedidos/', ListaPedidos.as_view(), name="pedidos-adm"),
+    path('upd-pedido/<int:pk>/', EditarPedido.as_view(), name="editar-pedido"),
     ]

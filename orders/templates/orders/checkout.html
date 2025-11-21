@@ -1,19 +1,45 @@
-<h1>Finalizar compra</h1>
+{% extends "base.html" %}
+{% load static %}
 
-<form method="post">
-  {% csrf_token %}
-  
-  <h3>Qual o endereço:</h3>
-  {{ endereco.rua }}, {{ endereco.numero }} - {{ endereco.complemento }} | {{ endereco.cep }}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock extra_css %}
 
-  <h3>Resumo do pedido:</h3>
-  <ul>
-    {% for item in cart %}
-      <li>{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
-    {% endfor %}
-  </ul>
+{% block conteudo %}
+  <div class="checkout-container">
+    <div class="checkout-header">
+      <h2 class="checkout-title">Checkout</h2>
+    </div>
 
-  <p><strong>Total:</strong> R$ {{ cart.get_total_price }}</p>
+    <div class="checkout-section">
+      <h4>Itens do Carrinho:</h4>
+      <ul class="cart-list">
+        {% for item in cart %}
+          <li class="cart-item">{{ item.nome }} - {{ item.quantidade }}x R$ {{ item.preco }}</li>
+        {% endfor %}
+      </ul>
+      <p class="subtotal"><strong>Subtotal:</strong> R$ {{ cart.get_total_price }}</p>
+    </div>
 
-  <button type="submit">Gerar Pix</button>
-</form>
+    <div class="checkout-section">
+      <h3>Endereço de entrega</h3>
+      <p class="endereco-text">
+        {{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento }} - CEP {{ endereco.cep }}
+      </p>
+      <p class="frete-info"><strong>Frete ({{ frete_servico }}):</strong> R$ {{ frete_valor|floatformat:2 }}</p>
+    </div>
+
+    <hr>
+    <div class="checkout-total">
+      <h3>Total com frete:</h3>
+      <h2 class="total-valor">R$ {{ total_com_frete|floatformat:2 }}</h2>
+    </div>
+
+    <form method="post" class="checkout-form">
+      {% csrf_token %}
+      <button type="submit" class="btn-pagamento">
+        Prosseguir para pagamento
+      </button>
+    </form>
+  </div>
+{% endblock %}

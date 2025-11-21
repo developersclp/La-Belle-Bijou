@@ -28,6 +28,10 @@ class ProdutoManager(models.Manager):
 class Produto(models.Model):
     nome = models.CharField(max_length=50)
     descricao = models.TextField(null=True, blank=True)
+    peso = models.DecimalField(max_digits=6, decimal_places=3, default=0.3)
+    altura = models.DecimalField(max_digits=5, decimal_places=2, default=10)
+    largura = models.DecimalField(max_digits=5, decimal_places=2, default=15)
+    comprimento = models.DecimalField(max_digits=5, decimal_places=2, default=20)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     categorias = models.ManyToManyField(Categoria, related_name="produtos")
     imagem_principal = models.ImageField(upload_to="produtos/principal/", null=True, blank=True)

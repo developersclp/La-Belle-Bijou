@@ -1,0 +1,136 @@
+/* ----- Layout global ----- */
+body, html {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* ----- Container principal ----- */
+.checkout-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.checkout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #00000075;
+    padding-bottom: 1vh;
+}
+
+.checkout-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2e2e2e;
+}
+
+.checkout-total {
+    text-align: right;
+    margin: 0;
+}
+
+.checkout-total h3 {
+    margin: 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.total-valor {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #D4AC6E;
+}
+
+/* Linha divisória */
+.checkout-divider {
+    width: 100%;
+    height: 2px;
+    background-color: #00000030;
+    margin: 10px 0 25px 0;
+    border-radius: 2px;
+}
+
+/* ----- Sessões ----- */
+.checkout-section {
+    margin-bottom: 25px;
+}
+
+.checkout-section h3,
+.checkout-section h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* ----- Lista do carrinho ----- */
+.cart-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    color: #444;
+}
+
+/* ----- Textos ----- */
+.subtotal,
+.frete-info {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.endereco-text {
+    background-color: #fafafa;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+/* ----- Botão ----- */
+.btn-pagamento {
+    display: block;
+    width: 60%;
+    margin: 35px auto 0 auto;
+    padding: 12px 0;
+    background-color: #3798ff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-pagamento:hover {
+    background-color: #007bff;
+    transform: scale(1.02);
+}
+
+/* ----- Footer ----- */
+footer {
+    margin-top: auto;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+}

@@ -253,22 +253,25 @@
     }
 
     .produtos-container {
-        position: absolute;
-        left: 50%;
-        top: 1rem;
-        transform: translateX(-50%);
+        width: 100%;
+        padding: 0 15px;
     }
 
     .produtos-track {
         width: 100%;
         gap: 10px;
-        margin: 3rem 0;
+        margin: 1rem 0;
+        scroll-behavior: smooth;
+        display: flex;
     }
 
     .produto-card {
-        flex: 0 0 calc((100% - 10px) / 2); /* 2 cards em mobile */
-        min-height: 5vh;
+        flex: 0 0 calc(50% - 5px); /* 2 cards em mobile */
+        min-height: 200px;
         padding: .7rem;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
     }
     
     .produtos-btn {
