@@ -11,11 +11,6 @@
         {% for categoria in categorias %}
           <a href="#{{ categoria.nome }}" class="nav-link-custom">{{ categoria.nome }}</a>
         {% endfor %}
-      {% else %}
-        <a href="" class="nav-link-custom">Joias</a>
-        <a href="" class="nav-link-custom">Colares</a>
-        <a href="" class="nav-link-custom">Pulseiras</a>
-        <a href="" class="nav-link-custom">Piercing</a>
       {% endif %}
     </div>
 
@@ -26,7 +21,7 @@
           <img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="icon-img">
         </a>
         {% if user.is_authenticated %}
-          <a href="{% url 'profile' %}" class="icon-link" aria-label="Perfil do usuário">
+          <a class="icon-link" aria-label="Perfil do usuário" id="icone-perfil">
             <img src="{% static 'img/perfil.png' %}" alt="Perfil" class="icon-img">
           </a>
         {% endif %}
@@ -40,9 +35,7 @@
       {% endif %}
 
       <button class="navbar-toggler custom-toggler d-lg-none" type="button" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="toggler-icon"></span>
-        <span class="toggler-icon"></span>
-        <span class="toggler-icon"></span>
+          <img src="" alt="">
       </button>
     </div>
 
@@ -75,6 +68,19 @@
     </div>
   </div>
 </header>
+
+<div id="overlay" class="oculto"></div>
+<div id="menu_variavel" class="oculto">
+  <h3>Olá, {{ user.username }}</h3>
+  <a href="{% url 'profile' %}">Editar perfil</a>
+  {% if user.is_superuser %}
+  <a href="{% url 'produtos-adm' %}">Seção do Administrador</a>
+  {% endif %}
+  <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Sair da conta</button>
+  </form>
+</div>
 
 <!-- Overlay para mobile -->
 <div class="navbar-overlay d-lg-none"></div>

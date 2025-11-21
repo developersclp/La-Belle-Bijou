@@ -7,6 +7,11 @@
     scroll-behavior: smooth;
 }
 
+.no_scroll {
+    position: fixed;
+    overflow: hidden;
+}
+
 .custom-navbar {
     width: 100%;
     height: 12vh;
@@ -67,6 +72,70 @@
     align-items: center;
     gap: 1vw;
     margin-left: auto;
+}
+
+#menu_variavel {
+    width: fit-content;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 20px;
+    position: fixed;
+    right: 3rem;
+    top: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 3px;
+    box-shadow: 0 5px 15px #0000001a;
+    z-index: 9999;
+
+    & h3 {
+        width: 100%;
+        text-align: center;
+        padding: 1rem 1rem 0 1rem;
+    }
+
+    & a, button {
+        width: fit-content;
+        height: 2rem;
+        background-color: #fff;
+        color: #252A36;
+        text-decoration: none;
+        border: 0;
+        border-radius: 10px;
+        padding: 0 10px;
+        text-align: center;
+        margin: 0 1rem;
+        transition: all .3s;
+    }
+
+    & button:last-child {
+        margin-bottom: 1rem;
+    }
+
+    & a:hover, button:hover {
+        background-color: #CECECE;
+    }
+}
+
+#overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #00000080;
+    z-index: 9998;
+    cursor: pointer;
+}
+
+.oculto {
+    opacity: 0;
+    display: none;
+}
+
+.ativo {
+    background-color: #f0f0f0;
 }
 
 /* Botões desktop */
@@ -136,7 +205,7 @@
 
 footer {
     width: 100vw;
-    height: 18vh;
+    height: 22vh;
     background-color: #CECECE;
     display: flex;
     align-items: center;
@@ -144,9 +213,9 @@ footer {
 
 .conteudo-footer {
     width: 100%;
-    height: 14vh;
+    height: 18vh;
     background-color: #fff;
-    color: #cdb468;
+    color: #c79f26;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -171,24 +240,31 @@ footer {
     margin-right: 3vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    align-items: flex-end;
 
     & a, h3 {
+        padding: 0 .3rem;
+        border-radius: 10px;
         font-size: 1rem;
         text-decoration: none;
-        color: #cdb468;
+        color: #c79f26;
         width: fit-content;
         display: flex;
-        align-content: end;
+        flex-direction: row;
+        gap: 10px;
     }
 
     & a:hover {
-        font-weight: bold;
+        background-color: #f0f0f0;
     }
 
     & img {
         width: 2rem;
     }
+}
+
+#footer_mobile {
+    display: none;
 }
 
 /* ===== LAYOUT MOBILE ===== */
@@ -206,14 +282,23 @@ footer {
     }
 
     .logo-img {
-        height: 100%;
-        max-height: 90px;
-        min-height: 40px;
+        height: 7vh;
     }
 
     /* Container de ações mobile */
     .navbar-actions {
         gap: 0.5rem;
+    }
+
+    #menu_variavel {
+        min-width: fit-content;
+        left: 50%;
+        transform: translateX(-50%);
+
+        & a, button {
+            width: 15rem;
+            text-align: start;
+        }
     }
 
     .navbar-icons {
@@ -383,11 +468,53 @@ footer {
     }
 
     #footer_tela_principal {
-        height: 10vh;
+        display: none;
+    }
 
-        .conteudo-footer {
-            height: 6vh;
-            font-size: 4vw;
+    #footer_mobile {
+        display: block;
+        height: fit-content;
+        padding: 1rem 0
+    }
+
+    .conteudo-footer {
+        height: fit-content;
+        margin: auto;
+        flex-direction: column-reverse;
+
+        & h3 {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    }
+
+    .geral-footer {
+        width: 90%;
+        height: fit-content;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 2px solid #c79f26;
+    
+        & p {
+            font-size: 1rem;
+            text-align: center;
+        }
+    }
+
+    .redes-footer {
+        width: 90%;
+        height: fit-content;
+        align-items: flex-start;
+        margin: .3rem 0 1rem 0;
+        gap: 10px;
+
+        & a {
+            text-align: start;
+            font-size: 1rem;
+        }
+
+        & img {
+            width: 1.5rem;
         }
     }
 }

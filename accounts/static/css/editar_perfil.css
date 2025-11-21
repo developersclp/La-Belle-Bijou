@@ -145,16 +145,8 @@ main {
     background-color: #3a3f4d;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
-    body {
-        padding-bottom: 10vh;
-    }
     
     .editar-perfil {
         min-height: calc(100vh - 15vh - 20vh);
@@ -177,12 +169,5 @@ footer {
     .botao-voltar, .botao-salvar, .botao-senha {
         width: 100%;
         max-width: none;
-    }
-    
-    footer {
-    }
-    
-    .conteudo-footer {
-        height: 14vh;
     }
 }

@@ -8,18 +8,6 @@
 {% endblock %}
 
 {% block conteudo %}
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">logout</button>
-        </form>
-        {% if user.is_superuser %}
-            <button onclick="window.location.href='{% url 'produtos-adm' %}'"> Tela de Adm </button>
-        {% endif %}
-        <div class="welcome-message">
-            <h1>Teste de {{ user.username }}</h1>
-        </div>
-    {% endif %}
 
 <div id="carouselExampleIndicators" class="carousel slide">
   <div class="carousel-indicators">

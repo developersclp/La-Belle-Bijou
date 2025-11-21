@@ -40,13 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-icon_perfil = document.querySelector('icon-link')
-menu_variavel = document.getElementById('menu-variavel')
+icon_perfil = document.getElementById('icone-perfil')
+menu_variavel = document.getElementById('menu_variavel')
+menu_variavel.style.display = 'none'
+overlay = document.getElementById('overlay')
 
-function menu_usuario() {
-    if (menu_variavel.style.display == 'flex') {
+icon_perfil.addEventListener('click', () => {
+    menu_variavel.classList.toggle('oculto')
+    menu_variavel.style.display = 'flex'
+    overlay.classList.toggle('oculto')
+    icon_perfil.classList.toggle('ativo')
+    document.body.classList.toggle('no_scroll')
+})
 
-    }
-}
-
-icon_perfil.addEventListener('click', menu_usuario)
+overlay.addEventListener('click', () => {
+    menu_variavel.classList.toggle('oculto')
+    menu_variavel.style.display = 'none'
+    overlay.classList.toggle('oculto')
+    icon_perfil.classList.toggle('ativo')
+    document.body.classList.toggle('no_scroll')
+})
