@@ -1,3 +1,51 @@
+{% load static %}
+<!-- Como o design dos footers é muito diferente entre os layouts existe um footer
+para cada layout, no layout desktop aparece um footer e no layout mobile aparece
+outro footer, respectivamente: footer_tela_principal e footer_mobile -->
 <footer id="footer_tela_principal">
-    <div class="conteudo-footer">© 2025 La belle bijou – Todos os direitos reservados.</div>
+    <div class="conteudo-footer">
+        <div class="geral-footer">
+            <p>© 2025 La belle bijou – Todos os<br>direitos reservados.</p>
+            <p>CNPJ:<br>63.083.626/0001-29</p>
+        </div>
+        <div class="redes-footer">
+            <h3>CONECTE-SE CONOSCO</h3>
+            <a href="mailto:labellebijoo@gmail.com">
+                labellebijoo@gmail.com
+                <img src="{% static 'img/dourado_email.png' %}" alt="">
+            </a>
+            <a href="">
+                Instagram
+                <img src="{% static 'img/dourado_instagram.png' %}" alt="">
+            </a>
+            <a href="">
+                Tiktok
+                <img src="{% static 'img/dourado_tiktok.png' %}" alt="">
+            </a>
+        </div>
+    </div>
+</footer>
+
+<footer id="footer_mobile">
+    <div class="conteudo-footer">
+        <div class="geral-footer">
+            <p>© 2025 La belle bijou – Todos os direitos reservados.</p>
+            <p>CNPJ: 63.083.626/0001-29</p>
+        </div>
+        <div class="redes-footer">
+            <a href="mailto:labellebijoo@gmail.com">
+                <img src="{% static 'img/dourado_email.png' %}" alt="">
+                labellebijoo@gmail.com
+            </a>
+            <a href="">
+                <img src="{% static 'img/dourado_instagram.png' %}" alt="">
+                                Instagram
+            </a>
+            <a href="">
+                <img src="{% static 'img/dourado_tiktok.png' %}" alt="">
+                Tiktok
+            </a>
+        </div>
+        <h3>Conecte-se conosco!</h3>
+    </div>
 </footer>

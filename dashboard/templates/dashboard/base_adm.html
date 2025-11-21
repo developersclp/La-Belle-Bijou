@@ -19,9 +19,9 @@
 <div class="admin-panel">
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="logo">
+        <a href="{% url 'home' %}" class="logo">
             <img src="{% static 'img/logo.png' %}" alt="Logo La Belle Bijou">
-        </div>
+        </a>
         <p class="welcome-message">Bem-vindo, {{ request.user.first_name|default:'Admin' }}</p>
 
         <nav class="navigation">

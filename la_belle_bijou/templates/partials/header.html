@@ -1,24 +1,82 @@
 {% load static %}
-<header>
-    <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Logo"></a>
-    <div class="links">
-        {% if categorias %}
-            {% for categoria in categorias %}
-            <a href="#{{ categoria.nome }}">{{ categoria.nome }}</a>
-            {% endfor %}
-        {% else %}
-        <a href="">Joias</a>
-        <a href="">Colares</a>
-        <a href="">Pulseiras</a>
-        <a href="">Piercing</a>
-        {% endif %}
+<header class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static 'img/logo_teste.png' %}" alt="Logo" class="logo-img">
+    </a>
+
+    <div class="navbar-links-desktop d-none d-lg-flex">
+      {% if categorias %}
+        {% for categoria in categorias %}
+          <a href="/#{{ categoria.nome }}" class="nav-link-custom">{{ categoria.nome }}</a>
+        {% endfor %}
+      {% endif %}
     </div>
-    <div class="icones">
+
+    <div class="navbar-actions">
+
+      <div class="navbar-icons">
+        <a href="{% url 'ver_carrinho' %}" class="icon-link" aria-label="Carrinho de compras">
+          <img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="icon-img">
+        </a>
+        {% if user.is_authenticated %}
+          <a class="icon-link" aria-label="Perfil do usuário" id="icone-perfil">
+            <img src="{% static 'img/perfil.png' %}" alt="Perfil" class="icon-img">
+          </a>
+        {% endif %}
+      </div>
+
+      {% if not user.is_authenticated %}
+        <div class="desktop-auth-buttons d-none d-lg-flex">
+          <a href="{% url 'register' %}" class="btn-cadastro">Cadastro</a>
+          <a href="{% url 'login' %}" class="btn-entrar">Entrar</a>
+        </div>
+      {% endif %}
+
+      <button class="navbar-toggler custom-toggler d-lg-none" type="button" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+          <img src="" alt="">
+      </button>
+    </div>
+
+    <div class="navbar-collapse-mobile d-lg-none" id="navbarMobile">
+      <div class="mobile-menu-header">
+        <h3>Menu</h3>
+      </div>
+      
+      <div class="mobile-menu-content">
         {% if not user.is_authenticated %}
-            <a href="{% url 'register' %}" id="bCadastro">Cadastro</a>
-            <a href="{% url 'login' %}" id="bEntrar">Entrar</a>
+          <div class="mobile-auth-buttons">
+            <a href="{% url 'register' %}" class="btn-cadastro-mobile">Cadastro</a>
+            <a href="{% url 'login' %}" class="btn-entrar-mobile">Entrar</a>
+          </div>
         {% endif %}
-        <a href="{% url 'ver_carrinho' %}"><img src="{% static 'img/carrinho.png' %}" alt="Carrinho" class="bCarrinho"></a>
-        <a href=""><img src="{% static 'img/perfil.png' %}" alt="Perfil" class="bPerfil"></a>
+
+        <nav class="mobile-categories" aria-label="Categorias de produtos">
+          {% if categorias %}
+            {% for categoria in categorias %}
+              <a href="/#{{ categoria.nome }}" class="mobile-category-link">{{ categoria.nome }}</a>
+            {% endfor %}
+          {% else %}
+          {% endif %}
+        </nav>
+      </div>
     </div>
+  </div>
 </header>
+
+<div id="overlay" class="oculto"></div>
+<div id="menu_variavel" class="oculto">
+  <h3>Olá, {{ user.username }}</h3>
+  <a href="{% url 'profile' %}">Editar perfil</a>
+  {% if user.is_superuser %}
+  <a href="{% url 'produtos-adm' %}">Seção do Administrador</a>
+  {% endif %}
+  <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Sair da conta</button>
+  </form>
+</div>
+
+<!-- Overlay para mobile -->
+<div class="navbar-overlay d-lg-none"></div>
