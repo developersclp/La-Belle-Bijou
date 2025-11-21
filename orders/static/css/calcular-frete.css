@@ -86,7 +86,7 @@ main {
 .frete-info {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 40px;
 }
 
 .frete-logo {
@@ -126,6 +126,7 @@ footer {
   .frete-info{
     display: flex;
     flex-direction: column;
+    gap: 10px;
   }
 
   .btn-escolher {
