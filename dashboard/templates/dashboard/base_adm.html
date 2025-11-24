@@ -16,23 +16,52 @@
 </head>
 
 <body>
-<div class="admin-panel">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="{% url 'home' %}" class="logo">
-            <img src="{% static 'img/logo.png' %}" alt="Logo La Belle Bijou">
-        </a>
-        <p class="welcome-message">Bem-vindo, {{ request.user.first_name|default:'Admin' }}</p>
 
-        <nav class="navigation">
-            <ul>
-                <li><a href="{% url 'produtos-adm' %}" class="{% if request.resolver_match.url_name == 'produtos-adm' %}active{% endif %}">Produtos</a></li>
-                <li><a href="{% url 'categorias-adm' %}" class="{% if request.resolver_match.url_name == 'categorias-adm' %}active{% endif %}">Categorias</a></li>
-                <li><a href="{% url 'usuarios-adm' %}" class="{% if request.resolver_match.url_name == 'usuarios-adm' %}active{% endif %}">Usuários</a></li>
-                <li><a href="{% url 'pedidos-adm' %}" class="{% if request.resolver_match.url_name == 'pedidos-adm' %}active{% endif %}">Pedidos</a></li>
-            </ul>
-        </nav>
-    </aside>
+<header class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+
+    <div class="navbar-actions">
+      <button class="navbar-toggler custom-toggler d-lg-none" type="button" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+          <img src="{% static 'img/hamburger.jpg' %}" alt="">
+      </button>
+    </div>
+
+    <div class="navbar-collapse-mobile d-lg-none" id="navbarMobile">
+      <div class="mobile-menu-header">
+        <h3>Menu</h3>
+      </div>
+      
+      <div class="mobile-menu-content">
+        <!-- <nav class="mobile-categories" aria-label="Categorias de produtos">
+          {% if categorias %}
+            {% for categoria in categorias %}
+              <a href="/#{{ categoria.nome }}" class="mobile-category-link">{{ categoria.nome }}</a>
+            {% endfor %}
+          {% else %}
+          {% endif %}
+        </nav> -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'img/logo.png' %}" alt="Logo La Belle Bijou">
+            </a>
+            <p class="welcome-message">Bem-vindo, {{ request.user.first_name|default:'Admin' }}</p>
+
+            <nav class="navigation">
+                <ul>
+                    <li><a href="{% url 'produtos-adm' %}" class="{% if request.resolver_match.url_name == 'produtos-adm' %}active{% endif %}">Produtos</a></li>
+                    <li><a href="{% url 'categorias-adm' %}" class="{% if request.resolver_match.url_name == 'categorias-adm' %}active{% endif %}">Categorias</a></li>
+                    <li><a href="{% url 'usuarios-adm' %}" class="{% if request.resolver_match.url_name == 'usuarios-adm' %}active{% endif %}">Usuários</a></li>
+                    <li><a href="{% url 'pedidos-adm' %}" class="{% if request.resolver_match.url_name == 'pedidos-adm' %}active{% endif %}">Pedidos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="admin-panel">
 
     <!-- Conteúdo principal -->
     <main class="main-content">
@@ -52,5 +81,7 @@
         </footer>
     </main>
 </div>
+
+<script src="{% static 'js/base_adm.js' %}"></script>
 </body>
 </html>
