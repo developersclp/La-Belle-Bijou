@@ -208,18 +208,18 @@
     min-height: 200px;
 }
 
-/* #footer_tela_principal {
-    height: 25vh;
-
-    & .conteudo-footer {
-        height: 20vh;
-    }
-} */
-
 @media (max-width: 992px) {
     #carouselExampleIndicators {
         width: 100vw;
         margin: 0 auto;
+
+        & button {
+            width: 20px;
+        }
+    }
+
+    .carousel-indicators {
+        margin-bottom: 0;
     }
 
     .carousel-inner {
