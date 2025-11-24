@@ -28,13 +28,13 @@ function initCarrossel(secao) {
         if (!card) return 1;
         
         const cardRect = card.getBoundingClientRect();
-        const gap = window.innerWidth < 768 ? 10 : 30; // Gap menor no mobile
+        const gap = window.innerWidth < 992 ? 10 : 30; // Gap menor no mobile
         const cardWidth = cardRect.width + gap;
         
         let cardsQueCabem = Math.floor(containerWidth / cardWidth);
         
         // CORREÇÃO: Garante pelo menos 1 card e no máximo 2 no mobile
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 992) {
             cardsQueCabem = Math.max(1, Math.min(cardsQueCabem, 2));
         } else if (window.innerWidth < 1200) {
             cardsQueCabem = Math.max(2, Math.min(cardsQueCabem, 3));
@@ -50,7 +50,7 @@ function initCarrossel(secao) {
         if (!card) return 0;
         
         const cardRect = card.getBoundingClientRect();
-        const gap = window.innerWidth < 768 ? 10 : 30;
+        const gap = window.innerWidth < 992 ? 10 : 30;
         return cardRect.width + gap;
     }
 
