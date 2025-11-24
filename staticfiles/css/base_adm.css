@@ -78,7 +78,7 @@ body {
 /* ========= CONTEÚDO PRINCIPAL ========= */
 .main-content {
     flex-grow: 1;
-    padding: 40px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }

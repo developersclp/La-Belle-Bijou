@@ -104,7 +104,7 @@ main {
     padding-bottom: 2rem; /* Espaço extra antes do footer */
 }
 
-.botao-voltar, .botao-salvar {
+.botao-voltar, .botao-salvar, .botao-senha {
     padding: 0.75rem 2rem;
     border: 2px solid #252A36;
     border-radius: 4px;
@@ -126,24 +126,27 @@ main {
 }
 
 .botao-salvar {
-    background-color: #252A36;
-    color: #fff;
+    background-color: #fff;
+    color: #252A36;
 }
 
 .botao-salvar:hover {
-    background-color: #3a3f4d;
+    background-color: #f0f0f0;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
+.botao-senha {
+    background-color: #252A36;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+}
+
+.botao-senha:hover {
+    background-color: #3a3f4d;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-    body {
-        padding-bottom: 20vh;
-    }
     
     .editar-perfil {
         min-height: calc(100vh - 15vh - 20vh);
@@ -163,16 +166,8 @@ footer {
         gap: 1rem;
     }
     
-    .botao-voltar, .botao-salvar {
+    .botao-voltar, .botao-salvar, .botao-senha {
         width: 100%;
         max-width: none;
-    }
-    
-    footer {
-        height: 20vh;
-    }
-    
-    .conteudo-footer {
-        height: 14vh;
     }
 }

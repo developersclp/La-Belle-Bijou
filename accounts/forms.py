@@ -3,10 +3,25 @@ from .models import CustomUser, Endereco
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from .validators import RegisterValidator
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Senha"}), label='Senha') # define o campo de senha
     password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirme a senha"}), label="Confirme a senha") # define o campo de confirmação de senha
+    cpf = forms.CharField(
+        max_length=14,
+        widget=forms.TextInput(attrs={
+            "placeholder": "CPF",
+            "inputmode": "numeric",
+        })
+    )
+    telefone = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Telefone",
+            "inputmode": "tel",
+        })
+    )
 
     class Meta:
         model = CustomUser # define que esse formulário irá criar/editar instâncias da tabela CustomUser
@@ -19,11 +34,6 @@ class RegisterForm(forms.ModelForm):
         }
         widgets = {
             "username": forms.TextInput(attrs={"placeholder": "Nome de usuário"}),
-            "cpf": forms.TextInput(attrs={
-                "placeholder": "CPF",
-                "inputmode": "numeric", # Mostra teclado numérico em celulares
-                "pattern": "[0-9]*",
-            }),
             "email": forms.EmailInput(attrs={"placeholder": "E-mail"}),
             "telefone": forms.TextInput(attrs={
                 "placeholder": "Telefone",
@@ -34,6 +44,14 @@ class RegisterForm(forms.ModelForm):
             "username": None,
         }
     
+    validator = RegisterValidator()
+
+    def clean_cpf(self):
+        return self.validator.validate_cpf(self.cleaned_data.get("cpf"))
+
+    def clean_telefone(self):
+        return self.validator.validate_phone(self.cleaned_data.get("telefone"))
+        
     def clean(self): # função que serve para fazer validações personalizadas antes de salvar o objeto
         cleaned_data = super().clean() # retorna um dicionário com os valores já validados dos campos do formulário
         password = cleaned_data.get("password") # pega o campo de senha do dicionário
@@ -73,6 +91,20 @@ class LoginForm(AuthenticationForm):
 # Novo formulário para edição de perfil
 class ProfileForm(forms.ModelForm):
     # Campos do usuário
+    telefone = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Telefone",
+            "inputmode": "tel",
+        })
+    )
+    cpf = forms.CharField(
+        max_length=14,
+        widget=forms.TextInput(attrs={
+            "placeholder": "CPF",
+            "inputmode": "numeric",
+        })
+    )
 
     class Meta:
         model = CustomUser
@@ -83,22 +115,41 @@ class ProfileForm(forms.ModelForm):
             'data_nasc': 'Data de nascimento',
         }
 
+    validator = RegisterValidator()
+
+    def clean_cpf(self):
+        return self.validator.validate_cpf(self.cleaned_data.get("cpf"))
+
+    def clean_telefone(self):
+        return self.validator.validate_phone(self.cleaned_data.get("telefone"))
+
 
 class CompleteSignupForm(forms.ModelForm):
+    telefone = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Telefone",
+            "inputmode": "tel",
+        })
+    )
+    cpf = forms.CharField(
+        max_length=14,
+        widget=forms.TextInput(attrs={
+            "placeholder": "CPF",
+            "inputmode": "numeric",
+        })
+    )
     class Meta:
         model = CustomUser
         fields = ['telefone', 'cpf']
-        widgets = {
-            "cpf": forms.TextInput(attrs={
-                "placeholder": "CPF",
-                "inputmode": "numeric", # Mostra teclado numérico em celulares
-                "pattern": "[0-9]*",
-            }),
-            "telefone": forms.TextInput(attrs={
-                "placeholder": "Telefone",
-                "inputmode": "tel", # Teclado numérico com símbolos em mobile
-            }),
-        }
+
+    validator = RegisterValidator()
+
+    def clean_cpf(self):
+        return self.validator.validate_cpf(self.cleaned_data.get("cpf"))
+
+    def clean_telefone(self):
+        return self.validator.validate_phone(self.cleaned_data.get("telefone"))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

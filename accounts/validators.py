@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
+import re
 
 class CustomPasswordValidator:
     def validate(self, password, user=None):
@@ -26,3 +27,33 @@ class CustomPasswordValidator:
                 <li>Pelo menos um caractere especial</li>
             """
         )
+
+class RegisterValidator:
+    def clean_digits(self, value):
+        return re.sub(r"\D", "", value or "")
+    
+    def validate_cpf(self, value):
+        cpf = self.clean_digits(value)
+
+        if not cpf:
+            raise ValidationError("Informe um CPF.")
+
+        if len(cpf) < 11:
+            raise ValidationError("CPF incompleto.")
+
+        if len(cpf) > 11:
+            raise ValidationError("CPF deve ter apenas 11 dígitos.")
+
+        if cpf in [s * 11 for s in "0123456789"]:
+            raise ValidationError("CPF inválido.")
+
+        return cpf
+            
+    
+    def validate_phone(self, value):
+        phone = self.clean_digits(value)
+
+        if len(phone) < 11:
+            raise ValidationError("Telefone incompleto")
+
+        return phone
