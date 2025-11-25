@@ -1,108 +1,225 @@
-<form method="post" enctype="multipart/form-data"> {# cria um formulário tipo post (enctype="multipart/form-data" é necessário quando o formulário contém uploads de imagens) #}
-    {% csrf_token %}
-    {{ form.as_p }} {# cria o form passado pela view sem o formset com as imagens secundárias #}
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
 
-    <h4>Imagens adicionais</h4>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/adm_add_produto.css' %}">
+{% endblock %}
 
-    {# management form obrigatório para o formset que gera inputs ocultos #}
-    {{ formset.management_form }}
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">
+  Gerenciar Produtos
+</h1>
+{% endblock %}
 
-    <div id="formset-container">
-        {# forms já existentes (ou os extras que vieram do server) #}
-        {% for f in formset %}
-            <div class="formset-form">
-                {# Renderiza os campos hidden (inclui id e DELETE quando aplicável) serve para garantir que esses campos sejam enviados quando o form for submetido #}
+{% block header_desc %}
+<p class="text-gray-400 mb-8">Verifique as informações abaixo</p>
+{% endblock %}
+
+{% block conteudo %}
+<div class="p-8">
+
+  <div class="bg-gray-100 rounded-2xl shadow-lg p-8">
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="grid grid-cols-2 gap-8">
+        
+        <div>
+          <h2 class="text-lg">Imagem Principal</h2>
+          
+          <div class="formset-form" style="margin-top: 12px;">
+            <div class="form-row">
+              {{ form.imagem_principal }}
+            </div>
+          </div>
+
+          <h2 class="text-lg" style="margin-top: 24px;">Imagens Secundárias</h2>
+          
+          {{ formset.management_form }}
+
+          <div id="formset-container">
+            {% for f in formset %}
+              <div class="formset-form">
                 {% for hidden in f.hidden_fields %}
-                    {{ hidden }}
+                  {{ hidden }}
                 {% endfor %}
 
-                {# Renderiza apenas o campo de imagem (evita usar f.as_p que renderiza DELETE visível) #}
                 <div class="form-row">
-                    {{ f.imagem.label_tag }} {{ f.imagem }}
+                  {{ f.imagem.label_tag }} {{ f.imagem }}
                 </div>
 
                 <button type="button" class="remove-form">🗑️</button>
-            </div>
-        {% endfor %}
-    </div>
-
-    {# empty_form escondido: template que é usado para clonar #}
-    <div id="empty-form" style="display:none;">
-        <div class="formset-form">
-            
-            {% for hidden in formset.empty_form.hidden_fields %}
-                {{ hidden }}
+              </div>
             {% endfor %}
+          </div>
 
-            <div class="form-row">
+          <div id="empty-form" style="display:none;">
+            <div class="formset-form">
+              {% for hidden in formset.empty_form.hidden_fields %}
+                {{ hidden }}
+              {% endfor %}
+
+              <div class="form-row">
                 {{ formset.empty_form.imagem.label_tag }} {{ formset.empty_form.imagem }}
+              </div>
+
+              <input type="hidden" name="{{ formset.prefix }}-__prefix__-DELETE"
+                     id="id_{{ formset.prefix }}-__prefix__-DELETE" value="">
+              <button type="button" class="remove-form">🗑️</button>
             </div>
+          </div>
 
-            {# Caso o empty_form não contenha explicitamente DELETE como hidden, garante um hidden DELETE #}
-            <input type="hidden" name="{{ formset.prefix }}-__prefix__-DELETE"
-                   id="id_{{ formset.prefix }}-__prefix__-DELETE" value="">
-            <button type="button" class="remove-form">🗑️</button>
+          <button type="button" id="add-form">+ Adicionar imagem</button>
         </div>
-    </div>
 
-    <button type="button" id="add-form">+ Adicionar imagem</button>
-    <br><br>
-    <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+        <div>
+          <h2 class="text-lg">Detalhes do produto</h2>
+
+          <div class="mb-4">
+            <label for="{{ form.nome.id_for_label }}">Nome da Joia</label>
+            {{ form.nome }}
+            {% if form.nome.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.nome.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label for="{{ form.categorias.id_for_label }}">Categoria</label>
+            {{ form.categorias }}
+            {% if form.categorias.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.categorias.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label for="{{ form.descricao.id_for_label }}">Descrição</label>
+            {{ form.descricao }}
+            {% if form.descricao.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.descricao.errors }}</div>
+            {% endif %}
+          </div>
+
+          <h2 class="text-lg" style="margin-top: 24px; margin-bottom: 16px;">Precificação</h2>
+
+          <div class="mb-4">
+            <label for="{{ form.preco.id_for_label }}">Preço Unitário (R$)</label>
+            {{ form.preco }}
+            {% if form.preco.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.preco.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4 flex items-center" style="margin-top: 24px; gap: 16px;">
+            <label for="{{ form.is_active.id_for_label }}" style="margin-bottom: 0;">Produto Ativo</label>
+            {{ form.is_active }}
+            {% if form.is_active.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.is_active.errors }}</div>
+            {% endif %}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="botoes-form">
+        <a href="{% url 'produtos-adm' %}" class="btn-cancelar">Cancelar</a>
+        <button type="submit" class="btn-salvar">Salvar Joia</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<footer class="text-center py-6">
+  <p class="text-gray-500 text-sm">&copy; {% now "Y" %} La belle bijou – Todos os direitos reservados.</p>
+</footer>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById("formset-container");
     const addBtn = document.getElementById("add-form");
     const emptyFormHtml = document.getElementById("empty-form").innerHTML;
-    // ID do TOTAL_FORMS — usa o prefix do formset gerado pelo Django
     const totalFormsInput = document.getElementById("id_{{ formset.prefix }}-TOTAL_FORMS");
+
+    // Função para extrair nome do arquivo de links existentes (modo edição)
+    function extractFileNameFromLinks() {
+        document.querySelectorAll('.formset-form').forEach(formDiv => {
+            const link = formDiv.querySelector('a');
+            const formRow = formDiv.querySelector('.form-row');
+            
+            if (link && formRow) {
+                const href = link.getAttribute('href');
+                if (href) {
+                    const fileName = href.split('/').pop();
+                    formRow.setAttribute('data-filename', decodeURIComponent(fileName));
+                    formDiv.classList.add('has-file');
+                }
+            }
+        });
+    }
+
+    // Função para mostrar nome do arquivo quando selecionado
+    function attachFileNameDisplay() {
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const formRow = this.closest('.form-row');
+                const formDiv = this.closest('.formset-form');
+                
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    if (formRow) {
+                        formRow.setAttribute('data-filename', fileName);
+                    }
+                    if (formDiv) {
+                        formDiv.classList.add('has-file');
+                    }
+                }
+            });
+        });
+    }
 
     // Função para reaplicar eventos de remoção a todos os botões existentes
     function attachRemoveEvents() {
         container.querySelectorAll(".remove-form").forEach(button => {
-            // Evita duplicar handlers
             button.onclick = function() {
                 const formDiv = this.closest(".formset-form");
-
-                // Tenta localizar um input DELETE (pode ser hidden)
                 const deleteInput = formDiv.querySelector("input[name$='-DELETE']");
 
                 if (deleteInput) {
-                    // Marca para deleção no backend (valor "on" é interpretado pelo Django)
                     deleteInput.value = "on";
-                    // Esconde o form do frontend (a visita seguinte continuará com o mark)
                     formDiv.style.display = "none";
                 } else {
-                    // Se não houver input DELETE (form recém-adicionado), remove do DOM
                     formDiv.remove();
-                    // Atualiza TOTAL_FORMS para refletir remoção de form não-salvo
                     totalFormsInput.value = container.querySelectorAll(".formset-form").length;
                 }
             };
         });
     }
 
-    // Adiciona novo form com base no empty_form (substitui __prefix__ pelo índice atual)
+    // Adiciona novo form com base no empty_form
     addBtn.addEventListener("click", function() {
         const formIndex = parseInt(totalFormsInput.value, 10);
-        // Substitui todos os __prefix__ pelo índice corrente
         const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formIndex);
 
-        // Cria um nó temporário e insere o novo form
         const temp = document.createElement("div");
         temp.innerHTML = newFormHtml.trim();
         const newFormDiv = temp.firstElementChild;
         container.appendChild(newFormDiv);
 
-        // Incrementa TOTAL_FORMS
         totalFormsInput.value = formIndex + 1;
 
-        // Reaplica os eventos de remoção (pro botão do novo form também)
         attachRemoveEvents();
+        attachFileNameDisplay();
     });
 
-    // inicializa os handlers ao carregar
+    // Inicializa os handlers ao carregar
+    extractFileNameFromLinks();
     attachRemoveEvents();
+    attachFileNameDisplay();
 });
 </script>
+{% endblock %}

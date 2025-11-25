@@ -1,0 +1,430 @@
+/* =========================
+    adm_add_produto.css — versão definitiva
+    Estilo para página de criar/editar produtos
+    ========================= */
+
+/* --- Variáveis de cor --- */
+:root{
+    --bg-dashboard: #262b31;
+    --card-bg: #ececec;
+    --panel-bg: #efefef;
+    --field-bg: #ffffff;
+    --field-border: #d8d8d8;
+    --label-color: #666666;
+    --muted: #8b8b8b;
+    --accent-dark: #1E293B;
+    --accent-gold: #d4af37;
+    --green: #35b24a;
+}
+
+/* =========================
+    CARD PRINCIPAL (a área branca interna)
+    ========================= */
+.bg-gray-100 {
+    width: 95%;
+    max-width: 1400px;
+    background-color: var(--card-bg) !important;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+    padding: 28px !important;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Garante grid duas colunas do conteúdo */
+.bg-gray-100 > form > .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+/* =========================
+    HEADINGS (títulos dentro do card)
+    ========================= */
+.bg-gray-100 h2.text-lg,
+.bg-gray-100 h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #444444;
+    margin: 4px 0 14px 0;
+}
+
+/* legenda pequena */
+.bg-gray-100 h3,
+.bg-gray-100 .text-sm {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* =========================
+    PREVIEWS / IMAGENS ADICIONAIS (thumbnails)
+    ========================= */
+#formset-container {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+}
+
+/* thumb branco com borda arredondada - estilo horizontal */
+.formset-form {
+    width: 100%;
+    max-width: 420px;
+    height: 48px;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 0 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: visible;
+    gap: 12px;
+}
+
+/* Esconde labels "Imagem:" do Django */
+.formset-form label {
+    display: none;
+}
+
+/* Esconde os links de "Imagem atual:" e textos extras do Django */
+.formset-form a {
+    display: none;
+}
+
+.formset-form .form-row a {
+    display: none;
+}
+
+/* Esconde o texto "Imagem atual:" */
+.formset-form p {
+    display: none;
+}
+
+/* Esconde qualquer span ou texto adicional */
+.formset-form span {
+    display: none;
+}
+
+/* Container do conteúdo (ícone + texto) */
+.formset-form .form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    position: relative;
+    min-width: 0;
+}
+
+/* Ícone antes do texto */
+.formset-form .form-row::before {
+    content: ''; /* Remove o '+' */
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Substitui pelo seu SVG */
+    background-image: url("data:image/svg+xml,%3Csvg width='19' height='19' viewBox='0 0 19 19' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.08333 18.75C1.51042 18.75 1.02014 18.5462 0.6125 18.1385C0.204861 17.7309 0.000694444 17.2403 0 16.6667V2.08333C0 1.51042 0.204167 1.02014 0.6125 0.6125C1.02083 0.204861 1.51111 0.000694444 2.08333 0H16.6667C17.2396 0 17.7302 0.204167 18.1385 0.6125C18.5469 1.02083 18.7507 1.51111 18.75 2.08333V16.6667C18.75 17.2396 18.5462 17.7302 18.1385 18.1385C17.7309 18.5469 17.2403 18.7507 16.6667 18.75H2.08333ZM3.125 14.5833H15.625L11.7188 9.375L8.59375 13.5417L6.25 10.4167L3.125 14.5833Z' fill='%23525252'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Quando tem arquivo, não precisa mudar o ícone pois o padrão já é o SVG */
+.formset-form.has-file .form-row::before {
+    /* Não altera o content, o background-image já é o SVG */
+    content: ''; 
+}
+
+/* Texto do arquivo */
+.formset-form .form-row::after {
+    content: 'Adicionar imagem';
+    color: #9ca3af;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* Quando tem arquivo selecionado, mostra o nome */
+.formset-form.has-file .form-row::after {
+    content: attr(data-filename);
+    color: #444;
+}
+
+/* input file dentro do formset - totalmente invisível */
+.formset-form input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+/* Esconde o checkbox "Limpar" do Django em modo de edição */
+.formset-form input[type="checkbox"] {
+    display: none !important;
+}
+
+/* Esconde qualquer texto solto (como "Alterar:") */
+.formset-form > *:not(.form-row):not(.remove-form) {
+    display: none;
+}
+
+/* Esconde a tag 'p' dentro do .form-row para o caso do Django inserir "Imagem atual: image.png" como um parágrafo */
+.formset-form .form-row p {
+    display: none;
+}
+
+/* Esconde o texto "Imagem atual: image.png" e o link "Alterar" para a imagem principal */
+.formset-form .form-row label[for^="id_imagem_principal"] + a, /* Link "Imagem atual:" */
+.formset-form .form-row label[for^="id_imagem_principal"] + a + span, /* Texto "Alterar:" */
+.formset-form .form-row label[for^="id_imagem_principal"] + a + span + input[type="checkbox"] + label { /* Checkbox "Limpar" e seu label */
+    display: none !important;
+}
+
+
+/* botão remover - ícone de lixeira à direita */
+.formset-form .remove-form {
+    background: transparent;
+    padding: 4px;
+    border-radius: 6px;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 18px;
+    z-index: 10;
+    transition: background 0.2s;
+}
+
+.formset-form .remove-form:hover { 
+    background: rgba(0,0,0,0.05); 
+}
+
+/* botão + Adicionar imagem */
+#add-form {
+    background: #e4e4e7;
+    color: #3f3f46;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+#add-form:hover {
+    background-color: #d4d4d8;
+    text-decoration: none;
+}
+
+/* =========================
+    FORM - DETALHES DO PRODUTO (lado direito)
+    ========================= */
+form.space-y-4 { width: 100%; }
+
+/* Força layout de campo: label sobre input */
+form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 580;
+    color: var(--label-color);
+    margin-bottom: 6px;
+}
+
+/* Estilo geral para inputs/selects/textarea */
+form input[type="text"],
+form input[type="number"],
+form input[type="email"],
+form select,
+form textarea {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #222;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    transition: border-color .14s ease, box-shadow .14s ease, transform .06s;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* especificidade maior para inputs que o Django gera sem wrapper */
+input, select, textarea { font-family: inherit; }
+
+/* textarea maior */
+form textarea { 
+    min-height: 40px;
+    max-height: 150px;
+    resize: vertical;
+}
+
+/* focus: borda dourada sutil */
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 6px rgba(212,175,55,0.06);
+    transform: translateY(-1px);
+}
+
+/* =========================
+    FIX do SELECT
+    ========================= */
+form select {
+    background-image: none !important;
+    -webkit-appearance: menulist-button !important;
+    appearance: menulist-button !important;
+    padding-right: 12px;
+    height: 38px;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+form select::-ms-expand { display: block; }
+
+/* =========================
+    TOGGLE (checkbox) estilo botão (Produto Ativo)
+    ========================= */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 46px;
+    height: 26px;
+    background: #e6e6e6;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    transition: background .14s, box-shadow .14s;
+}
+
+input[type="checkbox"]::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: left .14s cubic-bezier(.2,.9,.2,1);
+}
+
+input[type="checkbox"]:checked {
+    background: var(--green);
+    box-shadow: 0 4px 12px rgba(53,178,74,0.14);
+}
+
+input[type="checkbox"]:checked::after { 
+    left: calc(100% - 23px); 
+}
+
+/* =========================
+    BOTOES (Cancelar / Salvar Joia)
+    ========================= */
+.botoes-form {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+/* cancelar: cinza claro */
+a.bg-gray-400,
+.btn-cancelar {
+    background: #d4d4d8;
+    color: #3f3f46;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+a.bg-gray-400:hover,
+.btn-cancelar:hover {
+    background: #c2c2c7;
+}
+
+/* salvar: escuro com hover */
+.btn-salvar,
+form button[type="submit"],
+button.btn-salvar {
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-salvar:hover,
+form button[type="submit"]:hover {
+    background: #0f172a;
+    color: #fff;
+}
+
+/* Alinhamento inline para produto ativo */
+.flex.items-center {
+    display: flex;
+    align-items: center;
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+/* =========================
+    CORREÇÕES ADICIONAIS E RESPONSIVIDADE
+    ========================= */
+@media (max-width: 980px) {
+    .bg-gray-100 > form > .grid { 
+        grid-template-columns: 1fr; 
+    }
+    .formset-form { 
+        max-width: 100%; 
+    }
+}
+
+@media (max-width: 480px) {
+    .bg-gray-100 { 
+        padding: 18px !important; 
+        margin: 16px !important; 
+    }
+    .formset-form { 
+        height: 44px; 
+    }
+}

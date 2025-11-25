@@ -1,6 +1,45 @@
-<form method="post">
-    {% csrf_token %}
-    <h1>Criar Categoria</h1>
-    {{form.as_p}}
-    <button type="submit">Salvar</button>
-</form>
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
+
+{% block extra_css %}
+{# Reutilizamos o mesmo CSS, já que os estilos são os mesmos #}
+<link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
+{% endblock %}
+
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">Criar Nova Categoria</h1>
+{% endblock %}
+
+{% block header_desc %}
+<p class="text-gray-400 mb-8">Preencha o nome da nova categoria abaixo.</p>
+{% endblock %}
+
+{% block conteudo %}
+{# 1. Usamos o mesmo container flex para centralizar tudo #}
+<div class="flex items-center justify-center p-8">
+
+    {# 2. O card principal, mas um pouco mais estreito (max-w-2xl) por ter menos conteúdo #}
+    <div class="bg-gray-100 rounded-2xl shadow-lg p-8 w-full max-w-2xl">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <h2 class="text-lg mb-6">Detalhes da Categoria</h2>
+
+
+            <div class="mb-4">
+                <label for="{{ form.nome.id_for_label }}">Nome da Categoria</label>
+                {{ form.nome }}
+                {# Se houver erros no campo, eles podem ser mostrados aqui #}
+                {{ form.nome.errors }}
+            </div>
+            <div class="flex justify-end gap-3 mt-8">
+                {# É uma boa prática ter um botão de cancelar. Troque 'lista-categorias' pelo nome da sua URL da lista #}
+                <a href="#" class="btn-cancelar">Cancelar</a>
+                <button type="submit" class="btn-salvar">Salvar Categoria</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
