@@ -69,6 +69,7 @@
 <div id="menu_variavel" class="oculto">
   <h3>Olá, {{ user.username }}</h3>
   <a href="{% url 'profile' %}">Editar perfil</a>
+  <a href="{% url 'ver-pedidos' %}">Ver Pedidos</a>
   {% if user.is_superuser %}
   <a href="{% url 'produtos-adm' %}">Seção do Administrador</a>
   {% endif %}
