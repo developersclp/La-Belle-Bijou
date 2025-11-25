@@ -1,34 +1,72 @@
-<div class="container mt-4">
-    <h2>Editar Pedido</h2>
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/editar_pedido.css' %}">
+{% endblock %}
+
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">
+  Editar Pedido
+</h1>
+{% endblock %}
+
+{% block header_desc %}
+<p class="text-gray-400 mb-8">Atualize as informações do pedido e visualize os itens incluídos.</p>
+{% endblock %}
+
+{% block conteudo %}
+<div class="p-8">
+
+  <div class="container">
+
+    <!-- FORMULÁRIO DE EDIÇÃO -->
+    <h2>Informações do Pedido</h2>
 
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+      {% csrf_token %}
+      {{ form.as_p }}
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
         <a href="{% url 'pedidos-adm' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
     </form>
 
-    
+
+    <!-- TABELA DE ITENS DO PEDIDO -->
     <h3>Itens do Pedido</h3>
+    
+    {% if itens_pedido %}
     <table class="table">
-    <thead>
+      <thead>
         <tr>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Preço Unitário</th>
-        <th>Subtotal</th>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário</th>
+          <th>Subtotal</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for item in itens_pedido %}
-            <tr>
-            <td>{{ item.produto.nome }}</td>
-            <td>{{ item.quantidade }}</td>
-            <td>R$ {{ item.preco_unitario }}</td>
-            <td>R$ {{ pedido.valor_total }}</td>
-            </tr>
+        <tr>
+          <td>{{ item.produto.nome }}</td>
+          <td>{{ item.quantidade }}</td>
+          <td>R$ {{ item.preco_unitario }}</td>
+          <td>R$ {{ item.subtotal }}</td>
+        </tr>
         {% endfor %}
-    </tbody>
+      </tbody>
     </table>
+    {% else %}
+    <p class="text-gray-500 text-sm mt-4">Nenhum item encontrado neste pedido.</p>
+    {% endif %}
+
+  </div>
+
 </div>
+
+<footer class="text-center py-6">
+  <p class="text-gray-500 text-sm">&copy; {% now "Y" %} La belle bijou – Todos os direitos reservados.</p>
+</footer>
+{% endblock %}
