@@ -123,7 +123,7 @@
 .filter-container {
     display: flex;
     align-items: center;
-    gap: 10vw;
+    gap: 15rem;
     flex-direction: row;
 }
 
