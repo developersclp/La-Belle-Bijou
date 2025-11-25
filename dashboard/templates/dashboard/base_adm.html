@@ -34,20 +34,29 @@
           <img src="{% static 'img/logo.png' %}" alt="Logo La Belle Bijou">
         </a>
       </div>
-      
+
+      {% with request.resolver_match.url_name as current %}
+
       <div class="mobile-menu-content">
         <aside class="sidebar">
           <p class="welcome-message">Bem-vindo, {{ request.user.first_name|default:'Admin' }}</p>
           <nav class="navigation">
             <ul>
-              <li><a href="{% url 'produtos-adm' %}" class="{% if request.resolver_match.url_name == 'produtos-adm' %}active{% endif %}">Produtos</a></li>
-              <li><a href="{% url 'categorias-adm' %}" class="{% if request.resolver_match.url_name == 'categorias-adm' %}active{% endif %}">Categorias</a></li>
-              <li><a href="{% url 'usuarios-adm' %}" class="{% if request.resolver_match.url_name == 'usuarios-adm' %}active{% endif %}">Usuários</a></li>
-              <li><a href="{% url 'pedidos-adm' %}" class="{% if request.resolver_match.url_name == 'pedidos-adm' %}active{% endif %}">Pedidos</a></li>
+              <li>
+                <a href="{% url 'produtos-adm' %}"
+                  class="{% if current == 'produtos-adm' or current == 'add-produto' %}active{% endif %}">
+                  Produtos
+                </a>
+              </li>
+              <li><a href="{% url 'categorias-adm' %}" class="{% if current == 'categorias-adm' %}active{% endif %}">Categorias</a></li>
+              <li><a href="{% url 'usuarios-adm' %}" class="{% if current == 'usuarios-adm' %}active{% endif %}">Usuários</a></li>
+              <li><a href="{% url 'pedidos-adm' %}" class="{% if current == 'pedidos-adm' %}active{% endif %}">Pedidos</a></li>
             </ul>
           </nav>
         </aside>
       </div>
+
+      {% endwith %}
 
     </div>
 
