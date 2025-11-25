@@ -51,7 +51,7 @@
                 {% if produto.imagem_principal %}
                     <td><img src="{{ produto.imagem_principal.url }}" alt="{{ produto.nome }}"> {{ produto.nome }}</td>
                 {% else %}
-                    <td><p>produto sem imagem - {{ produto.nome }}</p></td>
+                    <td><img src="{% static 'img/produto-placeholder.jpg' %}" alt="Imagem não disponível"><p> {{ produto.nome }}</p></td>
                 {% endif %}
                 <td>{{ produto.id }}</td>
                 <td>{% for c in produto.categorias.all %}{{ c.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
