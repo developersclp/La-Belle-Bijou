@@ -1,7 +1,6 @@
 .table-container {
     max-height: 60vh;
     overflow-y: auto;
-    overflow-x: hidden;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -24,42 +23,47 @@
     border-collapse: collapse;
     font-size: 14px;
     color: #333;
+    table-layout: auto;
 }
 
 .admin-table thead {
     background-color: #e4e4e4;
 }
 
-.admin-table th {
-    position: sticky;
-    top: 0;
-    background-color: #e4e4e4;
-    font-weight: 600;
-    color: #555;
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-    z-index: 2;
-    text-align: left;
-}
-
-/* ======= CORPO ======= */
+.admin-table th,
 .admin-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #eee;
-    background-color: #fff;
+    text-align: center;
 }
 
-.admin-table tbody tr:hover {
-    background-color: #f9f9f9;
+.admin-table th {
+    font-weight: 600;
+    color: #555;
 }
 
-.admin-table img {
-    width: 60px;
-    height: 60px;
-    border-radius: 5px;
-    object-fit: cover;
-    margin-right: 10px;
-    vertical-align: middle;
+.admin-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #e4e4e4;
+    z-index: 2;
+}
+
+.admin-table th:first-child,
+.admin-table td:first-child {
+    text-align: left;
+    width: auto;
+}
+
+.admin-table th:nth-child(2),
+.admin-table td:nth-child(2) {
+    text-align: center;
+}
+
+.admin-table th:last-child,
+.admin-table td:last-child {
+    text-align: right;
+    width: 120px;
 }
 
 /* ======= STATUS ======= */
@@ -175,4 +179,10 @@
 
 .add-button:hover {
     background-color: #c89f5e;
+}
+
+@media (max-width: 992px) {
+    .admin-table {
+        overflow: scroll;
+    }
 }

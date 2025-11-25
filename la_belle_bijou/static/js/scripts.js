@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             navbarCollapse.classList.add('show');
             overlay.classList.add('show');
             body.classList.add('menu-open');
-            body.style.position = 'fixed';
+            body.style.overflow = 'hidden';
             navbarToggler.setAttribute('aria-expanded', 'true');
             navbarToggler.classList.add('bac')
         } else {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navbarCollapse.classList.remove('show');
         overlay.classList.remove('show');
         body.classList.remove('menu-open');
-        body.style.position = '';
+        body.style.overflow = '';
         navbarToggler.setAttribute('aria-expanded', 'false');
     }
 

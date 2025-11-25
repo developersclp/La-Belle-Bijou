@@ -336,6 +336,7 @@ header {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #b5b5b5 #f1f1f1;
+    scroll-behavior: smooth;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -600,6 +601,15 @@ header {
         & .sidebar {
             display: none;
         }
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        color: #333;
+        table-layout: auto;
+        overflow-x: hidden;
     }
 
     /* ========= TOOLBAR ========= */

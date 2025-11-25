@@ -8,7 +8,6 @@
 }
 
 .no_scroll {
-    position: fixed;
     overflow: hidden;
 }
 
@@ -127,6 +126,7 @@
     background-color: #00000080;
     z-index: 9998;
     cursor: pointer;
+    transition: all 1s;
 }
 
 .oculto {
