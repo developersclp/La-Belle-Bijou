@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/pedidos.css' %}">
 {% endblock %}
 
+
 {% block conteudo %}
 <div class="pedidos-container">
     <div class="pedidos-header">
@@ -62,9 +63,43 @@
                         </div>
                     </div>
 
+                    <div class="pedido-itens">
+                        <div class="itens-header">
+                            <span class="itens-titulo">Itens do Pedido</span>
+                            <span class="itens-quantidade">{{ pedido.itens.count }} item{{ pedido.itens.count|pluralize }}</span>
+                        </div>
+                        
+                        <div class="itens-lista">
+                            {% for item in pedido.itens.all %}
+                                <div class="item-produto">
+                                    {% if item.produto.imagem %}
+                                        <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="item-imagem">
+                                    {% endif %}
+                                    
+                                    <div class="item-info">
+                                        <span class="item-nome">{{ item.produto.nome }}</span>
+                                        <span class="item-detalhes">
+                                            Quantidade: {{ item.quantidade }} 
+                                            {% if item.produto.variacao %}
+                                                | {{ item.produto.variacao }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="item-preco">
+                                        <span class="preco-unitario">R$ {{ item.preco_unitario|floatformat:2 }}</span>
+                                        {% if item.quantidade > 1 %}
+                                            <span class="subtotal">Subtotal: R$ {{ item.subtotal|floatformat:2 }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <div class="pedido-acoes">
                         <a href="{% url 'detalhe-pedido' pedido.pk %}" class="btn-pedido btn-detalhes">
-                            Ver Detalhes
+                            Ver Detalhes Completos
                         </a>
                         {% if pedido.status == "AGUARDANDO_PAGAMENTO" %}
                             <a href="#" class="btn-pedido btn-secundario">
