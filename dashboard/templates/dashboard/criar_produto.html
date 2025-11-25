@@ -85,10 +85,10 @@
           </div>
 
           <div class="mb-4">
-            <label for="{{ form.categoria.id_for_label }}">Categoria</label>
-            {{ form.categoria }}
-            {% if form.categoria.errors %}
-              <div class="text-red-500 text-sm mt-1">{{ form.categoria.errors }}</div>
+            <label for="{{ form.categorias.id_for_label }}">Categoria</label>
+            {{ form.categorias }}
+            {% if form.categorias.errors %}
+              <div class="text-red-500 text-sm mt-1">{{ form.categorias.errors }}</div>
             {% endif %}
           </div>
 
@@ -100,21 +100,13 @@
             {% endif %}
           </div>
 
-          <h2 class="text-lg" style="margin-top: 24px; margin-bottom: 16px;">Precificação e Estoque</h2>
+          <h2 class="text-lg" style="margin-top: 24px; margin-bottom: 16px;">Precificação</h2>
 
           <div class="mb-4">
             <label for="{{ form.preco.id_for_label }}">Preço Unitário (R$)</label>
             {{ form.preco }}
             {% if form.preco.errors %}
               <div class="text-red-500 text-sm mt-1">{{ form.preco.errors }}</div>
-            {% endif %}
-          </div>
-
-          <div class="mb-4">
-            <label for="{{ form.quantidade_estoque.id_for_label }}">Quantidade em Estoque</label>
-            {{ form.quantidade_estoque }}
-            {% if form.quantidade_estoque.errors %}
-              <div class="text-red-500 text-sm mt-1">{{ form.quantidade_estoque.errors }}</div>
             {% endif %}
           </div>
 
