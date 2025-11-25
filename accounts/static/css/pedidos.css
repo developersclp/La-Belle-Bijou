@@ -1,0 +1,259 @@
+/* Estilo para página de pedidos - La Belle Bijou */
+
+.pedidos-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+}
+
+.pedidos-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pedidos-header h1 {
+    color: #C9A961;
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.pedidos-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.pedidos-lista {
+    display: grid;
+    gap: 25px;
+}
+
+.pedido-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.pedido-card:hover {
+    box-shadow: 0 4px 16px rgba(201, 169, 97, 0.15);
+    transform: translateY(-2px);
+}
+
+.pedido-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, #C9A961 0%, #D4B87A 100%);
+}
+
+.pedido-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.pedido-numero {
+    font-size: 0.9rem;
+    color: #999;
+    font-weight: 600;
+}
+
+.pedido-numero span {
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.pedido-status {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-aguardando {
+    background-color: #FFF4E6;
+    color: #E67E22;
+}
+
+.status-confirmado {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.status-enviado {
+    background-color: #E3F2FD;
+    color: #1976D2;
+}
+
+.status-entregue {
+    background-color: #F3E5F5;
+    color: #7B1FA2;
+}
+
+.status-cancelado {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+.pedido-detalhes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detalhe-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detalhe-label {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detalhe-valor {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.pedido-total {
+    font-size: 1.3rem;
+    color: #C9A961;
+}
+
+.pedido-acoes {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-pedido {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-detalhes {
+    background-color: #C9A961;
+    color: #fff;
+}
+
+.btn-detalhes:hover {
+    background-color: #B89850;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+}
+
+.btn-secundario {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.btn-secundario:hover {
+    background-color: #f5f5f5;
+    border-color: #C9A961;
+    color: #C9A961;
+}
+
+.pedidos-vazio {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.pedidos-vazio-icon {
+    font-size: 4rem;
+    color: #C9A961;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.pedidos-vazio h2 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.pedidos-vazio p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+.btn-comecar-comprar {
+    background-color: #C9A961;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-comecar-comprar:hover {
+    background-color: #B89850;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .pedidos-container {
+        padding: 15px;
+        margin: 20px auto;
+    }
+
+    .pedidos-header h1 {
+        font-size: 2rem;
+    }
+
+    .pedido-header-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .pedido-detalhes {
+        grid-template-columns: 1fr;
+    }
+
+    .pedido-acoes {
+        flex-direction: column;
+    }
+
+    .btn-pedido {
+        width: 100%;
+    }
+}
