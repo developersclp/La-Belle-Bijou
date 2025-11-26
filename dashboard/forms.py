@@ -87,6 +87,12 @@ class UsuarioForm(forms.ModelForm):
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Pedidos =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 class PedidoForm(forms.ModelForm):
+    endereco_exibicao = forms.CharField(
+        label="Endereço",
+        required=False,
+        disabled=True,
+        widget=forms.TextInput(attrs={"readonly": "readonly"})
+    )
     class Meta:
         model = Pedido
         fields = ["status", "valor_total", "pagarme_id", "payment_url", "endereco"]
@@ -94,5 +100,15 @@ class PedidoForm(forms.ModelForm):
             "valor_total": forms.TextInput(attrs={"readonly": "readonly"}),
             "pagarme_id": forms.TextInput(attrs={"readonly": "readonly"}),
             "payment_url": forms.TextInput(attrs={"readonly": "readonly"}),
-            "endereco": forms.TextInput(attrs={"readonly": "readonly"}),
+            "endereco": forms.HiddenInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        endereco = self.instance.endereco
+
+        self.fields["endereco_exibicao"].initial = (
+            f"{endereco.rua}, {endereco.numero} - "
+            f"{endereco.complemento or ''} - {endereco.cep}"
+        )
