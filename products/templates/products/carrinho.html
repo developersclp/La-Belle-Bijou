@@ -83,7 +83,6 @@ function updateQuantity(itemId, change) {
     const newQty = Math.max(1, currentQty + change);
     
     if (newQty !== currentQty) {
-        // Faz a requisição AJAX para atualizar no servidor
         fetch("{% url 'atualizar_quantidade' %}", {
             method: 'POST',
             headers: {
@@ -97,20 +96,26 @@ function updateQuantity(itemId, change) {
         })
         .then(response => response.json())
         .then(data => {
+
+            if (data.error === "estoque_insuficiente") {
+
+                qtyElement.textContent = data.max_quantity;
+
+                // Mensagem amigável
+                alert("Estoque insuficiente.");
+
+                return;
+            }
+
             if (data.success) {
-                // Atualiza a quantidade visualmente
                 qtyElement.textContent = newQty;
-                // Atualiza o total do item
+
                 document.getElementById('total-' + itemId).textContent = data.item_total;
-                // Atualiza os totais do carrinho
                 document.getElementById('subtotal').textContent = data.cart_total;
                 document.getElementById('total-final').textContent = data.cart_total;
-                
-                // Se foi removido (quantidade = 0), recarrega
+
                 if (data.removed) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);
+                    setTimeout(() => window.location.reload(), 500);
                 }
             }
         })

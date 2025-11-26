@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from accounts.models import Endereco
-from products.models import Produto
+from products.models import Produto, MovimentacaoEstoque
 from .models import Pedido, ItemPedido
 from products.cart import Cart
 from accounts.forms import EnderecoForm
@@ -326,6 +326,17 @@ class PagarmeWebhookView(View):
         if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
             pedido.data_pagamento = timezone.now()
+            pedido.save()
+
+            for item in pedido.itens.all():
+                MovimentacaoEstoque.objects.create(
+                    produto=item.produto,
+                    tipo="SAIDA",
+                    quantidade=item.quantidade,
+                    motivo="VENDA",
+                    usuario=pedido.usuario
+                )
+
         elif event_type in [
             "order.canceled",
             "payment.canceled",
@@ -334,8 +345,8 @@ class PagarmeWebhookView(View):
             "payment.failed",
         ]:
             pedido.status = "CANCELADO"
+            pedido.save()
         else:
             return JsonResponse({"message": "Evento ignorado"}, status=200)
 
-        pedido.save()
         return JsonResponse({"message": "Webhook processado com sucesso"}, status=200)

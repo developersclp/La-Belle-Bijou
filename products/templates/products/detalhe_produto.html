@@ -53,6 +53,10 @@
                     </div>
                 </div>
 
+                <p class="produto-descricao">
+                    Estoque Disponível: {{produto.estoque_atual}}
+                </p>
+
                 <!-- Ações -->
                 <div class="produto-acoes">
                     <button onclick="window.location.href='{% url 'adicionar_carrinho' produto.id %}'" class="btn-adicionar-carrinho">

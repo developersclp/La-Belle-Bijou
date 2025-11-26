@@ -50,8 +50,16 @@ class DetailProduto(DetailView):
 def adicionar_ao_carrinho(request, produto_id):
     cart = Cart(request)
     produto = get_object_or_404(Produto, id=produto_id)
-    cart.add(produto, quantidade=1)
-    return redirect("ver_carrinho")
+
+    item = cart.cart.get(str(produto_id))
+    quantidade_atual = item["quantidade"] if item else 0
+
+    if quantidade_atual + 1 > produto.estoque_atual:
+        return redirect("ver_carrinho")
+    else:
+        cart.add(produto, quantidade=1)
+
+        return redirect("ver_carrinho")
 
 def remover_do_carrinho(request, produto_id):
     cart = Cart(request)
@@ -80,6 +88,8 @@ def atualizar_quantidade(request):
         cart = Cart(request)
         produto = get_object_or_404(Produto, id=produto_id)
 
+        estoque_disponivel = produto.estoque_atual
+
         if quantidade <= 0:
             cart.remove(produto)
             total_carrinho = cart.get_total_price()
@@ -87,6 +97,13 @@ def atualizar_quantidade(request):
                 "success": True,
                 "removed": True,
                 "cart_total": f"{float(total_carrinho):.2f}"
+            })
+
+        if quantidade > estoque_disponivel:
+            return JsonResponse({
+                "success": False,
+                "error": "estoque_insuficiente",
+                "max_quantity": estoque_disponivel,
             })
 
         # Atualiza quantidade
