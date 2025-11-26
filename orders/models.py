@@ -32,5 +32,9 @@ class ItemPedido(models.Model):
     quantidade = models.PositiveIntegerField()
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
+    @property
+    def subtotal(self):
+        return self.preco_unitario * self.quantidade
+
     def __str__(self):
         return f"{self.quantidade}x {self.produto.nome} (Pedido {self.pedido.id})"

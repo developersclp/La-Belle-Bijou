@@ -1,15 +1,121 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pedidos.css' %}">
+{% endblock %}
+
+
 {% block conteudo %}
-    {% for pedido in pedidos %}
-        <div>
-            <p>Pedido: {{ pedido.id }}</p>
-            <p>Status: {{ pedido.status }}</p>
-            <p>Total: R$ {{ pedido.valor_total }}</p>
-            <a href="{% url 'detalhe-pedido' pedido.pk %}">Ver detalhes</a>
+<div class="pedidos-container">
+    <div class="pedidos-header">
+        <h1>Meus Pedidos</h1>
+        <p>Acompanhe o status de suas compras</p>
+    </div>
+
+    {% if pedidos %}
+        <div class="pedidos-lista">
+            {% for pedido in pedidos %}
+                <div class="pedido-card">
+                    <div class="pedido-header-info">
+                        <div class="pedido-numero">
+                            Pedido <span>#{{ pedido.id }}</span>
+                        </div>
+                        <div class="pedido-status status-{{ pedido.status|lower }}">
+                            {{ pedido.status }}
+                        </div>
+                    </div>
+
+                    <div class="pedido-detalhes">
+                        <div class="detalhe-item">
+                            <span class="detalhe-label">Data do Pedido</span>
+                            <span class="detalhe-valor">
+                                {% if pedido.created_at %}
+                                    {{ pedido.created_at|date:"d/m/Y H:i" }}
+                                {% elif pedido.data_pedido %}
+                                    {{ pedido.data_pedido|date:"d/m/Y H:i" }}
+                                {% elif pedido.data_criacao %}
+                                    {{ pedido.data_criacao|date:"d/m/Y H:i" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="detalhe-item">
+                            <span class="detalhe-label">Forma de Pagamento</span>
+                            <span class="detalhe-valor">
+                                {% if pedido.forma_pagamento %}
+                                    {{ pedido.get_forma_pagamento_display|default:pedido.forma_pagamento }}
+                                {% elif pedido.metodo_pagamento %}
+                                    {{ pedido.get_metodo_pagamento_display|default:pedido.metodo_pagamento }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="detalhe-item">
+                            <span class="detalhe-label">Total</span>
+                            <span class="detalhe-valor pedido-total">
+                                R$ {% if pedido.valor_total %}{{ pedido.valor_total|floatformat:2 }}{% elif pedido.total %}{{ pedido.total|floatformat:2 }}{% else %}0,00{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="pedido-itens">
+                        <div class="itens-header">
+                            <span class="itens-titulo">Itens do Pedido</span>
+                            <span class="itens-quantidade">{{ pedido.itens.count }} item{{ pedido.itens.count|pluralize }}</span>
+                        </div>
+                        
+                        <div class="itens-lista">
+                            {% for item in pedido.itens.all %}
+                                <div class="item-produto">
+                                    {% if item.produto.imagem %}
+                                        <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="item-imagem">
+                                    {% endif %}
+                                    
+                                    <div class="item-info">
+                                        <span class="item-nome">{{ item.produto.nome }}</span>
+                                        <span class="item-detalhes">
+                                            Quantidade: {{ item.quantidade }} 
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="item-preco">
+                                        <span class="preco-unitario">R$ {{ item.preco_unitario|floatformat:2 }}</span>
+                                        {% if item.quantidade > 1 %}
+                                            <span class="subtotal">Subtotal: R$ {{ item.subtotal|floatformat:2 }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="pedido-acoes">
+                        <a href="{% url 'detalhe-pedido' pedido.pk %}" class="btn-pedido btn-detalhes">
+                            Ver Detalhes Completos
+                        </a>
+                        {% if pedido.status == "AGUARDANDO_PAGAMENTO" %}
+                            <a href="{{pedido.payment_url}}" class="btn-pedido btn-secundario">
+                                Pagar Agora
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% empty %}
-        <p>Você ainda não fez nenhum pedido.</p>
-    {% endfor %}
+    {% else %}
+        <div class="pedidos-vazio">
+            <div class="pedidos-vazio-icon">🛍️</div>
+            <h2>Você ainda não fez nenhum pedido</h2>
+            <p>Que tal começar a explorar nossas joias exclusivas?</p>
+            <a href="{% url 'home' %}" class="btn-comecar-comprar">
+                Começar a Comprar
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock conteudo %}
