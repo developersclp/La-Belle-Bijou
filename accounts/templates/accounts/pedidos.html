@@ -95,9 +95,6 @@
                     </div>
 
                     <div class="pedido-acoes">
-                        <a href="{% url 'detalhe-pedido' pedido.pk %}" class="btn-pedido btn-detalhes">
-                            Ver Detalhes Completos
-                        </a>
                         {% if pedido.status == "AGUARDANDO_PAGAMENTO" %}
                             <a href="{{pedido.payment_url}}" class="btn-pedido btn-secundario">
                                 Pagar Agora

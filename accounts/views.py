@@ -90,25 +90,6 @@ class VerPedidos(LoginRequiredMixin, ListView):
         user = self.request.user
         return Pedido.objects.filter(usuario=user).order_by('-data_criacao')
 
-class PedidoDetalheView(LoginRequiredMixin, DetailView):
-    model = Pedido
-    template_name = 'accounts/ver_pedido.html'
-    context_object_name = 'pedido'
-
-    def get_object(self, queryset=None):
-        pedido = super().get_object(queryset)
-
-        if pedido.usuario != self.request.user:
-            raise Http404("Pedido não encontrado")
-        return pedido
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pedido = self.get_object()
-        context["itens_pedido"] = pedido.itens.all()
-
-        return context
-
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Reset de Senha -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
 class ResetPasswordView(auth_views.PasswordResetView): # view que manda o email
