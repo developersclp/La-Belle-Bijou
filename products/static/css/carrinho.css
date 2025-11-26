@@ -146,7 +146,7 @@ h1 {
 .summary {
   display: flex;
   justify-content: flex-end;
-  margin: 6rem 5% 6rem 0;
+  margin: 8rem 5% 8rem 0;
 }
 
 .summary-table {
