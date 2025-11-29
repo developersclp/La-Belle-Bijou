@@ -314,6 +314,22 @@ class GerarEtiquetaView(View):
     def gerar_superfrete(self, pedido):
         endereco = pedido.endereco
 
+        # ======= CALCULO DO VOLUME ========
+        total_peso = 0
+        max_altura = 0
+        max_largura = 0
+        max_comprimento = 0
+
+        for item in pedido.itens.all():
+            peso = float(item.produto.peso or 0) * item.quantidade
+            total_peso += peso
+
+            # Uso das maiores dimensões
+            max_altura = max(max_altura, float(item.produto.altura or 0))
+            max_largura = max(max_largura, float(item.produto.largura or 0))
+            max_comprimento = max(max_comprimento, float(item.produto.comprimento or 0))
+
+        # Payload CORRETO
         payload = {
             "service": pedido.frete_servico_id,
             "from": {
@@ -330,16 +346,26 @@ class GerarEtiquetaView(View):
                 "city": endereco.cidade,
                 "state": endereco.estado
             },
+
+            # products agora é APENAS lista simples
             "products": [
                 {
-                    "weight": float(item.produto.peso or 0),
-                    "width": float(item.produto.largura or 0),
-                    "height": float(item.produto.altura or 0),
-                    "length": float(item.produto.comprimento or 0),
+                    "name": item.produto.nome,
                     "quantity": item.quantidade,
                 }
                 for item in pedido.itens.all()
             ],
+
+            # volume único!
+            "volumes": [
+                {
+                    "weight": total_peso,
+                    "width": max_largura,
+                    "height": max_altura,
+                    "length": max_comprimento,
+                }
+            ],
+
             "settings": {
                 "insurance_value": float(pedido.valor_total)
             }
