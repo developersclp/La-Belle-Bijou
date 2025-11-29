@@ -20,6 +20,8 @@ class Endereco(models.Model):
     numero = models.CharField(max_length=10)
     complemento = models.CharField(max_length=255, blank=True, null=True)
     cep = models.CharField(max_length=9)
+    cidade = models.CharField(max_length=255, blank=True, null=True)
+    estado = models.CharField(max_length=2, blank=True, null=True)
     
     def __str__(self):
         return f"{self.rua}, {self.numero} - {self.cep}"

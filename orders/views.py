@@ -307,8 +307,6 @@ class PagarmeWebhookView(View):
         except json.JSONDecodeError:
             return JsonResponse({"message": "JSON inválido"}, status=200)
 
-        print("📩 Webhook recebido:", json.dumps(payload, indent=2))
-
         paymentlink_code = (
             order_data.get("integration", {}).get("code")
             or order_data.get("code")
@@ -322,6 +320,23 @@ class PagarmeWebhookView(View):
 
         if not pedido:
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
+        
+        pagarme_address = (
+            order_data.get("customer", {}).get("address")
+            or order_data.get("charges", [{}])[0]
+                .get("customer", {})
+                .get("address", {})
+        )
+
+        cidade = pagarme_address.get("city")
+        estado = pagarme_address.get("state")
+
+        endereco = pedido.endereco
+        if cidade:
+            endereco.cidade = cidade
+        if estado:
+            endereco.estado = estado
+        endereco.save()
 
         if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
@@ -337,6 +352,8 @@ class PagarmeWebhookView(View):
                     usuario=pedido.usuario
                 )
 
+            self.criar_etiqueta_superfrete(pedido)
+
         elif event_type in [
             "order.canceled",
             "payment.canceled",
@@ -350,3 +367,57 @@ class PagarmeWebhookView(View):
             return JsonResponse({"message": "Evento ignorado"}, status=200)
 
         return JsonResponse({"message": "Webhook processado com sucesso"}, status=200)
+    
+    def criar_etiqueta_superfrete(self, pedido):
+
+        endereco = pedido.endereco
+
+        payload = {
+            "service": pedido.frete_servico_id,
+            "from": {
+                "postal_code": "01024-000",
+                "address": "rua da Cantareira",
+                "number": "686",
+                "city": "São Paulo",
+                "state": "SP"
+            },
+            "to": {
+                "postal_code": endereco.cep,
+                "address": endereco.rua,
+                "number": endereco.numero,
+                "city": endereco.cidade,
+                "state": endereco.estado
+            },
+            "products": [
+                {
+                    "weight": float(item.produto.peso),
+                    "width": float(item.produto.largura),
+                    "height": float(item.produto.altura),
+                    "length": float(item.produto.comprimento),
+                    "quantity": item.quantidade
+                }
+                for item in pedido.itens.all()
+            ],
+            "settings": {
+                "insurance_value": float(pedido.valor_total)
+            }
+        }
+
+        headers = {
+            "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.post(
+            "https://api.superfrete.com/v1/shipments",
+            json=payload,
+            headers=headers
+        )
+
+        print("📦 RESPOSTA SUPFRETE:", response.json())
+
+        if response.status_code in (200, 201):
+            data = response.json()
+            pedido.codigo_rastreio = data.get("tracking_code")
+            pedido.etiqueta_url = data.get("label_url")
+            pedido.save()
