@@ -353,12 +353,13 @@ class GerarEtiquetaView(View):
                 {
                     "name": item.produto.nome,
                     "quantity": str(item.quantidade),
+                    "unitary_value": str(item.preco_unitario),
                 }
                 for item in pedido.itens.all()
             ],
 
             # volume único!
-            "volumes": {
+            "volumes":{
                 "weight": total_peso,
                 "width": max_largura,
                 "height": max_altura,
@@ -373,9 +374,10 @@ class GerarEtiquetaView(View):
         print("PAYLOAD:", payload)
 
         response = requests.post(
-            "https://api.superfrete.com/v1/shipments",
+            "https://sandbox.superfrete.com/api/v0/cart",
             json=payload,
             headers={
+                "accept": "application/json",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
                 "Content-Type": "application/json"
             }
