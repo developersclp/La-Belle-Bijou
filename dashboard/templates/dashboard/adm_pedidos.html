@@ -46,7 +46,16 @@
                 <td>{{pedido.usuario}}</td>
                 <td>R${{ pedido.valor_total }}</td>
                 <td>{{ pedido.status }}</td>
-                <td><a href="{% url "editar-pedido" pedido.pk %}" class="edit-icon">✎</a></td>
+                <td class="acoes-coluna">
+                    <a href="{% url "editar-pedido" pedido.pk %}" class="edit-icon">✎</a>
+
+                    {% if pedido.status == 'PAGO' and not pedido.etiqueta_gerada %}
+                    <form method="post" action="{% url 'gerar-etiqueta' pedido.pk %}" class="form-etiqueta">
+                        {% csrf_token %}
+                        <button class="btn-etiqueta">Etiqueta</button>
+                    </form>
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr><td colspan="3">Nenhum pedido encontrado</td></tr>

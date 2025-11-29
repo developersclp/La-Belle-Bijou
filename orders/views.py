@@ -89,6 +89,7 @@ class CalcularFreteView(LoginRequiredMixin, View):
                     continue
                 else:
                     opcoes_envio.append({
+                        "id": servico.get("id"),                       # <--- ESSENCIAL!!
                         "nome": servico.get("company", {}).get("name"),
                         "servico": servico.get("name"),
                         "valor": servico.get("price"),
@@ -120,13 +121,15 @@ class EscolherFreteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         frete_valor = request.POST.get("frete_escolhido")
         servico_nome = request.POST.get("servico_nome")
+        servico_id = request.POST.get("servico_id")
 
-        if not frete_valor:
+        if not frete_valor or not servico_id:
             messages.error(request, "Selecione uma opção de frete.")
             return redirect("calcular-frete")
 
         request.session["frete_escolhido"] = float(frete_valor)
         request.session["frete_servico"] = servico_nome
+        request.session["frete_servico_id"] = servico_id
         request.session.modified = True
 
         return redirect("checkout")
@@ -181,14 +184,17 @@ class CheckoutView(LoginRequiredMixin, View):
 
         total_com_frete = cart.get_total_price() + frete_valor
 
-        pedido = Pedido.objects.create(
-            usuario=request.user,
-            endereco=endereco,
-            status="PENDENTE",
-            valor_total=total_com_frete,
-            data_criacao=timezone.now(),
-        )
+        frete_id = request.session.get("frete_servico_id")
 
+        pedido = Pedido.objects.create(
+                usuario=request.user,
+                endereco=endereco,
+                status="PENDENTE",
+                valor_total=total_com_frete,
+                frete_servico_id=frete_id,   # <--- ESSENCIAL!
+                data_criacao=timezone.now(),
+            )
+        
         for item in cart:
             produto = Produto.objects.get(id=item["id"])
             ItemPedido.objects.create(
@@ -320,7 +326,8 @@ class PagarmeWebhookView(View):
 
         if not pedido:
             return JsonResponse({"message": "Pedido não encontrado"}, status=200)
-        
+
+        # Atualizar endereço vindo da pagarme
         pagarme_address = (
             order_data.get("customer", {}).get("address")
             or order_data.get("charges", [{}])[0]
@@ -338,11 +345,13 @@ class PagarmeWebhookView(View):
             endereco.estado = estado
         endereco.save()
 
+        # STATUS PAID
         if event_type in ["order.paid", "payment.paid"]:
             pedido.status = "PAGO"
             pedido.data_pagamento = timezone.now()
             pedido.save()
 
+            # Baixa estoque
             for item in pedido.itens.all():
                 MovimentacaoEstoque.objects.create(
                     produto=item.produto,
@@ -352,8 +361,7 @@ class PagarmeWebhookView(View):
                     usuario=pedido.usuario
                 )
 
-            self.criar_etiqueta_superfrete(pedido)
-
+        # STATUS CANCELLED
         elif event_type in [
             "order.canceled",
             "payment.canceled",
@@ -363,61 +371,5 @@ class PagarmeWebhookView(View):
         ]:
             pedido.status = "CANCELADO"
             pedido.save()
-        else:
-            return JsonResponse({"message": "Evento ignorado"}, status=200)
 
-        return JsonResponse({"message": "Webhook processado com sucesso"}, status=200)
-    
-    def criar_etiqueta_superfrete(self, pedido):
-
-        endereco = pedido.endereco
-
-        payload = {
-            "service": pedido.frete_servico_id,
-            "from": {
-                "postal_code": "01024-000",
-                "address": "rua da Cantareira",
-                "number": "686",
-                "city": "São Paulo",
-                "state": "SP"
-            },
-            "to": {
-                "postal_code": endereco.cep,
-                "address": endereco.rua,
-                "number": endereco.numero,
-                "city": endereco.cidade,
-                "state": endereco.estado
-            },
-            "products": [
-                {
-                    "weight": float(item.produto.peso),
-                    "width": float(item.produto.largura),
-                    "height": float(item.produto.altura),
-                    "length": float(item.produto.comprimento),
-                    "quantity": item.quantidade,
-                }
-                for item in pedido.itens.all()
-            ],
-            "settings": {
-                "insurance_value": float(pedido.valor_total)
-            }
-        }
-
-        headers = {
-            "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-        response = requests.post(
-            "https://api.superfrete.com/v1/shipments",
-            json=payload,
-            headers=headers
-        )
-
-        print("📦 RESPOSTA SUPFRETE:", response.json())
-
-        if response.status_code in (200, 201):
-            data = response.json()
-            pedido.codigo_rastreio = data.get("tracking_code")
-            pedido.etiqueta_url = data.get("label_url")
-            pedido.save()
+        return JsonResponse({"message": "Webhook processado"}, status=200)

@@ -2,8 +2,12 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from products.models import Produto, Categoria, MovimentacaoEstoque
 from accounts.models import CustomUser
 from orders.models import Pedido, ItemPedido
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
 from django.urls import reverse_lazy
+from django.views import View
+from django.conf import settings
+import requests
 from .forms import ProdutoForm, ImagemProdutoFormSet, CategoriaForm, MovimentacaoEstoqueForm, UsuarioForm, PedidoForm
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
@@ -288,3 +292,71 @@ class EditarPedido(UpdateView):
         context = super().get_context_data(**kwargs)
         context["itens_pedido"] = ItemPedido.objects.filter(pedido=self.object)
         return context
+    
+class GerarEtiquetaView(View):
+    def post(self, request, pk):
+        pedido = get_object_or_404(Pedido, pk=pk)
+
+        # Se já existir etiqueta, não gerar de novo
+        if pedido.etiqueta_gerada:
+            messages.info(request, "A etiqueta já foi gerada para este pedido.")
+            return redirect("editar-pedido", pedido.pk)
+
+        try:
+            self.gerar_superfrete(pedido)
+            messages.success(request, "Etiqueta gerada com sucesso!")
+        except Exception as e:
+            print("ERRO AO GERAR ETIQUETA:", e)
+            messages.error(request, "Erro ao gerar etiqueta. Veja os logs.")
+        
+        return redirect("editar-pedido", pedido.pk)
+
+    def gerar_superfrete(self, pedido):
+        endereco = pedido.endereco
+
+        payload = {
+            "service": pedido.frete_servico_id,
+            "from": {
+                "postal_code": "01024-000",
+                "address": "rua da Cantareira",
+                "number": "686",
+                "city": "São Paulo",
+                "state": "SP"
+            },
+            "to": {
+                "postal_code": endereco.cep,
+                "address": endereco.rua,
+                "number": endereco.numero,
+                "city": endereco.cidade,
+                "state": endereco.estado
+            },
+            "products": [
+                {
+                    "weight": float(item.produto.peso),
+                    "width": float(item.produto.largura),
+                    "height": float(item.produto.altura),
+                    "length": float(item.produto.comprimento),
+                    "quantity": item.quantidade,
+                }
+                for item in pedido.itens.all()
+            ],
+            "settings": {
+                "insurance_value": float(pedido.valor_total)
+            }
+        }
+
+        response = requests.post(
+            "https://api.superfrete.com/v1/shipments",
+            json=payload,
+            headers={
+                "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
+                "Content-Type": "application/json"
+            }
+        )
+
+        if response.status_code in (200, 201):
+            data = response.json()
+            pedido.codigo_rastreio = data.get("tracking_code")
+            pedido.etiqueta_url = data.get("label_url")
+            pedido.etiqueta_gerada = True
+            pedido.save()

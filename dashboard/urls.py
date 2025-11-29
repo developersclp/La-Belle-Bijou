@@ -25,4 +25,5 @@ urlpatterns = [
     # pedidos
     path('pedidos/', ListaPedidos.as_view(), name="pedidos-adm"),
     path('upd-pedido/<int:pk>/', EditarPedido.as_view(), name="editar-pedido"),
+    path("gerar-etiqueta/<int:pk>/", GerarEtiquetaView.as_view(), name="gerar-etiqueta"),
     ]

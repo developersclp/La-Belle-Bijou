@@ -81,8 +81,47 @@
     color: #e74c3c;
 }
 
+.acoes-coluna {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Remove margin esquisita dos forms dentro da tabela */
+.form-etiqueta {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+/* ======= Botão de Gerar Etiqueta ======= */
+.btn-etiqueta {
+    background-color: #D4AC6E;
+    color: #202A3A;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-etiqueta:hover {
+    background-color: #c89f5e;
+}
+
+/* Ajuste para tornar o ✎ alinhado no centro vertical */
+.edit-icon {
+    font-size: 18px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ======= AÇÕES ======= */
-.edit-icon,
 .delete-icon {
     text-decoration: none;
     color: #555;

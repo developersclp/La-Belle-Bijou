@@ -19,6 +19,10 @@ class Pedido(models.Model):
     pagarme_id = models.CharField(max_length=100, blank=True, null=True)
     payment_url = models.URLField(blank=True, null=True)
     data_pagamento = models.DateTimeField(blank=True, null=True)
+    frete_servico_id = models.CharField(max_length=50, blank=True, null=True)
+    etiqueta_gerada = models.BooleanField(default=False)
+    etiqueta_url = models.URLField(blank=True, null=True)
+    codigo_rastreio = models.CharField(max_length=100, blank=True, null=True)
 
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, null=False)

@@ -33,6 +33,15 @@
       </div>
     </form>
 
+    {% if not pedido.etiqueta_gerada %}
+    <form method="post" action="{% url 'gerar-etiqueta' pedido.pk %}">
+        {% csrf_token %}
+        <button class="btn">Gerar Etiqueta</button>
+    </form>
+    {% else %}
+    <a href="{{ pedido.etiqueta_url }}" target="_blank">Baixar Etiqueta</a>
+    {% endif %}
+
 
     <!-- TABELA DE ITENS DO PEDIDO -->
     <h3>Itens do Pedido</h3>
