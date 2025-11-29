@@ -394,7 +394,7 @@ class PagarmeWebhookView(View):
                     "width": float(item.produto.largura),
                     "height": float(item.produto.altura),
                     "length": float(item.produto.comprimento),
-                    "quantity": item.quantidade
+                    "quantity": item.quantidade,
                 }
                 for item in pedido.itens.all()
             ],
