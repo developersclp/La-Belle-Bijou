@@ -331,7 +331,6 @@ class GerarEtiquetaView(View):
 
         # Payload CORRETO
         payload = {
-            "service": pedido.frete_servico_id,
             "from": {
                 "postal_code": "01024-000",
                 "address": "rua da Cantareira",
@@ -347,26 +346,26 @@ class GerarEtiquetaView(View):
                 "state": endereco.estado
             },
 
+            "service": pedido.frete_servico_id,
+
             # products agora é APENAS lista simples
             "products": [
                 {
                     "name": item.produto.nome,
-                    "quantity": item.quantidade,
+                    "quantity": str(item.quantidade),
                 }
                 for item in pedido.itens.all()
             ],
 
             # volume único!
-            "volumes": [
-                {
-                    "weight": total_peso,
-                    "width": max_largura,
-                    "height": max_altura,
-                    "length": max_comprimento,
-                }
-            ],
+            "volumes": {
+                "weight": total_peso,
+                "width": max_largura,
+                "height": max_altura,
+                "length": max_comprimento,
+            },
 
-            "settings": {
+            "options": {
                 "insurance_value": float(pedido.valor_total)
             }
         }
