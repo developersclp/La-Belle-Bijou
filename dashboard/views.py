@@ -314,7 +314,6 @@ class GerarEtiquetaView(View):
     def gerar_superfrete(self, pedido):
         endereco = pedido.endereco
 
-        # ======= CALCULO DO VOLUME ========
         total_peso = 0
         max_altura = 0
         max_largura = 0
@@ -324,20 +323,21 @@ class GerarEtiquetaView(View):
             peso = float(item.produto.peso or 0) * item.quantidade
             total_peso += peso
 
-            # Uso das maiores dimensões
             max_altura = max(max_altura, float(item.produto.altura or 0))
             max_largura = max(max_largura, float(item.produto.largura or 0))
             max_comprimento = max(max_comprimento, float(item.produto.comprimento or 0))
 
-        # Payload CORRETO
         payload = {
+            "service": pedido.frete_servico_id,
+
             "from": {
                 "postal_code": "01024-000",
-                "address": "rua da Cantareira",
+                "address": "Rua da Cantareira",
                 "number": "686",
                 "city": "São Paulo",
                 "state": "SP"
             },
+
             "to": {
                 "postal_code": endereco.cep,
                 "address": endereco.rua,
@@ -346,25 +346,23 @@ class GerarEtiquetaView(View):
                 "state": endereco.estado
             },
 
-            "service": pedido.frete_servico_id,
-
-            # products agora é APENAS lista simples
             "products": [
                 {
                     "name": item.produto.nome,
-                    "quantity": str(item.quantidade),
-                    "unitary_value": str(item.preco_unitario),
+                    "quantity": item.quantidade,
+                    "unitary_value": float(item.preco_unitario)
                 }
                 for item in pedido.itens.all()
             ],
 
-            # volume único!
-            "volumes":{
-                "weight": total_peso,
-                "width": max_largura,
-                "height": max_altura,
-                "length": max_comprimento,
-            },
+            "volumes": [
+                {
+                    "weight": total_peso,
+                    "width": max_largura,
+                    "height": max_altura,
+                    "length": max_comprimento
+                }
+            ],
 
             "options": {
                 "insurance_value": float(pedido.valor_total)
@@ -374,10 +372,9 @@ class GerarEtiquetaView(View):
         print("PAYLOAD:", payload)
 
         response = requests.post(
-            "https://sandbox.superfrete.com/api/v0/cart",
+            "https://api.superfrete.com/api/v0/orders",
             json=payload,
             headers={
-                "accept": "application/json",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
                 "Content-Type": "application/json"
             }
