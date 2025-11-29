@@ -35,7 +35,7 @@
       {% endif %}
 
       <button class="navbar-toggler custom-toggler d-lg-none" type="button" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
-          <img src="{% static 'img/hamburger.jpg' %}" alt="">
+          <img src="{% static 'img/hamburger-menu.svg' %}" alt="">
       </button>
     </div>
 
@@ -65,8 +65,8 @@
   </div>
 </header>
 
-<div id="overlay" class="oculto"></div>
-<div id="menu_variavel" class="oculto">
+<div id="overlay"></div>
+<div id="menu_variavel">
   <h3>Olá, {{ user.username }}</h3>
   <a href="{% url 'profile' %}">Editar perfil</a>
   <a href="{% url 'ver-pedidos' %}">Ver Pedidos</a>
