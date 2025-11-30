@@ -9,7 +9,7 @@ class Categoria(models.Model):
         return self.nome
 
 class ProdutoManager(models.Manager):
-    def mais_vendidos(self, limite=10):
+    def mais_vendidos(self):
         """
         Retorna os produtos mais vendidos (com mais saídas por VENDA)
         """
@@ -23,7 +23,7 @@ class ProdutoManager(models.Manager):
         ).filter(
             total_vendas__isnull=False,
             total_vendas__gt=0
-        ).order_by('-total_vendas')[:limite]
+        ).order_by('-total_vendas')
 
 class Produto(models.Model):
     nome = models.CharField(max_length=50)

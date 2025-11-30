@@ -9,6 +9,8 @@ from django.views.decorators.http import require_POST
 import json
 from .models import Produto
 from .cart import Cart
+from django.db.models import Sum, Q, F, ExpressionWrapper, IntegerField
+from django.db.models.functions import Coalesce
 
 # Create your views here.
 class Home(TemplateView):
@@ -17,7 +19,19 @@ class Home(TemplateView):
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
 
-        produtos_mais_vendidos = Produto.objects.mais_vendidos(10)
+        produtos_mais_vendidos = Produto.objects.mais_vendidos()
+        produtos_mais_vendidos = produtos_mais_vendidos.annotate(
+            entradas=Coalesce(Sum('movimentacoes__quantidade', filter=Q(movimentacoes__tipo='ENTRADA')), 0),
+            saidas=Coalesce(Sum('movimentacoes__quantidade', filter=Q(movimentacoes__tipo='SAIDA')), 0),
+        ).annotate(
+            estoque_calc=ExpressionWrapper(
+                (F('entradas') - F('saidas')),
+                output_field=IntegerField()
+            )
+        ).filter(
+            is_active=True,
+            estoque_calc__gt=0
+        )[:20]
         contexto['produtos_mais_vendidos'] = produtos_mais_vendidos
 
         # Criar lista de tuplas (categoria, produtos) para o template
@@ -25,7 +39,19 @@ class Home(TemplateView):
         categorias = Categoria.objects.all().prefetch_related('produtos')
         
         for categoria in categorias:
-            produtos_da_categoria = categoria.produtos.all() # Limita a 10 produtos
+            produtos_da_categoria = categoria.produtos.all()
+            produtos_da_categoria = produtos_da_categoria.annotate(
+                entradas=Coalesce(Sum('movimentacoes__quantidade', filter=Q(movimentacoes__tipo='ENTRADA')), 0),
+                saidas=Coalesce(Sum('movimentacoes__quantidade', filter=Q(movimentacoes__tipo='SAIDA')), 0)
+            ).annotate(
+                estoque_calc=ExpressionWrapper(
+                    (F('entradas') - F('saidas')),
+                    output_field=IntegerField()
+                )
+            ).filter(
+                is_active=True,
+                estoque_calc__gt=0
+            )
             categorias_com_produtos.append((categoria, produtos_da_categoria))
         contexto['categorias_com_produtos'] = categorias_com_produtos
 
