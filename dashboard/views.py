@@ -331,7 +331,6 @@ class GerarEtiquetaView(View):
 
         payload = {
             "service": pedido.frete_servico_id,
-
             "from": {
                 "name": "Sarah",
                 "postal_code": "01024-000",
@@ -341,7 +340,6 @@ class GerarEtiquetaView(View):
                 "city": "São Paulo",
                 "state_abbr": "SP"
             },
-
             "to": {
                 "name": usuario.username,
                 "postal_code": endereco.cep,
@@ -351,7 +349,6 @@ class GerarEtiquetaView(View):
                 "city": endereco.cidade,
                 "state_abbr": endereco.estado
             },
-
             "products": [
                 {
                     "name": item.produto.nome,
@@ -360,7 +357,6 @@ class GerarEtiquetaView(View):
                 }
                 for item in pedido.itens.all()
             ],
-
             "volumes": [
                 {
                     "weight": total_peso,
@@ -369,7 +365,6 @@ class GerarEtiquetaView(View):
                     "length": max_comprimento
                 }
             ],
-
             "options": {
                 "insurance_value": float(pedido.valor_total)
             }
@@ -377,8 +372,9 @@ class GerarEtiquetaView(View):
 
         print("PAYLOAD:", payload)
 
+        # Criando carrinho
         response = requests.post(
-            "https://api.superfrete.com/api/v0/orders",
+            "https://api.superfrete.com/api/v0/cart",
             json=payload,
             headers={
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
@@ -386,15 +382,35 @@ class GerarEtiquetaView(View):
             }
         )
 
-        print("STATUS:", response.status_code)
-        print("RESPONSE:", response.text)
+        print("STATUS CART:", response.status_code)
+        print("RAW CART RESPONSE:", response.text)
 
         if response.status_code not in (200, 201):
-            raise Exception(f"Erro da API: {response.status_code} - {response.text}")
+            raise Exception(f"Erro CART: {response.status_code} - {response.text}")
 
         data = response.json()
+        cart_token = data.get("token")
 
-        pedido.codigo_rastreio = data.get("tracking_code")
-        pedido.etiqueta_url = data.get("label_url")
+        print("CART TOKEN:", cart_token)
+
+        # Gerando etiqueta
+        purchase = requests.post(
+            f"https://api.superfrete.com/api/v0/cart/{cart_token}/purchase",
+            headers={
+                "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
+                "Content-Type": "application/json"
+            }
+        )
+
+        print("STATUS PURCHASE:", purchase.status_code)
+        print("RAW PURCHASE RESPONSE:", purchase.text)
+
+        if purchase.status_code not in (200, 201):
+            raise Exception(f"Erro PURCHASE: {purchase.status_code} - {purchase.text}")
+
+        purchase_data = purchase.json()
+
+        pedido.codigo_rastreio = purchase_data.get("tracking_code")
+        pedido.etiqueta_url = purchase_data.get("label_url")
         pedido.etiqueta_gerada = True
         pedido.save()
