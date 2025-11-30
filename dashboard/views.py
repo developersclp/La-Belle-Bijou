@@ -328,6 +328,11 @@ class GerarEtiquetaView(View):
             max_altura = max(max_altura, float(item.produto.altura or 0))
             max_largura = max(max_largura, float(item.produto.largura or 0))
             max_comprimento = max(max_comprimento, float(item.produto.comprimento or 0))
+        
+        valor_total_produtos = sum(
+            float(item.preco_unitario) * item.quantidade
+            for item in pedido.itens.all()
+        )
 
         payload = {
             "service": pedido.frete_servico_id,
@@ -368,7 +373,7 @@ class GerarEtiquetaView(View):
                 }
             ],
             "options": {
-                "insurance_value": float(pedido.valor_total)
+                "insurance_value": float(valor_total_produtos)
             }
         }
 
