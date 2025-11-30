@@ -342,12 +342,14 @@ class GerarEtiquetaView(View):
             },
             "to": {
                 "name": usuario.username,
+                'document': usuario.cpf,
                 "postal_code": endereco.cep,
                 "address": endereco.rua,
                 "number": endereco.numero,
                 "district": endereco.bairro,
                 "city": endereco.cidade,
-                "state_abbr": endereco.estado
+                "state_abbr": endereco.estado,
+                "email": usuario.email
             },
             "products": [
                 {
