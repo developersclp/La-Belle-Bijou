@@ -381,6 +381,15 @@ class GerarEtiquetaView(View):
 
         print("PAYLOAD:", payload)
 
+        teste={
+                "accept": "application/json",
+                "User-Agent": "Labellebijou/1.0 (labellebijoo@gmail.com)",
+                "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
+                "Content-Type": "application/json"
+            }
+        
+        print(teste)
+
         # Criando carrinho
         response = requests.post(
             "https://api.superfrete.com/api/v0/cart",
