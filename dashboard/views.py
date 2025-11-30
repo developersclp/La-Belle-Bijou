@@ -417,8 +417,10 @@ class GerarEtiquetaView(View):
         purchase = requests.post(
             f"https://api.superfrete.com/api/v0/cart/{cart_token}/purchase",
             headers={
+                "accept": "application/json",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "User-Agent": "Labellebijou/1.0 (labellebijoo@gmail.com)",
             }
         )
 
@@ -428,7 +430,10 @@ class GerarEtiquetaView(View):
         if purchase.status_code not in (200, 201):
             raise Exception(f"Erro PURCHASE: {purchase.status_code} - {purchase.text}")
 
-        purchase_data = purchase.json()
+        try:
+            purchase_data = purchase.json()
+        except ValueError:
+            raise Exception(f"Resposta inválida no purchase: {purchase.text}")
 
         pedido.codigo_rastreio = purchase_data.get("tracking_code")
         pedido.etiqueta_url = purchase_data.get("label_url")
