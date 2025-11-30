@@ -375,7 +375,8 @@ class GerarEtiquetaView(View):
             ],
             "options": {
                 "insurance_value": float(valor_total_produtos)
-            }
+            },
+            "platform": "labellebijou"
         }
 
         print("PAYLOAD:", payload)
