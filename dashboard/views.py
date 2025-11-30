@@ -332,7 +332,7 @@ class GerarEtiquetaView(View):
         payload = {
             "service": pedido.frete_servico_id,
             "from": {
-                "name": "Sarah",
+                "name": "Sarah Suelen Fernandes Freitas",
                 "postal_code": "01024-000",
                 "address": "Rua da Cantareira",
                 "number": "686",
@@ -341,7 +341,7 @@ class GerarEtiquetaView(View):
                 "state_abbr": "SP"
             },
             "to": {
-                "name": usuario.username,
+                'name': f"{usuario.first_name} {usuario.last_name}",
                 'document': usuario.cpf,
                 "postal_code": endereco.cep,
                 "address": endereco.rua,
