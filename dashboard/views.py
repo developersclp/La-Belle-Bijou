@@ -305,6 +305,7 @@ class GerarEtiquetaView(View):
         try:
             self.gerar_superfrete(pedido)
             messages.success(request, "Etiqueta gerada com sucesso!")
+            print("Etiqueta gerada com sucesso!")
             return redirect("home")
         except Exception as e:
             print("ERRO AO GERAR ETIQUETA:", e)
