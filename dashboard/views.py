@@ -395,7 +395,7 @@ class GerarEtiquetaView(View):
             "https://api.superfrete.com/api/v0/cart",
             json=payload,
             headers={
-                "accept": "application/json",
+                "Accept": "application/json",
                 "User-Agent": "Labellebijou/1.0 (labellebijoo@gmail.com)",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
                 "Content-Type": "application/json"
@@ -417,7 +417,7 @@ class GerarEtiquetaView(View):
         purchase = requests.post(
             f"https://api.superfrete.com/api/v0/cart/{cart_token}/purchase",
             headers={
-                "accept": "application/json",
+                "Accept": "application/json",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
                 "Content-Type": "application/json",
                 "User-Agent": "Labellebijou/1.0 (labellebijoo@gmail.com)",
