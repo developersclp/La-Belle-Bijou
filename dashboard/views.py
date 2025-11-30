@@ -384,6 +384,8 @@ class GerarEtiquetaView(View):
             "https://api.superfrete.com/api/v0/cart",
             json=payload,
             headers={
+                "accept": "application/json",
+                "User-Agent": "Labellebijou/1.0 (labellebijoo@gmail.com)",
                 "Authorization": f"Bearer {settings.SUPERFRETE_API_KEY}",
                 "Content-Type": "application/json"
             }
