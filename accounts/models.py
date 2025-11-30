@@ -17,6 +17,7 @@ class CustomUser(AbstractUser):
 class Endereco(models.Model):
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="enderecos")
     rua = models.CharField(max_length=255)
+    bairro = models.CharField(max_length=255, blank=True, null=True)
     numero = models.CharField(max_length=10)
     complemento = models.CharField(max_length=255, blank=True, null=True)
     cep = models.CharField(max_length=9)

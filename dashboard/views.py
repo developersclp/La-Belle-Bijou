@@ -305,6 +305,7 @@ class GerarEtiquetaView(View):
         try:
             self.gerar_superfrete(pedido)
             messages.success(request, "Etiqueta gerada com sucesso!")
+            return redirect("home")
         except Exception as e:
             print("ERRO AO GERAR ETIQUETA:", e)
             messages.error(request, "Erro ao gerar etiqueta. Veja os logs.")
@@ -313,6 +314,7 @@ class GerarEtiquetaView(View):
 
     def gerar_superfrete(self, pedido):
         endereco = pedido.endereco
+        usuario = pedido.usuario
 
         total_peso = 0
         max_altura = 0
@@ -331,19 +333,23 @@ class GerarEtiquetaView(View):
             "service": pedido.frete_servico_id,
 
             "from": {
+                "name": "Sarah",
                 "postal_code": "01024-000",
                 "address": "Rua da Cantareira",
                 "number": "686",
+                "district": "Centro",
                 "city": "São Paulo",
-                "state": "SP"
+                "state_abbr": "SP"
             },
 
             "to": {
+                "name": usuario.username,
                 "postal_code": endereco.cep,
                 "address": endereco.rua,
                 "number": endereco.numero,
+                "district": endereco.bairro,
                 "city": endereco.cidade,
-                "state": endereco.estado
+                "state_abbr": endereco.estado
             },
 
             "products": [

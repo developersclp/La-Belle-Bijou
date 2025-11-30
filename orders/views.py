@@ -337,12 +337,15 @@ class PagarmeWebhookView(View):
 
         cidade = pagarme_address.get("city")
         estado = pagarme_address.get("state")
+        bairro = pagarme_address.get("neighborhood")
 
         endereco = pedido.endereco
         if cidade:
             endereco.cidade = cidade
         if estado:
             endereco.estado = estado
+        if bairro:
+            endereco.bairro = bairro
         endereco.save()
 
         # STATUS PAID
