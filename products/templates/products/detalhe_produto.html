@@ -35,10 +35,10 @@
 
             <!-- Informações do produto -->
             <div class="produto-info">
-                <h1 class="produto-titulo">{{ produto.nome }} (Desde 2010)</h1>
+                <h1 class="produto-titulo">{{ produto.nome }}</h1>
                 
                 <p class="produto-descricao">
-                    {{ produto.nome }}: {{ produto.descricao|default:"Produto de alta qualidade da La Belle Bijou. Feito com materiais premium e acabamento impecável, este item exclusivo traz elegância e sofisticação para seu estilo." }}
+                    {{ produto.descricao|default:"Produto de alta qualidade da La Belle Bijou. Feito com materiais premium e acabamento impecável, este item exclusivo traz elegância e sofisticação para seu estilo." }}
                 </p>
                 
                 <div class="produto-preco">
@@ -46,12 +46,12 @@
                 </div>
 
                 <!-- Tamanhos - Único -->
-                <div class="produto-tamanhos">
+                <!-- <div class="produto-tamanhos">
                     <h3>Tamanhos</h3>
                     <div class="tamanhos-lista">
                         <span class="tamanho-item unico">Único</span>
                     </div>
-                </div>
+                </div> -->
 
                 <p class="produto-descricao">
                     Estoque Disponível: {{produto.estoque_atual}}
@@ -63,9 +63,9 @@
                         Adicionar ao carrinho
                     </button>
                     
-                    <a href="{% url 'ver_carrinho' %}" class="btn-ver-carrinho">
+                    <!-- <a href="{% url 'ver_carrinho' %}" class="btn-ver-carrinho">
                     Ver carrinho
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>

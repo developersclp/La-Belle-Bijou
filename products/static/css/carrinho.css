@@ -1,8 +1,4 @@
 /* =================== GERAL =================== */
-html, body {
-  height: 100%;
-}
-
 body {
   font-family: 'Alata', sans-serif;
   color: #333;
@@ -146,7 +142,7 @@ h1 {
 .summary {
   display: flex;
   justify-content: flex-end;
-  margin: 8rem 5% 8rem 0;
+  margin: 3rem 5% 3rem 0;
 }
 
 .summary-table {
@@ -180,7 +176,7 @@ h1 {
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  margin: 40px auto;
+  margin: 39px auto;
 }
 
 .action-link {

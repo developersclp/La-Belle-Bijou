@@ -14,12 +14,11 @@ body {
 main {
     flex: 1;
     width: 100%;
-    padding: 2rem 0;
+    padding: 2rem 0 0 0;
 }
 
 .editar-perfil {
     width: 100%;
-    min-height: calc(100vh - 15vh - 24vh); /* Altura total - header - footer */
 }
 
 .container {
@@ -30,7 +29,7 @@ main {
 
 .titulo {
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     text-align: center;
     color: #252A36;
     font-weight: normal;
@@ -42,12 +41,12 @@ main {
 }
 
 .secao {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .subtitulo {
     font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: #252A36;
     font-weight: normal;
     border-bottom: none;
@@ -76,7 +75,7 @@ main {
 }
 
 .campo input {
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid #CECECE;
     border-radius: 4px;
     font-family: "Alata", sans-serif;
@@ -99,7 +98,6 @@ main {
 .botoes {
     display: flex;
     justify-content: space-between;
-    margin-top: 3rem;
     gap: 1rem;
     padding-bottom: 2rem; /* Espaço extra antes do footer */
 }
