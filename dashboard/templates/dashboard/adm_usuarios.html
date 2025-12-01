@@ -43,7 +43,7 @@
         </thead>
         <tbody>
             {% for usuario in usuarios %}
-            <tr onclick="window.location.href='{% url 'detalhe-user' usuario.pk %}'" class="clickable-row">
+            <tr class="clickable-row">
                 <td>{{ usuario.id }}</td>
                 <td>{{ usuario.username }}</td>
                 <td>{{ usuario.email }}</td>

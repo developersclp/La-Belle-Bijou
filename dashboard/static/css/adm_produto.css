@@ -50,6 +50,8 @@
 
 .admin-table th:first-child,
 .admin-table td:first-child {
+    display: flex;
+    align-items: center;
     text-align: left;
     width: auto;
 }

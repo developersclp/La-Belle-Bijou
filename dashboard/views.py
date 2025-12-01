@@ -233,14 +233,6 @@ class ListaUsuarios(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
         return queryset
     
-class DetalheUsuario(LoginRequiredMixin, UserPassesTestMixin, DetailView):
-    model = CustomUser
-    template_name = "dashboard/detalhe_usuario.html"
-    context_object_name = "usuario"
-
-    def test_func(self):
-        return self.request.user.is_superuser
-    
 class EditarUsuario(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = CustomUser
     form_class = UsuarioForm
@@ -256,7 +248,7 @@ class ListaPedidos(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Pedido
     template_name = "dashboard/adm_pedidos.html"
     context_object_name = "pedidos"
-    ordering = ["id"]
+    ordering = ["-id"]
 
     def get_queryset(self): # método padrão do django para filtragem
         queryset = super().get_queryset()

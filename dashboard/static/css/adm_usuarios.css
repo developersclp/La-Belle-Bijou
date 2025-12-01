@@ -137,12 +137,3 @@
     align-items: center;
     gap: 12px;
 }
-
-.clickable-row {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.clickable-row:hover {
-    background-color: #f2f2f2;
-}

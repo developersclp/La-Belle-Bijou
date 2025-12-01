@@ -43,7 +43,7 @@ h1 {
 }
 
 .cart-table td {
-  padding: 16px;
+  width: 25%;
   border-bottom: 1px solid #e1e1e1;
   text-align: center;
   vertical-align: middle;
@@ -176,7 +176,7 @@ h1 {
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  margin: 39px auto;
+  margin: 7rem auto;
 }
 
 .action-link {
@@ -209,7 +209,7 @@ h1 {
 }
 
 .main-content {
-  flex: 1;
+  margin-bottom: 7.85rem;
 }
 
 footer {
@@ -271,6 +271,7 @@ footer {
   .cart-actions {
     flex-direction: column;
     gap: 15px;
+    margin: 3rem auto;
   }
 
   .cart-actions .action-link {
@@ -281,5 +282,9 @@ footer {
   .summary {
     justify-content: center;
     margin: 40px auto 0 auto;
+  }
+
+  .main-content {
+    margin-bottom: 4rem;
   }
 }
