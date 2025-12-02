@@ -127,7 +127,7 @@ class EscolherFreteView(LoginRequiredMixin, View):
             messages.error(request, "Selecione uma opção de frete.")
             return redirect("calcular-frete")
 
-        request.session["frete_escolhido"] = float(frete_valor)
+        request.session["frete_escolhido"] = float(str(frete_valor).replace(",", "."))
         request.session["frete_servico"] = servico_nome
         request.session["frete_servico_id"] = servico_id
         request.session.modified = True
