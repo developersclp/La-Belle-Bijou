@@ -1,0 +1,115 @@
+:root {
+  --card-bg: #ececec;
+  --field-bg: #ffffff;
+  --field-border: #d8d8d8;
+  --label-color: #666666;
+  --accent-dark: #1E293B;
+  --accent-gold: #d4af37;
+}
+
+.bg-gray-100 {
+  width: 100%;
+  max-width: 1400px;
+  background-color: var(--card-bg) !important;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  padding: 28px !important;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================
+   TIPOGRAFIA DENTRO DO CARD
+   ========================= */
+/* Título "Detalhes da Movimentação" */
+.bg-gray-100 h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #444444;
+  margin-bottom: 24px; /* Aumenta o espaço abaixo do título */
+}
+
+/* Labels dos campos: "Produto", "Quantidade", etc. */
+form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 580;
+  color: var(--label-color);
+  margin-bottom: 6px;
+}
+
+/* =========================
+   CAMPOS DO FORMULÁRIO (Inputs e Selects)
+   ========================= */
+form input[type="number"],
+form select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #222;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Efeito de foco para os campos */
+form input[type="number"]:focus,
+form select:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+}
+
+/* Garante que a seta nativa do <select> apareça */
+form select {
+  background-image: none !important;
+  -webkit-appearance: menulist-button !important;
+  appearance: menulist-button !important;
+  cursor: pointer;
+}
+
+/* =========================
+   BOTÕES (Cancelar / Salvar)
+   ========================= */
+/* Botão Cancelar */
+.btn-cancelar {
+  background: #d4d4d8;
+  color: #3f3f46;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.btn-cancelar:hover {
+  background: #c2c2c7;
+}
+
+/* Botão Salvar */
+.btn-salvar {
+  background: var(--accent-dark);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.btn-salvar:hover {
+  background: #0f172a;
+}

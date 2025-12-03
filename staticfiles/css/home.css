@@ -37,9 +37,8 @@
 .produtos-secao {
     position: relative;
     width: 80vw;
-    min-height: 400px; /* Altura mínima em vez de fixa */
-    margin: 2vh auto;
-    padding: 1rem 0;
+    margin: 1vh auto;
+    padding: .5rem 0;
 }
 
 #subtitulo {
@@ -181,7 +180,7 @@
 
 .empty {
     text-align: center;
-    padding: 3rem 2rem;
+    padding: 1rem 2rem;
     color: #666;
     width: 100%;
     grid-column: 1 / -1;
@@ -208,7 +207,7 @@
     min-height: 200px;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1000px) {
     #carouselExampleIndicators {
         width: 100vw;
         margin: 0 auto;
@@ -272,6 +271,18 @@
         box-sizing: border-box;
         flex-shrink: 0;
         box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .produto-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        
+        & button {
+            display: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+        }
     }
     
     .produtos-btn {

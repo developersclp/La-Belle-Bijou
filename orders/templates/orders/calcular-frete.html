@@ -18,35 +18,43 @@
   </form>
 
   {% if opcoes_envio %}
-  <div class="opcoes-envio">
-    <h3>Escolha o tipo de envio:</h3>
-    <form method="post" action="{% url 'escolher-frete' %}">
-      {% csrf_token %}
+    <div class="opcoes-envio">
+      <h3>Escolha o tipo de envio:</h3>
+
       {% for opcao in opcoes_envio %}
-      <form method="post" action="{% url 'escolher-frete' %}">
+        <form method="post" action="{% url 'escolher-frete' %}">
           {% csrf_token %}
           <div class="opcao-frete">
-              <div class="frete-info">
-                  <img src="{{ opcao.logo }}" alt="{{ opcao.nome }}" class="frete-logo">
-                  <div class="frete-detalhes">
-                      <strong>{{ opcao.nome }} - {{ opcao.servico }}</strong><br>
-                      <span>Valor: <b>R$ {{ opcao.valor|floatformat:2 }}</b></span><br>
-                      <span>Prazo: {{ opcao.prazo }} dias úteis</span>
-                  </div>
+
+            <div class="frete-info">
+
+              {% if opcao.id == 3 %}
+                <img src="{% static 'img/jadlog.png' %}" alt="{{ opcao.nome }}" class="frete-logo">
+              {% elif opcao.id == 31 %}
+                <img src="{% static 'img/loggi.png' %}" alt="{{ opcao.nome }}" class="frete-logo">
+              {% else %}
+                <img src="{{ opcao.logo }}" alt="{{ opcao.nome }}" class="frete-logo">
+              {% endif %}
+
+              <div class="frete-detalhes">
+                <strong>{{ opcao.nome }} - {{ opcao.servico }}</strong><br>
+                <span>Valor: <b>R$ {{ opcao.valor|floatformat:2 }}</b></span><br>
+                <span>Prazo: {{ opcao.prazo }} dias úteis</span>
               </div>
 
-              <input type="hidden" name="frete_escolhido" value="{{ opcao.valor }}">
-              <input type="hidden" name="servico_nome" value="{{ opcao.servico }}">
-              <input type="hidden" name="servico_id" value="{{ opcao.id }}">
+            </div>
 
-              <button type="submit" class="btn-escolher">
-                  Escolher esta opção
-              </button>
+            <input type="hidden" name="frete_escolhido" value="{{ opcao.valor }}">
+            <input type="hidden" name="servico_nome" value="{{ opcao.servico }}">
+            <input type="hidden" name="servico_id" value="{{ opcao.id }}">
+
+            <button type="submit" class="btn-escolher">Escolher esta opção</button>
+
           </div>
-      </form>
+        </form>
       {% endfor %}
-    </form>
-  </div>
+
+    </div>
   {% endif %}
 </div>
 {% endblock %}

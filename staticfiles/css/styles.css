@@ -7,11 +7,6 @@
     scroll-behavior: smooth;
 }
 
-.no_scroll {
-    position: fixed;
-    overflow: hidden;
-}
-
 .custom-navbar {
     width: 100%;
     height: 12vh;
@@ -81,13 +76,17 @@
     border-radius: 20px;
     position: fixed;
     right: 3rem;
-    top: 5rem;
+    top: 10rem;
     display: flex;
     flex-direction: column;
     align-items: start;
     gap: 3px;
     box-shadow: 0 5px 15px #0000001a;
     z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: top .3s ease, opacity .3s ease, visibility .3s ease;
+    pointer-events: none;
 
     & h3 {
         width: 100%;
@@ -118,20 +117,31 @@
     }
 }
 
+#menu_variavel.visivel {
+    top: 5rem;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
 #overlay {
     position: fixed;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    inset: 0;
     background-color: #00000080;
     z-index: 9998;
     cursor: pointer;
+    transition: all 1s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
-.oculto {
-    opacity: 0;
-    display: none;
+#overlay.visivel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .ativo {
@@ -268,7 +278,7 @@ footer {
 }
 
 /* ===== LAYOUT MOBILE ===== */
-@media (max-width: 992px) {
+@media (max-width: 1000px) {
     /* Prevenir scroll horizontal */
     body {
         overflow-x: hidden;
@@ -337,19 +347,6 @@ footer {
         border-radius: 2px;
         transition: all 0.3s ease;
         transform-origin: center;
-    }
-
-    /* Animação hamburger para X */
-    .menu-open .custom-toggler .toggler-icon:nth-child(1) {
-        transform: translateY(10.5px) rotate(45deg);
-    }
-    
-    .menu-open .custom-toggler .toggler-icon:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .menu-open .custom-toggler .toggler-icon:nth-child(3) {
-        transform: translateY(-10.5px) rotate(-45deg);
     }
 
     .navbar-collapse-mobile {
