@@ -1,9 +1,30 @@
-<div class="container mt-5">
-  <h2>Tem certeza que deseja excluir o produto "{{ object.nome }}"?</h2>
+{% extends 'dashboard/base_adm.html' %}
+{% load static %}
 
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a href="{% url 'categorias-adm' %}" class="btn btn-secondary">Cancelar</a>
-  </form>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
+{% endblock %}
+
+{% block header_title %}
+<h1 class="text-3xl font-semibold text-gray-100 mb-2">Deletar Categoria</h1>
+{% endblock %}
+
+{% block conteudo %}
+<div class="flex items-center justify-center p-8">
+
+    <div class="bg-gray-100 rounded-2xl shadow-lg p-8 w-full max-w-2xl">
+
+
+      <div class="container mt-5">
+        <h2>Tem certeza que deseja excluir a categoria "{{ object.nome }}"?</h2>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Excluir</button>
+          <a href="{% url 'categorias-adm' %}" class="btn-cancelar">Cancelar</a>
+        </form>
+      </div>
+
+    </div>
 </div>
+{% endblock %}
