@@ -1,7 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 # Create your models here.
+# Manager que permite a remoção do campo username do CustomUser
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("O email é obrigatório")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+        
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     telefone = models.CharField(null=True, max_length=11)
@@ -9,7 +25,12 @@ class CustomUser(AbstractUser):
     data_nasc = models.DateField(null=True, blank=True)
     verificado = models.BooleanField(default=False)
 
-    REQUIRED_FIELDS = ["email", "cpf"]
+    # Retirando username padrão do CustomUser já que o email é o identificador e a nomeação do usuário é com Nome e Sobrenome
+    username = None
+    objects = CustomUserManager()
+
+    REQUIRED_FIELDS = ["cpf", "first_name", "last_name",]
+    USERNAME_FIELD = "email"
 
     def __str__(self):
         return self.email

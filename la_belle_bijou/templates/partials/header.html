@@ -67,7 +67,7 @@
 
 <div id="overlay"></div>
 <div id="menu_variavel">
-  <h3>Olá, {{ user.username }}</h3>
+  <h3>Olá, {{ user.first_name }}</h3>
   <a href="{% url 'profile' %}">Editar perfil</a>
   <a href="{% url 'ver-pedidos' %}">Ver Pedidos</a>
   {% if user.is_superuser %}

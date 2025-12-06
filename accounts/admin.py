@@ -1,21 +1,22 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
-@admin.register(CustomUser)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'cpf', 'data_nasc'] # campos exibidos na listagem
-    list_filter = ['data_nasc'] # campo disponivel para filtragem
-    search_fields = ['username', 'email', 'cpf', 'data_nasc'] # campos a serem pesquisados na barra de pesquisa
-
-    fieldsets = ( # divide em seções
-        ('Identificação', {
-            'fields': ('username', 'first_name', 'last_name')
-        }),
-        ('Informações Gerais', {
-            'fields': ('email', 'password', 'cpf', 'data_nasc')
-        }),
-        ('Dados de Registro', {
-            'fields': ('date_joined',)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ("email", "first_name", "last_name", "cpf", "is_staff")
+    ordering = ("email",)
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Informações Pessoais", {"fields": ("first_name", "last_name", "cpf", "telefone", "data_nasc")}),
+        ("Permissões", {"fields": ("is_staff", "is_superuser", "groups", "user_permissions")}),
+    )
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "first_name", "last_name", "cpf", "password1", "password2", "is_staff", "is_superuser"),
         }),
     )
-    readonly_fields = ['date_joined']
+    search_fields = ("email", "first_name", "last_name", "cpf")
+
+admin.site.register(CustomUser, CustomUserAdmin)

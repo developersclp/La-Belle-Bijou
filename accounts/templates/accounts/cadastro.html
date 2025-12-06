@@ -25,8 +25,12 @@
                 {% csrf_token %}
 
                 <div class="input-group">
-                    {{ form.username.errors }}
-                    {{ form.username }}
+                    {{ form.first_name.errors }}
+                    {{ form.first_name }}
+                </div>
+                <div class="input-group">
+                    {{ form.last_name.errors }}
+                    {{ form.last_name }}
                 </div>
                 <div class="input-group">
                     {{ form.email.errors }}

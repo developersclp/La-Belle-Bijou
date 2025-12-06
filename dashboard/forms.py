@@ -70,16 +70,15 @@ class MovimentacaoEstoqueForm(forms.ModelForm):
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ["username", "first_name", "last_name", "email", "telefone", "cpf", "data_nasc", "is_active", "is_superuser"]
+        fields = ["first_name", "last_name", "email", "telefone", "cpf", "data_nasc", "is_active", "is_superuser"]
         labels = {
-            "username": "Nome de Usuário",
-            "first_name": "Primeiro nome",
-            "last_name": "Último nome",
+            "first_name": "Nome",
+            "last_name": "Sobrenome",
             "data_nasc": "Data de nascimento"
         }
 
         help_texts = {
-            "username": None,
+            "first_name": None,
             "is_active": None,
             "is_superuser": None,
         }

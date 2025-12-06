@@ -20,7 +20,7 @@ class CompleteProfileMiddleware:
 
         if user.is_authenticated:
             # Se faltar dados obrigatórios
-            if (not user.cpf or not user.telefone):
+            if (not user.cpf or not user.telefone or not user.first_name or not user.last_name):
                 # E não estiver já na tela de completar cadastro
                 if not any(request.path.startswith(p) for p in allowed_paths):
                     return redirect(reverse('completar-cadastro'))

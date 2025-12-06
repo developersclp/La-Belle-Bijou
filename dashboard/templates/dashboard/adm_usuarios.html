@@ -35,7 +35,8 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nome de Usuário</th>
+                <th>Nome</th>
+                <th>Sobrenome</th>
                 <th>Email</th>
                 <th>Status</th>
                 <th>Ações</th>
@@ -45,7 +46,8 @@
             {% for usuario in usuarios %}
             <tr class="clickable-row">
                 <td>{{ usuario.id }}</td>
-                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.first_name }}</td>
+                <td>{{ usuario.last_name }}</td>
                 <td>{{ usuario.email }}</td>
                 <td>
                     {% if usuario.is_active %}

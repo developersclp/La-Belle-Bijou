@@ -22,18 +22,28 @@ class RegisterForm(forms.ModelForm):
             "inputmode": "tel",
         })
     )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"placeholder": "Nome"}),
+        required=True
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"placeholder": "Sobrenome"}),
+        required=True
+    )
 
     class Meta:
         model = CustomUser # define que esse formulário irá criar/editar instâncias da tabela CustomUser
-        fields = ["username", "cpf", "email", "telefone", "password"] # define a ordem e os campos que irão aparecer
+        fields = ["first_name", "last_name", "cpf", "email", "telefone", "password"] # define a ordem e os campos que irão aparecer
         labels = { # define os labels de cada campo
-            "username": "Usuário",
+            "first_name": "Nome",
+            "last_name": "Sobrenome",
             "cpf": "CPF",
             "email": "E-mail",
             "telefone": "Telefone",
         }
         widgets = {
-            "username": forms.TextInput(attrs={"placeholder": "Nome de usuário"}),
+            "first_name": forms.TextInput(attrs={"placeholder": "Nome"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Sobrenome"}),
             "email": forms.EmailInput(attrs={"placeholder": "E-mail"}),
             "telefone": forms.TextInput(attrs={
                 "placeholder": "Telefone",
@@ -41,7 +51,7 @@ class RegisterForm(forms.ModelForm):
             }),
         }
         help_texts = { # define os textos de apoio para cada campo
-            "username": None,
+            "first_name": None,
         }
     
     validator = RegisterValidator()
@@ -139,9 +149,23 @@ class CompleteSignupForm(forms.ModelForm):
             "inputmode": "numeric",
         })
     )
+    first_name = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Nome",
+            "inputmode": "text",
+        })
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Sobrenome",
+            "inputmode": "text",
+        })
+    )
     class Meta:
         model = CustomUser
-        fields = ['telefone', 'cpf']
+        fields = ['telefone', 'cpf', 'first_name', 'last_name']
 
     validator = RegisterValidator()
 
@@ -155,6 +179,8 @@ class CompleteSignupForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['telefone'].required = True
         self.fields['cpf'].required = True
+        self.fields['first_name'].required = True
+        self.fields['first_name'].required = True
 
 class EnderecoForm(forms.ModelForm):
     class Meta:

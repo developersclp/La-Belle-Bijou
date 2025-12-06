@@ -68,7 +68,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 def complete_signup(request):
     user = request.user
 
-    if user.telefone and user.cpf:
+    if user.telefone and user.cpf and user.first_name and user.last_name:
         return redirect('home')
 
     if request.method == 'POST':
