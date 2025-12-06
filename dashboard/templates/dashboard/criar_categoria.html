@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block extra_css %}
-{# Reutilizamos o mesmo CSS, já que os estilos são os mesmos #}
 <link rel="stylesheet" href="{% static 'css/criar_produto.css' %}">
 {% endblock %}
 
@@ -15,10 +14,8 @@
 {% endblock %}
 
 {% block conteudo %}
-{# 1. Usamos o mesmo container flex para centralizar tudo #}
 <div class="flex items-center justify-center p-8">
 
-    {# 2. O card principal, mas um pouco mais estreito (max-w-2xl) por ter menos conteúdo #}
     <div class="bg-gray-100 rounded-2xl shadow-lg p-8 w-full max-w-2xl">
 
         <form method="post">
@@ -30,11 +27,9 @@
             <div class="mb-4">
                 <label for="{{ form.nome.id_for_label }}">Nome da Categoria</label>
                 {{ form.nome }}
-                {# Se houver erros no campo, eles podem ser mostrados aqui #}
                 {{ form.nome.errors }}
             </div>
             <div class="flex justify-end gap-3 mt-8">
-                {# É uma boa prática ter um botão de cancelar. Troque 'lista-categorias' pelo nome da sua URL da lista #}
                 <a href="{% url 'categorias-adm' %}" class="btn-cancelar">Cancelar</a>
                 <button type="submit" class="btn-salvar">Salvar Categoria</button>
             </div>
