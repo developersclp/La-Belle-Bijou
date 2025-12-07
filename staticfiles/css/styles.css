@@ -8,7 +8,7 @@
 }
 
 .custom-navbar {
-    width: 100%;
+    width: 100vw;
     height: 12vh;
     background-color: #fff;
     border-bottom: 2px solid #CECECE;
@@ -234,6 +234,11 @@ footer {
         width: 40%;
         text-align: center;
         font-size: 1.5rem;
+    }
+
+    .logo-footer {
+        height: 6rem;
+        width: auto;
     }
 }
 

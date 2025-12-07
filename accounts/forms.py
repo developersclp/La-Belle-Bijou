@@ -135,20 +135,6 @@ class ProfileForm(forms.ModelForm):
 
 
 class CompleteSignupForm(forms.ModelForm):
-    telefone = forms.CharField(
-        max_length=15,
-        widget=forms.TextInput(attrs={
-            "placeholder": "Telefone",
-            "inputmode": "tel",
-        })
-    )
-    cpf = forms.CharField(
-        max_length=14,
-        widget=forms.TextInput(attrs={
-            "placeholder": "CPF",
-            "inputmode": "numeric",
-        })
-    )
     first_name = forms.CharField(
         max_length=20,
         widget=forms.TextInput(attrs={
@@ -163,9 +149,23 @@ class CompleteSignupForm(forms.ModelForm):
             "inputmode": "text",
         })
     )
+    telefone = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Telefone",
+            "inputmode": "tel",
+        })
+    )
+    cpf = forms.CharField(
+        max_length=14,
+        widget=forms.TextInput(attrs={
+            "placeholder": "CPF",
+            "inputmode": "numeric",
+        })
+    )
     class Meta:
         model = CustomUser
-        fields = ['telefone', 'cpf', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'telefone', 'cpf']
 
     validator = RegisterValidator()
 
@@ -177,10 +177,10 @@ class CompleteSignupForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['first_name'].required = True
         self.fields['telefone'].required = True
         self.fields['cpf'].required = True
-        self.fields['first_name'].required = True
-        self.fields['first_name'].required = True
 
 class EnderecoForm(forms.ModelForm):
     class Meta:

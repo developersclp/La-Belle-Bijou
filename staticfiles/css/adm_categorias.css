@@ -61,7 +61,6 @@
 
 .admin-table th:last-child,
 .admin-table td:last-child {
-    text-align: right;
     width: 120px;
 }
 
