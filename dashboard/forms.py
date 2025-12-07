@@ -63,6 +63,7 @@ class MovimentacaoEstoqueForm(forms.ModelForm):
         elif tipo_movimentacao == "saida": # se o tipo_movimentacao for igual a "saida"
             self.fields["motivo"].choices = [ # define as opções do campo motivo
                 ("VENDA", "Venda para cliente"),
+                ("AJUSTE", "Ajuste de estoque"),
             ] 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Usuarios =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

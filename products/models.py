@@ -64,6 +64,7 @@ class MovimentacaoEstoque(models.Model):
     MOTIVOS = [
         ("COMPRA", "Compra de fornecedor"),
         ("VENDA", "Venda para cliente"),
+        ("AJUSTE", "Ajuste de estoque"),
     ]
 
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name="movimentacoes")
