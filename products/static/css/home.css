@@ -20,6 +20,7 @@
 
 .imgs-menores {
     width: 75vw;
+    height: 30vw;
 }
 
 .carousel-control-prev-icon {
@@ -227,7 +228,7 @@
 
     .imgs-menores {
         width: 100vw;
-        height: auto;
+        height: 36vw;
         border-radius: 0;
     }
     
