@@ -26,28 +26,28 @@
                 {% csrf_token %}
 
                 <div class="input-group">
-                    {{ form.first_name.errors }}
                     {{ form.first_name }}
+                    {{ form.first_name.errors }}
                 </div>
                 <div class="input-group">
-                    {{ form.last_name.errors }}
                     {{ form.last_name }}
+                    {{ form.last_name.errors }}
                 </div>
                 <div class="input-group">
-                    {{ form.email.errors }}
                     {{ form.email }}
+                    {{ form.email.errors }}
                 </div>
                 <div class="input-group">
-                    {{ form.cpf.errors }}
                     {{ form.cpf }}
+                    {{ form.cpf.errors }}
                 </div>
                 <div class="input-group">
-                    {{ form.telefone.errors }}
                     {{ form.telefone }}
+                    {{ form.telefone.errors }}
                 </div>
                 <div class="input-group">
-                    {{ form.password.errors }}
                     {{ form.password }}
+                    {{ form.password.errors }}
                 </div>
                 <div class="input-group">
                     {{ form.password_confirm }}

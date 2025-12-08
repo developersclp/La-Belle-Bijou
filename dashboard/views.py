@@ -278,7 +278,7 @@ class EditarPedido(UpdateView):
     form_class = PedidoForm
     template_name = "dashboard/editar_pedido.html"
     context_object_name = "pedido"
-    success_url = "pedidos-adm"
+    success_url = reverse_lazy("pedidos-adm")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
