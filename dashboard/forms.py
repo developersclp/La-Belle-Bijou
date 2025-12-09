@@ -48,6 +48,14 @@ class CategoriaForm(forms.ModelForm):
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Estoque =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 class MovimentacaoEstoqueForm(forms.ModelForm):
+    produto = forms.ModelChoiceField(
+        queryset=Produto.objects.all(),
+        label="Produto",
+        widget=forms.Select(),
+        empty_label="Selecione um produto",
+        to_field_name="id"
+    )
+    
     class Meta:
         model = MovimentacaoEstoque
         fields = ["produto", "quantidade", "motivo"]
@@ -56,6 +64,9 @@ class MovimentacaoEstoqueForm(forms.ModelForm):
         tipo_movimentacao = kwargs.pop("tipo_movimentacao", None) # tira o campo "tipo_movimentacao" do kwargs caso exista, se não retorna None
         super().__init__(*args, **kwargs)
 
+        # força mostrar apenas o nome no select
+        self.fields["produto"].label_from_instance = lambda obj: obj.nome
+        
         if tipo_movimentacao == "entrada": # se o tipo_movimentacao for igual a "entrada"
             self.fields["motivo"].choices = [ # define as opções do campo motivo
                 ("COMPRA", "Compra de fornecedor"),
