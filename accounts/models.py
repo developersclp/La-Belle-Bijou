@@ -20,8 +20,8 @@ class CustomUserManager(BaseUserManager):
         
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    telefone = models.CharField(null=True, max_length=11)
-    cpf = models.CharField(max_length=11, unique=True)
+    telefone = models.CharField(null=True, max_length=11, blank=True)
+    cpf = models.CharField(max_length=11, unique=True, null=True, blank=True)
     data_nasc = models.DateField(null=True, blank=True)
     verificado = models.BooleanField(default=False)
 
