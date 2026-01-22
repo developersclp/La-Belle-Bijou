@@ -215,7 +215,7 @@ ANYMAIL = {
     "SENDGRID_API_KEY": os.getenv("SENDGRID_API_KEY"),
 }
 
-DEFAULT_FROM_EMAIL = "lucgarcbeni@gmail.com"
+DEFAULT_FROM_EMAIL = "rianprates894@gmail.com"
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Frete -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
 
