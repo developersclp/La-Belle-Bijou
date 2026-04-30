@@ -89,6 +89,8 @@ MIDDLEWARE = [
     'accounts.middleware.CompleteProfileMiddleware',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 ROOT_URLCONF = 'la_belle_bijou.urls'
 
 TEMPLATES = [
