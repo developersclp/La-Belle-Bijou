@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    "storages"
 
     #apps
     "accounts.apps.AccountsConfig",
@@ -84,6 +85,8 @@ INSTALLED_APPS = [
     "orders",
     "dashboard",
 ]
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 SOCIALACCOUNT_ADAPTER = "accounts.adapter.CustomSocialAccountAdapter"
 
@@ -259,4 +262,4 @@ AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 
-MEDIA_URL = "https://fgzqgirgsokdpvhxjica.supabase.co/storage/v1/object/public/media/"
+MEDIA_URL = "https://gfzgqirgskodpvhxjica.supabase.co/storage/v1/object/public/media/"
