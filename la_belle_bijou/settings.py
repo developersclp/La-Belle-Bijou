@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    "storages"
+    "storages",
 
     #apps
     "accounts.apps.AccountsConfig",
