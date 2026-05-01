@@ -230,3 +230,21 @@ SUPERFRETE_API_URL = os.getenv("SUPERFRETE_API_URL", "https://api.superfrete.com
 
 PAGARME_API_KEY = os.getenv("PAGARME_API_KEY")
 PAGARME_API_URL = os.getenv("PAGARME_API_URL", "https://api.pagar.me/core/v5")
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=- Api Pagamento -=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--=-
+
+AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET_KEY")
+
+AWS_STORAGE_BUCKET_NAME = "media"
+
+AWS_S3_ENDPOINT_URL = "https://gfzgqirgskodpvhxjica.storage.supabase.co/storage/v1/s3"
+
+AWS_S3_REGION_NAME = "us-west-2"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+MEDIA_URL = "https://fgzqgirgsokdpvhxjica.supabase.co/storage/v1/object/public/media/"
