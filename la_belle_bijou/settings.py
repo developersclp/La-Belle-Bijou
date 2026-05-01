@@ -86,7 +86,14 @@ INSTALLED_APPS = [
     "dashboard",
 ]
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 SOCIALACCOUNT_ADAPTER = "accounts.adapter.CustomSocialAccountAdapter"
 
@@ -104,7 +111,7 @@ MIDDLEWARE = [
     'accounts.middleware.CompleteProfileMiddleware',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'la_belle_bijou.urls'
 
@@ -252,6 +259,8 @@ AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY")
 AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET_KEY")
 
 AWS_STORAGE_BUCKET_NAME = "media"
+
+AWS_LOCATION = ""
 
 AWS_S3_ENDPOINT_URL = "https://gfzgqirgskodpvhxjica.storage.supabase.co/storage/v1/s3"
 
