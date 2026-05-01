@@ -271,6 +271,6 @@ AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 
-AWS_S3_CUSTOM_DOMAIN = "gfzgqirgskodpvhxjica.supabase.co/storage/v1/object/public"
+AWS_S3_CUSTOM_DOMAIN = f"gfzgqirgskodpvhxjica.supabase.co/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}"
 
 MEDIA_URL = "https://gfzgqirgskodpvhxjica.supabase.co/storage/v1/object/public/media/"
