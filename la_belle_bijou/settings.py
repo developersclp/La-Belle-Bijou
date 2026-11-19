@@ -60,8 +60,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     ".railway.app",
-    "labellebijou.store",
-    "www.labellebijou.store"
+    "labellebijou.shop",
+    "www.labellebijou.shop"
 ]
 
 # Application definition
